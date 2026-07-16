@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <!--
+      Design philosophy: Clinical Data Craft
+      添付名刺の余白・縦罫線・ドット・斜め帯を、個人開発者の技術ポートフォリオへ展開する。
+    -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#fbfcfa" />
+    <meta name="description" content="SystemLink YandYは、希少疾患・慢性疾患の当事者経験とソフトウェア開発の知識をもとに、生活データの記録・可視化ツールを個人開発するプロジェクトです。" />
+    <meta property="og:title" content="SystemLink YandY | 記録と可視化で、伝わる形へ" />
+    <meta property="og:description" content="体調・環境・服薬・活動の記録と可視化を支援する個人開発プロジェクト。" />
+    <meta property="og:type" content="website" />
+    <link rel="stylesheet" href="fonts.css" />
+    <link rel="icon" href="assets/systemlink-mark.png" />
+    <link rel="stylesheet" href="index.css" />
+    <title>SystemLink YandY | 個人開発・生活データ可視化</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">本文へ移動</a>
+
+    <header class="site-header" data-header>
+      <div class="header-inner">
+        <a class="brand" href="#top" aria-label="SystemLink YandY トップへ">
+          <img src="assets/systemlink-lockup-horizontal-safe.png" alt="SystemLink YandY" width="1040" height="320" />
+        </a>
+
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="global-nav" data-menu-button>
+          <span class="menu-label">MENU</span>
+          <span class="menu-lines" aria-hidden="true"><i></i><i></i></span>
+        </button>
+
+        <nav class="global-nav" id="global-nav" aria-label="グローバルナビゲーション" data-nav>
+          <a href="#about">About</a>
+          <a href="#projects">Projects</a>
+          <a href="#development-log">Development Log</a>
+          <a href="#activities">Activities</a>
+          <a href="#profile">Profile</a>
+          <a class="nav-contact" href="#contact">Contact <span aria-hidden="true">↗</span></a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero" id="top" aria-labelledby="hero-title">
+        <img class="hero-art" src="assets/systemlink-hero-data.png" alt="環境と体調の変化を線と点で表した抽象的なデータビジュアル" />
+        <img class="watermark watermark-hero" src="assets/systemlink-mark.png" alt="" aria-hidden="true" />
+        <div class="dot-field dot-field-hero" aria-hidden="true"></div>
+        <div class="hero-inner">
+          <div class="hero-copy">
+            <p class="eyebrow"><span>INDEPENDENT DEVELOPMENT</span><span>RARE DISEASE DATA VISUALIZATION</span></p>
+            <h1 id="hero-title"><span class="hero-line">見えにくい不調を、</span><span class="hero-line"><em>記録と可視化で、</em></span><span class="hero-line">伝わる形へ。</span></h1>
+            <p class="hero-lead">希少疾患・慢性疾患の当事者経験とソフトウェア開発の知識をもとに、体調・環境・服薬・活動の記録と可視化を支援するツールを個人開発しています。</p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="#projects">開発プロジェクトを見る <span aria-hidden="true">↓</span></a>
+              <a class="text-link" href="#contact">相談・フィードバック <span aria-hidden="true">↗</span></a>
+            </div>
+          </div>
+          <div class="hero-index" aria-hidden="true">
+            <span>SYS / 001</span>
+            <b>DAILY SIGNALS</b>
+            <span>OBSERVE — RECORD — EXPLAIN</span>
+          </div>
+        </div>
+        <div class="brand-stripe" aria-hidden="true"><span></span><i></i></div>
+      </section>
+
+      <section class="section section-about" id="about" aria-labelledby="about-title">
+        <div class="section-inner split-layout">
+          <div class="section-heading reveal">
+            <p class="section-number">01 / ABOUT</p>
+            <h2 id="about-title">記録を、<br />説明できるデータへ。</h2>
+          </div>
+          <div class="about-content reveal">
+            <p class="lead-copy">日常の不調は、診察室の外で起きています。だからこそ、生活の中に散らばる小さな変化を、あとから振り返れる形で残すことが重要だと考えています。</p>
+            <p>SystemLink YandYは、当事者としての実感と、ソフトウェアエンジニアとしての実装力をつなぐ個人開発プロジェクトです。環境、服薬、活動、主観的な体調を記録し、本人が生活を整理するため、そして受診時に状況を説明するための補助ツールを開発しています。</p>
+            <dl class="principles" aria-label="活動の3つの視点">
+              <div><dt>OBSERVE</dt><dd>生活の中で起こる変化を捉える</dd></div>
+              <div><dt>STRUCTURE</dt><dd>散らばる記録を比較できる形にする</dd></div>
+              <div><dt>COMMUNICATE</dt><dd>経験を第三者へ伝えやすくする</dd></div>
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-projects" id="projects" aria-labelledby="projects-title">
+        <img class="watermark watermark-projects" src="assets/systemlink-mark.png" alt="" aria-hidden="true" />
+        <div class="section-inner">
+          <div class="section-heading horizontal-heading reveal">
+            <div>
+              <p class="section-number">02 / PROJECTS</p>
+              <h2 id="projects-title">生活の実感から<br />設計したツール</h2>
+            </div>
+            <p>記録の負担を抑えながら、あとで比較・説明しやすいデータを残すことを重視しています。</p>
+          </div>
+
+          <div class="project-list">
+            <article class="project-card reveal">
+              <div class="project-visual">
+                <svg class="data-diagram environment-diagram" viewBox="0 0 680 460" role="img" aria-label="気圧・気温・湿度などの環境要因を時系列で比較する抽象図">
+                  <defs><pattern id="env-grid" width="34" height="34" patternUnits="userSpaceOnUse"><path d="M34 0H0V34" fill="none" stroke="#dfe3dc" stroke-width="1"/></pattern><linearGradient id="env-fill" x1="0" x2="1"><stop stop-color="#86d900" stop-opacity=".18"/><stop offset="1" stop-color="#86d900" stop-opacity="0"/></linearGradient></defs>
+                  <rect width="680" height="460" fill="#f8faf6"/><rect x="62" y="62" width="556" height="316" fill="url(#env-grid)"/><path d="M62 300C124 284 142 220 202 238s75-103 139-72 89 124 147 70 78-17 130-76V378H62Z" fill="url(#env-fill)"/>
+                  <path d="M62 300C124 284 142 220 202 238s75-103 139-72 89 124 147 70 78-17 130-76" fill="none" stroke="#2b2d2f" stroke-width="5"/>
+                  <path d="M62 333c66-34 92-6 139-34s84-12 136-42 92 33 143 13 83-57 138-46" fill="none" stroke="#86d900" stroke-width="4"/>
+                  <g fill="#86d900" stroke="#2b2d2f" stroke-width="3"><circle cx="202" cy="238" r="8"/><circle cx="341" cy="166" r="8"/><circle cx="488" cy="236" r="8"/></g>
+                  <g fill="#2b2d2f" font-family="IBM Plex Sans" font-size="14" font-weight="700"><text x="62" y="44">ENVIRONMENT / CONDITION</text><text x="62" y="410">PRESSURE</text><text x="242" y="410">HUMIDITY</text><text x="421" y="410">AIR QUALITY</text></g><g fill="#86d900"><rect x="62" y="424" width="92" height="5"/><rect x="242" y="424" width="92" height="5"/><rect x="421" y="424" width="92" height="5"/></g>
+                </svg>
+                <span class="project-code">APP / 01</span>
+              </div>
+              <div class="project-body">
+                <div class="project-title-row">
+                  <span class="project-icon" aria-hidden="true">
+                    <svg viewBox="0 0 48 48"><path d="M7 35 17 23l9 7 15-18"/><circle cx="7" cy="35" r="3"/><circle cx="17" cy="23" r="3"/><circle cx="26" cy="30" r="3"/><circle cx="41" cy="12" r="3"/></svg>
+                  </span>
+                  <div><p>ENVIRONMENT & CONDITION</p><h3>体調環境ログ</h3></div>
+                </div>
+                <p>体調が変化した瞬間の気圧、気温、湿度、大気質、照度などを記録し、不調時と好転時の環境条件を比較するアプリです。</p>
+                <ul class="feature-list" aria-label="体調環境ログの機能">
+                  <li>環境データ自動取得</li><li>不調・好転・中立ログ</li><li>時系列・相関分析</li><li>JSONL／テキスト出力</li>
+                </ul>
+                <p class="project-version"><span>RELEASE RECORD</span>初版 2026年6月 / 最新 改訂版 v2（2026-07-12）</p>
+                <p class="project-status"><span></span>個人開発 / Prototype & Validation</p>
+              </div>
+            </article>
+
+            <article class="project-card project-card-reverse reveal">
+              <div class="project-visual">
+                <svg class="data-diagram hp-diagram" viewBox="0 0 680 460" role="img" aria-label="一日の相対的なエネルギー推移を曲線とセグメントで表した抽象図">
+                  <defs><pattern id="hp-grid" width="34" height="34" patternUnits="userSpaceOnUse"><path d="M34 0H0V34" fill="none" stroke="#dfe3dc" stroke-width="1"/></pattern></defs>
+                  <rect width="680" height="460" fill="#f8faf6"/><rect x="62" y="62" width="556" height="316" fill="url(#hp-grid)"/>
+                  <path d="M62 188c78-88 139-83 190-16 46 60 74 38 103-28 32-72 85-66 114-2 35 76 77 90 149 41" fill="none" stroke="#2b2d2f" stroke-width="5"/>
+                  <path d="M62 188c78-88 139-83 190-16" fill="none" stroke="#86d900" stroke-width="7"/>
+                  <g transform="translate(480 264)"><path d="M0 62a72 72 0 1 1 106-9" fill="none" stroke="#dfe3dc" stroke-width="18"/><path d="M0 62a72 72 0 0 1 106-9" fill="none" stroke="#86d900" stroke-width="18"/><circle cx="53" cy="48" r="32" fill="#fff"/><text x="53" y="54" text-anchor="middle" fill="#2b2d2f" font-family="IBM Plex Sans" font-size="22" font-weight="700">REL</text></g>
+                  <g fill="#2b2d2f" font-family="IBM Plex Sans" font-size="14" font-weight="700"><text x="62" y="44">RELATIVE RESERVE / DAILY CURVE</text><text x="62" y="410">MEDICATION</text><text x="242" y="410">ACTIVITY LOAD</text></g><g fill="#86d900"><rect x="62" y="424" width="92" height="5"/><rect x="242" y="424" width="92" height="5"/></g>
+                  <g fill="#86d900" stroke="#2b2d2f" stroke-width="3"><circle cx="252" cy="172" r="8"/><circle cx="355" cy="144" r="8"/></g>
+                </svg>
+                <span class="project-code">APP / 02</span>
+              </div>
+              <div class="project-body">
+                <div class="project-title-row">
+                  <span class="project-icon" aria-hidden="true">
+                    <svg viewBox="0 0 48 48"><path d="M8 25a16 16 0 1 1 7 13"/><path d="M24 15v10l7 4"/><path d="M8 34v-9h9"/></svg>
+                  </span>
+                  <div><p>PACING & DAILY RECORD</p><h3>残コルチゾールHP</h3></div>
+                </div>
+                <p>コルチゾール補充療法中の服薬、活動負荷、体調変化を、ゲームのHPのような形で見える化する記録・ペーシング支援ツールです。</p>
+                <div class="note-inline"><strong>相対的指標について</strong><p>数値は医学的な実測値ではなく、生活管理と受診時の説明を補助する相対的指標です。</p></div>
+                <ul class="feature-list" aria-label="残コルチゾールHPの機能">
+                  <li>服薬・活動記録</li><li>予測カーブ</li><li>日別ログ</li><li>タスク別負荷設定</li>
+                </ul>
+                <p class="project-version"><span>RELEASE RECORD</span>初版 2026年6月 / 最新 操作マニュアル 0.1版（2026-07）</p>
+                <p class="project-status"><span></span>個人開発 / Concept & Implementation</p>
+              </div>
+            </article>
+          </div>
+
+          <aside class="medical-notice reveal" aria-label="医療上の注意事項">
+            <span class="notice-mark" aria-hidden="true">!</span>
+            <div><strong>Medical Disclaimer</strong><p>本サイトおよび掲載ツールは、体調・環境・服薬・活動の記録と可視化を支援するためのものです。診断、治療、服薬量の決定を目的とするものではありません。</p></div>
+          </aside>
+
+          <aside class="medical-notice terms-notice reveal" id="terms" aria-labelledby="terms-title">
+            <span class="notice-mark" aria-hidden="true">©</span>
+            <div>
+              <strong id="terms-title">利用条件・権利表示 / TERMS</strong>
+              <p>本サイトに掲載するソフトウェアおよび関連資料（操作マニュアル、図解、設計資料を含む）は、ケイ（SystemLink YandY）が個人の開発環境において作成した個人著作物です。著作権は著作者に帰属します。</p>
+              <p>無断での複製、改変、再配布、商用利用、および第三者への提供を禁じます。</p>
+              <p>利用・協業をご希望の場合は、<a href="#contact">Contact</a> よりご相談ください。</p>
+              <p class="terms-links"><a href="privacy.html">プライバシーポリシー</a><a href="operator.html">運営者情報</a></p>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section section-development" id="development-log" aria-labelledby="development-log-title">
+        <div class="section-inner development-layout">
+          <div class="section-heading horizontal-heading reveal">
+            <div>
+              <p class="section-number">03 / DEVELOPMENT LOG</p>
+              <h2 id="development-log-title">いつ、何を<br />つくってきたか。</h2>
+            </div>
+            <p>個人開発として、記録と可視化のツールを継続的に開発しています。各ツールの版数と公開時期を、記録として残しています。</p>
+          </div>
+          <ol class="development-timeline" aria-label="開発履歴">
+            <li class="reveal"><time datetime="2026-07">2026年7月</time><p>体調環境ログ 改訂版 v2 公開<span>環境データの定期自動取得、気圧変化率の相関分析を実装</span></p></li>
+            <li class="reveal"><time datetime="2026-07">2026年7月</time><p>残コルチゾールHP 操作マニュアル 0.1版 公開</p></li>
+            <li class="reveal"><time datetime="2026-06">2026年6月</time><p>残コルチゾールHP 初版開発</p></li>
+            <li class="reveal"><time datetime="2026-06">2026年6月</time><p>体調環境ログ 初版開発</p></li>
+            <li class="reveal"><time datetime="2025-05">2025年5月</time><p>SystemLink YandY として個人開発を開始</p></li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="section section-activities" id="activities" aria-labelledby="activities-title">
+        <div class="section-inner activity-layout">
+          <div class="activity-visual reveal">
+            <svg class="research-diagram" viewBox="0 0 760 860" role="img" aria-label="日々の観察記録が長期的なパターンへ整理される様子を表した抽象図">
+              <defs><pattern id="research-grid" width="38" height="38" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.7" fill="#737873"/></pattern><linearGradient id="signal" x1="0" x2="1"><stop stop-color="#86d900"/><stop offset="1" stop-color="#86d900" stop-opacity=".2"/></linearGradient></defs>
+              <rect width="760" height="860" fill="#252729"/><rect x="74" y="82" width="612" height="662" fill="url(#research-grid)" opacity=".42"/>
+              <g fill="none" stroke-linecap="round"><path d="M82 610C185 548 201 650 294 538s111-222 187-120 101 49 190-110" stroke="#f4f5f2" stroke-width="6"/><path d="M82 648c95-13 117-90 198-36s111-69 183-31 115-88 208-53" stroke="url(#signal)" stroke-width="5"/><path d="M114 238h492M114 314h492M114 390h492" stroke="#707570" stroke-width="1"/></g>
+              <g fill="#86d900"><circle cx="294" cy="538" r="10"/><circle cx="481" cy="418" r="10"/><rect x="82" y="168" width="210" height="8"/></g>
+              <g fill="#f4f5f2" font-family="IBM Plex Sans"><text x="82" y="138" font-size="17" font-weight="700" letter-spacing="3">LONGITUDINAL SIGNAL MAP</text><text x="82" y="794" font-size="13" font-weight="700">OBSERVE</text><text x="314" y="794" font-size="13" font-weight="700">STRUCTURE</text><text x="546" y="794" font-size="13" font-weight="700">EXPLAIN</text></g>
+              <g fill="#86d900"><rect x="82" y="808" width="104" height="5"/><rect x="314" y="808" width="104" height="5"/><rect x="546" y="808" width="104" height="5"/></g>
+            </svg>
+            <div class="visual-caption"><span>LONGITUDINAL VIEW</span><span>PERSON-CENTERED DATA</span></div>
+          </div>
+          <div class="activity-copy reveal">
+            <p class="section-number">04 / RESEARCH & ACTIVITIES</p>
+            <h2 id="activities-title"><span class="activity-title-line">希少疾患</span><span class="activity-title-line">データ可視化</span></h2>
+            <p class="lead-copy">希少疾患・慢性疾患では、症状の現れ方や生活への影響が個人ごとに異なり、短い診察時間だけでは伝えきれないことがあります。</p>
+            <p>日々の体調、環境、服薬、活動負荷を本人が扱える形で記録し、長期的な傾向や出来事の前後関係を可視化する方法を検討しています。実装だけでなく、項目設計、データ出力、説明資料、プライバシーに配慮した運用までを活動範囲としています。</p>
+            <ul class="activity-points">
+              <li><b>01</b><span><strong>生活ログの構造化</strong>主観的な経験を、あとから振り返れる単位へ整理</span></li>
+              <li><b>02</b><span><strong>時系列・相関の可視化</strong>環境や活動との関係を断定せず、傾向として確認</span></li>
+              <li><b>03</b><span><strong>説明可能なデータ出力</strong>本人による振り返りや受診時の説明を補助</span></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-collaborators" id="collaborators" aria-labelledby="collaborators-title">
+        <div class="section-inner">
+          <div class="section-heading horizontal-heading reveal">
+            <div>
+              <p class="section-number">05 / FOR PATIENTS & COLLABORATORS</p>
+              <h2 id="collaborators-title">当事者と技術者のあいだに、<br />対話できる接点を。</h2>
+            </div>
+            <p>開発途中のツールに対する率直なフィードバックや、生活データ活用に関する情報交換を歓迎しています。</p>
+          </div>
+          <div class="collaboration-grid">
+            <article class="collab-card reveal" data-index="01"><span>01</span><h3>当事者・ご家族の方へ</h3><p>記録で困っていること、残したい情報、使い続けるうえでの負担など、実生活からのご意見をお聞かせください。</p><a href="#contact">フィードバックを送る <i aria-hidden="true">↗</i></a></article>
+            <article class="collab-card reveal" data-index="02"><span>02</span><h3>医療・研究に関わる方へ</h3><p>診療を代替しない範囲で、当事者が日常データを整理し説明するための設計や出力形式について意見交換できます。</p><a href="#contact">活動について問い合わせる <i aria-hidden="true">↗</i></a></article>
+            <article class="collab-card reveal" data-index="03"><span>03</span><h3>開発者・デザイナーの方へ</h3><p>データ可視化、アクセシビリティ、組込みGUI、アプリ設計、技術文書などの観点からの協力・レビューを歓迎します。</p><a href="#contact">協力を相談する <i aria-hidden="true">↗</i></a></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-profile" id="profile" aria-labelledby="profile-title">
+        <div class="section-inner profile-layout">
+          <div class="profile-aside reveal">
+            <img src="assets/systemlink-mark.png" alt="SystemLink YandY シンボル" loading="lazy" />
+            <div class="profile-id"><span>DEVELOPER ID</span><b>SLY / KEI</b><span>JAPAN — INDEPENDENT</span></div>
+          </div>
+          <div class="profile-copy reveal">
+            <p class="section-number">06 / DEVELOPER PROFILE</p>
+            <h2 id="profile-title">ケイ <span>/ Kei</span></h2>
+            <p class="profile-role">Software Engineer / Independent Developer</p>
+            <p class="lead-copy">組込みGUI、アプリケーション開発、データ可視化、技術文書作成に従事。</p>
+            <p>希少疾患の当事者経験をもとに、日常生活の課題をソフトウェアで整理する活動を行っています。</p>
+            <p>すべてのツールは、所属業務とは独立した個人プロジェクトとして、個人の開発環境で開発しています。</p>
+            <div class="skill-cloud" aria-label="専門領域">
+              <span>Embedded GUI</span><span>Application Development</span><span>Data Visualization</span><span>Technical Writing</span><span>Accessibility</span><span>Personal Health Data</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-contact" id="contact" aria-labelledby="contact-title">
+        <img class="watermark watermark-contact" src="assets/systemlink-mark.png" alt="" aria-hidden="true" />
+        <div class="dot-field dot-field-contact" aria-hidden="true"></div>
+        <div class="section-inner contact-layout">
+          <div class="contact-copy reveal">
+            <p class="section-number">07 / CONTACT</p>
+            <h2 id="contact-title">お問い合わせ</h2>
+            <p>ツールへのフィードバック、活動に関する情報交換、技術協力については、以下のメールアドレスからご連絡ください。</p>
+            <a class="email-link" href="mailto:systemlink.yandy@gmail.com"><span>EMAIL / CONTACT</span>systemlink.yandy@gmail.com <i aria-hidden="true">↗</i></a>
+          </div>
+          <div class="contact-form contact-status reveal" aria-label="連絡先">
+            <p class="contact-status-label">CONTACT STATUS</p>
+            <strong>Available</strong>
+            <p>お問い合わせ内容を確認のうえ、可能な範囲で返信します。診断、治療、服薬量に関する個別の医療相談には対応していません。</p>
+          </div>
+        </div>
+        <div class="brand-stripe brand-stripe-bottom" aria-hidden="true"><span></span><i></i></div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <a class="footer-brand" href="#top"><img src="assets/systemlink-lockup-horizontal-safe.png" alt="SystemLink YandY" width="1040" height="320" /></a>
+        <div class="footer-nav"><a href="#about">About</a><a href="#projects">Projects</a><a href="#development-log">Development Log</a><a href="#activities">Activities</a><a href="#profile">Profile</a><a href="#terms">Terms</a><a href="privacy.html">Privacy Policy</a><a href="operator.html">Operator</a><a href="#contact">Contact</a></div>
+        <p class="footer-disclaimer">本サイトおよび掲載ツールは、体調・環境・服薬・活動の記録と可視化を支援するためのものです。診断、治療、服薬量の決定を目的とするものではありません。</p>
+        <p class="copyright">© 2026 SystemLink YandY. Independent project by ケイ / Kei. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script type="module" src="main.js"></script>
+  </body>
+</html>
