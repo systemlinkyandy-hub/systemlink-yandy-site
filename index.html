@@ -97,60 +97,66 @@
 
           <div class="project-list">
             <article class="project-card reveal">
-              <div class="project-visual">
-                <svg class="data-diagram environment-diagram" viewBox="0 0 680 460" role="img" aria-label="気圧・気温・湿度などの環境要因を時系列で比較する抽象図">
-                  <defs><pattern id="env-grid" width="34" height="34" patternUnits="userSpaceOnUse"><path d="M34 0H0V34" fill="none" stroke="#dfe3dc" stroke-width="1"/></pattern><linearGradient id="env-fill" x1="0" x2="1"><stop stop-color="#86d900" stop-opacity=".18"/><stop offset="1" stop-color="#86d900" stop-opacity="0"/></linearGradient></defs>
-                  <rect width="680" height="460" fill="#f8faf6"/><rect x="62" y="62" width="556" height="316" fill="url(#env-grid)"/><path d="M62 300C124 284 142 220 202 238s75-103 139-72 89 124 147 70 78-17 130-76V378H62Z" fill="url(#env-fill)"/>
-                  <path d="M62 300C124 284 142 220 202 238s75-103 139-72 89 124 147 70 78-17 130-76" fill="none" stroke="#2b2d2f" stroke-width="5"/>
-                  <path d="M62 333c66-34 92-6 139-34s84-12 136-42 92 33 143 13 83-57 138-46" fill="none" stroke="#86d900" stroke-width="4"/>
-                  <g fill="#86d900" stroke="#2b2d2f" stroke-width="3"><circle cx="202" cy="238" r="8"/><circle cx="341" cy="166" r="8"/><circle cx="488" cy="236" r="8"/></g>
-                  <g fill="#2b2d2f" font-family="IBM Plex Sans" font-size="14" font-weight="700"><text x="62" y="44">ENVIRONMENT / CONDITION</text><text x="62" y="410">PRESSURE</text><text x="242" y="410">HUMIDITY</text><text x="421" y="410">AIR QUALITY</text></g><g fill="#86d900"><rect x="62" y="424" width="92" height="5"/><rect x="242" y="424" width="92" height="5"/><rect x="421" y="424" width="92" height="5"/></g>
-                </svg>
-                <span class="project-code">APP / 01</span>
-              </div>
-              <div class="project-body">
+              <div class="project-intro">
                 <div class="project-title-row">
                   <span class="project-icon" aria-hidden="true">
                     <svg viewBox="0 0 48 48"><path d="M7 35 17 23l9 7 15-18"/><circle cx="7" cy="35" r="3"/><circle cx="17" cy="23" r="3"/><circle cx="26" cy="30" r="3"/><circle cx="41" cy="12" r="3"/></svg>
                   </span>
                   <div><p>ENVIRONMENT & CONDITION</p><h3>体調環境ログ</h3></div>
                 </div>
-                <p>体調が変化した瞬間の気圧、気温、湿度、大気質、照度などを記録し、不調時と好転時の環境条件を比較するアプリです。</p>
-                <ul class="feature-list" aria-label="体調環境ログの機能">
+                <p class="project-status"><span></span>開発中 / 検証用</p>
+                <p class="project-overview">体調が変化した瞬間の気圧、気温、湿度、大気質、照度などを記録し、不調時と好転時の環境条件を比較するアプリです。</p>
+              </div>
+              <div class="project-visual">
+                <div class="app-screen-preview environment-screen" role="img" aria-label="体調環境ログの記録、ログ一覧、相関分析画面を表した静的プレビュー">
+                  <div class="screen-topline"><span>HEALTHENVLOGGER</span><i>LOG / ANALYZE</i></div>
+                  <div class="environment-heading"><strong>今日の状態を記録</strong><span>12:45</span></div>
+                  <div class="environment-actions"><span>つらいので記録</span><span>少し不調</span><span>今の状態を記録</span></div>
+                  <div class="environment-log"><b>LOG LIST</b><p><i></i>環境データを記録しました</p><p><i></i>気圧・湿度・気温を同期</p></div>
+                  <div class="environment-analysis"><b>相関ログ / 分析</b><div><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+                </div>
+                <span class="project-code">APP / 01</span>
+              </div>
+              <div class="project-details">
+                <ul class="feature-list" aria-label="体調環境ログの主な機能">
                   <li>環境データ自動取得</li><li>不調・好転・中立ログ</li><li>時系列・相関分析</li><li>JSONL／テキスト出力</li>
                 </ul>
                 <p class="project-version"><span>RELEASE RECORD</span>初版 2026年6月 / 最新 改訂版 v2（2026-07-12）</p>
-                <p class="project-status"><span></span>個人開発 / Prototype & Validation</p>
+                <div class="note-inline manual-note"><strong>記録と振り返りのために</strong><p>気象・環境データや分析結果は、日常の記録を整理し、振り返るための参考情報です。</p></div>
+                <a class="button button-primary manual-link" href="manuals/HealthEnvLogger_manual_v2.pdf" target="_blank" rel="noopener noreferrer" aria-label="体調環境ログのPDFマニュアルを見る（新しいタブで開きます）"><svg class="manual-pdf-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2.75h8l4 4v14.5H6z"/><path d="M14 2.75v4h4M8.5 15.5h7M8.5 18.5h5"/></svg><span>PDFマニュアルを見る</span><i aria-hidden="true">↗</i></a>
               </div>
             </article>
 
             <article class="project-card project-card-reverse reveal">
-              <div class="project-visual">
-                <svg class="data-diagram hp-diagram" viewBox="0 0 680 460" role="img" aria-label="一日の相対的なエネルギー推移を曲線とセグメントで表した抽象図">
-                  <defs><pattern id="hp-grid" width="34" height="34" patternUnits="userSpaceOnUse"><path d="M34 0H0V34" fill="none" stroke="#dfe3dc" stroke-width="1"/></pattern></defs>
-                  <rect width="680" height="460" fill="#f8faf6"/><rect x="62" y="62" width="556" height="316" fill="url(#hp-grid)"/>
-                  <path d="M62 188c78-88 139-83 190-16 46 60 74 38 103-28 32-72 85-66 114-2 35 76 77 90 149 41" fill="none" stroke="#2b2d2f" stroke-width="5"/>
-                  <path d="M62 188c78-88 139-83 190-16" fill="none" stroke="#86d900" stroke-width="7"/>
-                  <g transform="translate(480 264)"><path d="M0 62a72 72 0 1 1 106-9" fill="none" stroke="#dfe3dc" stroke-width="18"/><path d="M0 62a72 72 0 0 1 106-9" fill="none" stroke="#86d900" stroke-width="18"/><circle cx="53" cy="48" r="32" fill="#fff"/><text x="53" y="54" text-anchor="middle" fill="#2b2d2f" font-family="IBM Plex Sans" font-size="22" font-weight="700">REL</text></g>
-                  <g fill="#2b2d2f" font-family="IBM Plex Sans" font-size="14" font-weight="700"><text x="62" y="44">RELATIVE RESERVE / DAILY CURVE</text><text x="62" y="410">MEDICATION</text><text x="242" y="410">ACTIVITY LOAD</text></g><g fill="#86d900"><rect x="62" y="424" width="92" height="5"/><rect x="242" y="424" width="92" height="5"/></g>
-                  <g fill="#86d900" stroke="#2b2d2f" stroke-width="3"><circle cx="252" cy="172" r="8"/><circle cx="355" cy="144" r="8"/></g>
-                </svg>
-                <span class="project-code">APP / 02</span>
-              </div>
-              <div class="project-body">
+              <div class="project-intro">
                 <div class="project-title-row">
                   <span class="project-icon" aria-hidden="true">
                     <svg viewBox="0 0 48 48"><path d="M8 25a16 16 0 1 1 7 13"/><path d="M24 15v10l7 4"/><path d="M8 34v-9h9"/></svg>
                   </span>
                   <div><p>PACING & DAILY RECORD</p><h3>残コルチゾールHP</h3></div>
                 </div>
-                <p>コルチゾール補充療法中の服薬、活動負荷、体調変化を、ゲームのHPのような形で見える化する記録・ペーシング支援ツールです。</p>
-                <div class="note-inline"><strong>相対的指標について</strong><p>数値は医学的な実測値ではなく、生活管理と受診時の説明を補助する相対的指標です。</p></div>
-                <ul class="feature-list" aria-label="残コルチゾールHPの機能">
-                  <li>服薬・活動記録</li><li>予測カーブ</li><li>日別ログ</li><li>タスク別負荷設定</li>
+                <p class="project-status"><span></span>開発中 / 検証用</p>
+                <p class="project-overview">コートリルの服薬時刻と服薬量を記録し、体内に残っていると推定されるヒドロコルチゾン量を可視化するためのアプリです。服薬履歴と体調変化を照合し、日常生活における記録と振り返りを支援します。</p>
+              </div>
+              <div class="project-visual">
+                <div class="app-screen-preview cortisol-screen" role="img" aria-label="残コルチゾールHPのHPゲージ、服薬履歴、天候プリセットを表した静的プレビュー">
+                  <div class="screen-topline"><span>CORTISOL HP</span><i>PACING</i></div>
+                  <h4>残コルチゾールHP</h4>
+                  <p>生活を守るために。服薬と回復を、<br />ゆるく把握する。</p>
+                  <div class="hp-readout"><span>HP</span><strong>167</strong><small>/ 1200</small></div>
+                  <div class="hp-meter"><i></i></div>
+                  <div class="dose-list"><span>💊&nbsp; 06:30&nbsp; 10mg&nbsp; +500</span><span>💊&nbsp; 17:40&nbsp; 5mg&nbsp; +250</span></div>
+                  <div class="weather-presets"><span>☔<b>雨天</b></span><span>☁<b>曇天</b></span><span>☀<b>晴天</b></span></div>
+                </div>
+                <span class="project-code">APP / 02</span>
+              </div>
+              <div class="project-details">
+                <ul class="feature-list" aria-label="残コルチゾールHPの主な機能">
+                  <li>服薬時刻と服薬量の記録</li><li>推定残コルチゾール量の可視化</li><li>服薬履歴と体調変化の照合</li><li>日別の振り返りとログ確認</li>
                 </ul>
                 <p class="project-version"><span>RELEASE RECORD</span>初版 2026年6月 / 最新 操作マニュアル 0.1版（2026-07）</p>
-                <p class="project-status"><span></span>個人開発 / Concept & Implementation</p>
+                <div class="note-inline manual-note"><strong>相対的な目安として</strong><p>数値は医学的な実測値や治療判断を示すものではなく、生活記録と振り返りを補助する相対的な目安です。</p></div>
+                <a class="button button-primary manual-link" href="manuals/cortisol_hp_manual_v0_1.pdf" target="_blank" rel="noopener noreferrer" aria-label="残コルチゾールHPのPDFマニュアルを見る（新しいタブで開きます）"><svg class="manual-pdf-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2.75h8l4 4v14.5H6z"/><path d="M14 2.75v4h4M8.5 15.5h7M8.5 18.5h5"/></svg><span>PDFマニュアルを見る</span><i aria-hidden="true">↗</i></a>
               </div>
             </article>
           </div>
