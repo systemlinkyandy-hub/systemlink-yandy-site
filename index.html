@@ -105,21 +105,20 @@
                   <div><p>ENVIRONMENT & CONDITION</p><h3>体調環境ログ</h3></div>
                 </div>
                 <p class="project-status"><span></span>開発中 / 検証用</p>
-                <p class="project-overview">体調が変化した瞬間の気圧、気温、湿度、大気質、照度などを記録し、不調時と好転時の環境条件を比較するアプリです。</p>
+                <p class="project-overview">体調変化と気圧・湿度・照度などの環境情報を記録し、不調時と好転時の条件を比較するアプリです。</p>
               </div>
-              <div class="project-visual">
-                <div class="app-screen-preview environment-screen" role="img" aria-label="体調環境ログの記録、ログ一覧、相関分析画面を表した静的プレビュー">
-                  <div class="screen-topline"><span>HEALTHENVLOGGER</span><i>LOG / ANALYZE</i></div>
-                  <div class="environment-heading"><strong>今日の状態を記録</strong><span>12:45</span></div>
-                  <div class="environment-actions"><span>つらいので記録</span><span>少し不調</span><span>今の状態を記録</span></div>
-                  <div class="environment-log"><b>LOG LIST</b><p><i></i>環境データを記録しました</p><p><i></i>気圧・湿度・気温を同期</p></div>
-                  <div class="environment-analysis"><b>相関ログ / 分析</b><div><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+              <figure class="project-visual project-visual-real environment-visual">
+                <div class="screen-caption"><span>DEVELOPMENT PREVIEW</span><i>RECORD</i></div>
+                <div class="device-frame device-frame-light">
+                  <img src="assets/app-screens/health-env-log-screen.jpg" alt="体調環境ログの実機画面。大きな記録ボタン、状態選択、メモ入力、ログ確認導線が表示されている" width="720" height="1600" loading="lazy" />
                 </div>
+                <figcaption>実機画面の縮小表示</figcaption>
                 <span class="project-code">APP / 01</span>
-              </div>
+              </figure>
               <div class="project-details">
-                <ul class="feature-list" aria-label="体調環境ログの主な機能">
-                  <li>環境データ自動取得</li><li>不調・好転・中立ログ</li><li>時系列・相関分析</li><li>JSONL／テキスト出力</li>
+                <p class="detail-kicker">MAIN FUNCTIONS</p>
+                <ul class="feature-list feature-list-compact" aria-label="体調環境ログの主な機能">
+                  <li><span>記録</span>体調・メモと環境データ</li><li><span>状態</span>不調・好転・中立ログ</li><li><span>分析</span>時系列と相関を比較</li><li><span>出力</span>JSONL／テキスト出力</li>
                 </ul>
                 <p class="project-version"><span>RELEASE RECORD</span>初版 2026年6月 / 最新 改訂版 v2（2026-07-12）</p>
                 <div class="note-inline manual-note"><strong>記録と振り返りのために</strong><p>気象・環境データや分析結果は、日常の記録を整理し、振り返るための参考情報です。</p></div>
@@ -136,23 +135,20 @@
                   <div><p>PACING & DAILY RECORD</p><h3>残コルチゾールHP</h3></div>
                 </div>
                 <p class="project-status"><span></span>開発中 / 検証用</p>
-                <p class="project-overview">コートリルの服薬時刻と服薬量を記録し、体内に残っていると推定されるヒドロコルチゾン量を可視化するためのアプリです。服薬履歴と体調変化を照合し、日常生活における記録と振り返りを支援します。</p>
+                <p class="project-overview">服薬時刻と服薬量を記録し、推定残ヒドロコルチゾン量を可視化するアプリです。服薬履歴と体調変化の振り返りを支援します。</p>
               </div>
-              <div class="project-visual">
-                <div class="app-screen-preview cortisol-screen" role="img" aria-label="残コルチゾールHPのHPゲージ、服薬履歴、天候プリセットを表した静的プレビュー">
-                  <div class="screen-topline"><span>CORTISOL HP</span><i>PACING</i></div>
-                  <h4>残コルチゾールHP</h4>
-                  <p>生活を守るために。服薬と回復を、<br />ゆるく把握する。</p>
-                  <div class="hp-readout"><span>HP</span><strong>167</strong><small>/ 1200</small></div>
-                  <div class="hp-meter"><i></i></div>
-                  <div class="dose-list"><span>💊&nbsp; 06:30&nbsp; 10mg&nbsp; +500</span><span>💊&nbsp; 17:40&nbsp; 5mg&nbsp; +250</span></div>
-                  <div class="weather-presets"><span>☔<b>雨天</b></span><span>☁<b>曇天</b></span><span>☀<b>晴天</b></span></div>
+              <figure class="project-visual project-visual-real cortisol-visual">
+                <div class="screen-caption"><span>DEVELOPMENT PREVIEW</span><i>MAIN SCREEN</i></div>
+                <div class="device-frame device-frame-dark">
+                  <img src="assets/app-screens/cortisol-hp-main-screen.jpg" alt="残コルチゾールHPの実機画面。HP数値とゲージ、服薬履歴、天候プリセットが表示されている" width="720" height="1090" loading="lazy" />
                 </div>
+                <figcaption>実機画面の縮小表示</figcaption>
                 <span class="project-code">APP / 02</span>
-              </div>
+              </figure>
               <div class="project-details">
-                <ul class="feature-list" aria-label="残コルチゾールHPの主な機能">
-                  <li>服薬時刻と服薬量の記録</li><li>推定残コルチゾール量の可視化</li><li>服薬履歴と体調変化の照合</li><li>日別の振り返りとログ確認</li>
+                <p class="detail-kicker">MAIN FUNCTIONS</p>
+                <ul class="feature-list feature-list-compact" aria-label="残コルチゾールHPの主な機能">
+                  <li><span>服薬</span>時刻・服薬量を記録</li><li><span>残量</span>推定残ヒドロコルチゾン量</li><li><span>照合</span>服薬履歴と体調変化</li><li><span>日別</span>振り返りとログ確認</li>
                 </ul>
                 <p class="project-version"><span>RELEASE RECORD</span>初版 2026年6月 / 最新 操作マニュアル 0.1版（2026-07）</p>
                 <div class="note-inline manual-note"><strong>相対的な目安として</strong><p>数値は医学的な実測値や治療判断を示すものではなく、生活記録と振り返りを補助する相対的な目安です。</p></div>
