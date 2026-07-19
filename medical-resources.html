@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <!--
+      Design philosophy: Clinical Data Craft / medical resource library
+      既存サイトのヘッダー・フッター・配色・余白を維持し、資料カード一覧のみを新規追加するページ。
+
+      ================================================================
+      資料を追加する方法（管理画面なし・HTMLの追記のみ）
+      ================================================================
+      1. 追加するPDFを manuals/medical-resources/ に半角英数字のファイル名で置く。
+      2. そのPDFの1ページ目のサムネイル画像（軽量JPEG推奨）を
+         assets/medical-resources/thumbnails/ に置く。
+      3. 下記の該当カテゴリの <div class="resource-grid"> 内に、
+         "RESOURCE CARD TEMPLATE" とコメントされたブロックをコピーして1つ追加し、
+         タイトル・説明・ページ数・ファイルパスを書き換える。
+      4. 新しいカテゴリが必要な場合は、"RESOURCE CATEGORY TEMPLATE" ブロックをコピーし、
+         id・見出し・resources-quicknav内のリンクを追加する。
+         （今後追加予定のカテゴリの一覧は、このファイル末尾のコメントを参照）
+      既存のCSS（index.css, medical-resources.css）やJavaScriptの変更は不要。
+    -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#fbfcfa" />
+    <meta name="description" content="副腎機能不全、下垂体ホルモン、ステロイド補充療法について、一般の方にも理解しやすい形でまとめたPDF資料の一覧です。" />
+    <meta name="robots" content="index, follow" />
+    <link rel="stylesheet" href="fonts.css" />
+    <link rel="icon" href="assets/systemlink-mark.png" />
+    <link rel="stylesheet" href="index.css" />
+    <link rel="stylesheet" href="medical-resources.css" />
+    <title>医療・疾患資料 | SystemLink YandY</title>
+  </head>
+  <body class="legal-page">
+    <a class="skip-link" href="#main">本文へ移動</a>
+
+    <header class="site-header legal-header is-scrolled">
+      <div class="header-inner">
+        <a class="brand" href="index.html" aria-label="SystemLink YandY トップへ">
+          <img src="assets/systemlink-lockup-horizontal-safe.png" alt="SystemLink YandY" width="1040" height="320" />
+        </a>
+        <a class="legal-header-link" href="index.html">サイトへ戻る <span aria-hidden="true">↗</span></a>
+      </div>
+    </header>
+
+    <main class="legal-main" id="main">
+      <header class="legal-hero">
+        <div class="legal-inner">
+          <p class="section-number">RESOURCES / 01</p>
+          <h1>医療・疾患資料</h1>
+          <p class="legal-en">MEDICAL RESOURCES</p>
+          <p class="legal-updated">最終更新：2026年7月19日</p>
+        </div>
+      </header>
+
+      <div class="legal-inner legal-document">
+        <p class="legal-intro">副腎機能不全や下垂体ホルモン、治療や服薬について、一般の方にも理解しやすい形でまとめた資料です。患者本人による情報整理と制作をもとにしています。本資料は一般的な情報提供を目的としたもので、個別の診断や治療を代替するものではありません。</p>
+
+        <!-- 資料が増えた場合の絞り込み用ページ内目次。カテゴリを追加したら、ここにもリンクを追加する。 -->
+        <nav class="resources-quicknav" aria-label="資料カテゴリの目次">
+          <a href="#cat-adrenal-basics">副腎機能不全の基礎</a>
+          <a href="#cat-pituitary-hormones">下垂体のホルモン地図</a>
+          <a href="#cat-treatment">治療と服薬</a>
+        </nav>
+
+        <!-- ============== RESOURCE CATEGORY: 副腎機能不全の基礎 ============== -->
+        <section class="resource-category" id="cat-adrenal-basics" aria-labelledby="cat-adrenal-basics-title">
+          <div class="resource-category-heading">
+            <p class="section-number">01 / ADRENAL INSUFFICIENCY BASICS</p>
+            <h2 id="cat-adrenal-basics-title">副腎機能不全の基礎</h2>
+          </div>
+
+          <div class="resource-grid">
+            <!-- RESOURCE CARD TEMPLATE START -->
+            <article class="resource-card">
+              <div class="resource-thumb">
+                <img src="assets/medical-resources/thumbnails/adrenal-insufficiency-basics.jpg" alt="「副腎機能不全とは」資料の1ページ目" loading="lazy" width="640" height="904" />
+              </div>
+              <div class="resource-body">
+                <p class="resource-kicker">ADRENAL INSUFFICIENCY BASICS</p>
+                <h3 class="resource-title">副腎機能不全とは</h3>
+                <p class="resource-desc">副腎機能不全の仕組み、コルチゾールの主な役割、不足したときにみられる症状を、一般向けにまとめた資料です。</p>
+                <p class="resource-meta"><span><b>3</b>ページ</span></p>
+                <a class="button button-primary resource-cta" href="manuals/medical-resources/adrenal-insufficiency-basics.pdf" target="_blank" rel="noopener noreferrer" aria-label="副腎機能不全とは のPDFを見る（新しいタブで開きます）">
+                  <svg class="resource-pdf-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2.75h8l4 4v14.5H6z"/><path d="M14 2.75v4h4M8.5 15.5h7M8.5 18.5h5"/></svg>
+                  <span>PDFを見る</span><i aria-hidden="true">↗</i>
+                </a>
+              </div>
+            </article>
+            <!-- RESOURCE CARD TEMPLATE END -->
+          </div>
+        </section>
+
+        <!-- ============== RESOURCE CATEGORY: 下垂体のホルモン地図（シリーズ） ============== -->
+        <section class="resource-category" id="cat-pituitary-hormones" aria-labelledby="cat-pituitary-hormones-title">
+          <div class="resource-category-heading">
+            <p class="section-number">02 / PITUITARY HORMONE MAP</p>
+            <h2 id="cat-pituitary-hormones-title">下垂体のホルモン地図</h2>
+          </div>
+          <p class="resource-series-note"><strong>シリーズ形式で解説しています。</strong> 第1回から順番にご覧いただくと理解しやすい構成です。今後も回を追加予定です。</p>
+
+          <div class="resource-grid">
+            <!-- SERIES CARD 第1回 -->
+            <article class="resource-card">
+              <div class="resource-thumb">
+                <span class="resource-badge">第1回</span>
+                <img src="assets/medical-resources/thumbnails/pituitary-hormones-01-acth.jpg" alt="「ACTH」資料の1ページ目" loading="lazy" width="640" height="799" />
+              </div>
+              <div class="resource-body">
+                <p class="resource-kicker">PITUITARY HORMONE MAP / 01</p>
+                <h3 class="resource-title">ACTH</h3>
+                <p class="resource-desc">下垂体ホルモンの全体像と、ACTHからコルチゾールへつながるHPA軸について説明しています。</p>
+                <p class="resource-meta"><span><b>7</b>ページ</span></p>
+                <a class="button button-primary resource-cta" href="manuals/medical-resources/pituitary-hormones-01-acth.pdf" target="_blank" rel="noopener noreferrer" aria-label="ACTH のPDFを見る（新しいタブで開きます）">
+                  <svg class="resource-pdf-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2.75h8l4 4v14.5H6z"/><path d="M14 2.75v4h4M8.5 15.5h7M8.5 18.5h5"/></svg>
+                  <span>PDFを見る</span><i aria-hidden="true">↗</i>
+                </a>
+              </div>
+            </article>
+
+            <!-- SERIES CARD 第2回 -->
+            <article class="resource-card">
+              <div class="resource-thumb">
+                <span class="resource-badge">第2回</span>
+                <img src="assets/medical-resources/thumbnails/pituitary-hormones-02-tsh.jpg" alt="「TSH」資料の1ページ目" loading="lazy" width="640" height="1137" />
+              </div>
+              <div class="resource-body">
+                <p class="resource-kicker">PITUITARY HORMONE MAP / 02</p>
+                <h3 class="resource-title">TSH</h3>
+                <p class="resource-desc">TSHと甲状腺ホルモンの関係、検査結果を組み合わせて見る考え方を説明しています。</p>
+                <p class="resource-meta"><span><b>7</b>ページ</span></p>
+                <a class="button button-primary resource-cta" href="manuals/medical-resources/pituitary-hormones-02-tsh.pdf" target="_blank" rel="noopener noreferrer" aria-label="TSH のPDFを見る（新しいタブで開きます）">
+                  <svg class="resource-pdf-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2.75h8l4 4v14.5H6z"/><path d="M14 2.75v4h4M8.5 15.5h7M8.5 18.5h5"/></svg>
+                  <span>PDFを見る</span><i aria-hidden="true">↗</i>
+                </a>
+              </div>
+            </article>
+
+            <!-- SERIES CARD 第3回 -->
+            <article class="resource-card">
+              <div class="resource-thumb">
+                <span class="resource-badge">第3回</span>
+                <img src="assets/medical-resources/thumbnails/pituitary-hormones-03-lh-fsh.jpg" alt="「LH・FSH」資料の1ページ目" loading="lazy" width="640" height="1138" />
+              </div>
+              <div class="resource-body">
+                <p class="resource-kicker">PITUITARY HORMONE MAP / 03</p>
+                <h3 class="resource-title">LH・FSH</h3>
+                <p class="resource-desc">LH・FSHの働き、性腺ホルモンや月経、排卵、男性の性機能との関係を説明しています。</p>
+                <p class="resource-meta"><span><b>7</b>ページ</span></p>
+                <a class="button button-primary resource-cta" href="manuals/medical-resources/pituitary-hormones-03-lh-fsh.pdf" target="_blank" rel="noopener noreferrer" aria-label="LH・FSH のPDFを見る（新しいタブで開きます）">
+                  <svg class="resource-pdf-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2.75h8l4 4v14.5H6z"/><path d="M14 2.75v4h4M8.5 15.5h7M8.5 18.5h5"/></svg>
+                  <span>PDFを見る</span><i aria-hidden="true">↗</i>
+                </a>
+              </div>
+            </article>
+
+            <!-- SERIES CARD 第4回 -->
+            <article class="resource-card">
+              <div class="resource-thumb">
+                <span class="resource-badge">第4回</span>
+                <img src="assets/medical-resources/thumbnails/pituitary-hormones-04-gh.jpg" alt="「GH（成長ホルモン）」資料の1ページ目" loading="lazy" width="640" height="904" />
+              </div>
+              <div class="resource-body">
+                <p class="resource-kicker">PITUITARY HORMONE MAP / 04</p>
+                <h3 class="resource-title">GH（成長ホルモン）</h3>
+                <p class="resource-desc">GHとIGF-1の役割、子どもと成人でみられる影響、検査の見方を説明しています。</p>
+                <p class="resource-meta"><span><b>6</b>ページ</span></p>
+                <a class="button button-primary resource-cta" href="manuals/medical-resources/pituitary-hormones-04-gh.pdf" target="_blank" rel="noopener noreferrer" aria-label="GH（成長ホルモン） のPDFを見る（新しいタブで開きます）">
+                  <svg class="resource-pdf-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2.75h8l4 4v14.5H6z"/><path d="M14 2.75v4h4M8.5 15.5h7M8.5 18.5h5"/></svg>
+                  <span>PDFを見る</span><i aria-hidden="true">↗</i>
+                </a>
+              </div>
+            </article>
+
+            <!-- SERIES CARD 第5回 -->
+            <article class="resource-card">
+              <div class="resource-thumb">
+                <span class="resource-badge">第5回</span>
+                <img src="assets/medical-resources/thumbnails/pituitary-hormones-05-prolactin.jpg" alt="「プロラクチン」資料の1ページ目" loading="lazy" width="640" height="1138" />
+              </div>
+              <div class="resource-body">
+                <p class="resource-kicker">PITUITARY HORMONE MAP / 05</p>
+                <h3 class="resource-title">プロラクチン</h3>
+                <p class="resource-desc">プロラクチンの役割、高値の場合にみられる変化、ドーパミンや他の下垂体ホルモンとの関係を説明しています。</p>
+                <p class="resource-meta"><span><b>7</b>ページ</span></p>
+                <a class="button button-primary resource-cta" href="manuals/medical-resources/pituitary-hormones-05-prolactin.pdf" target="_blank" rel="noopener noreferrer" aria-label="プロラクチン のPDFを見る（新しいタブで開きます）">
+                  <svg class="resource-pdf-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2.75h8l4 4v14.5H6z"/><path d="M14 2.75v4h4M8.5 15.5h7M8.5 18.5h5"/></svg>
+                  <span>PDFを見る</span><i aria-hidden="true">↗</i>
+                </a>
+              </div>
+            </article>
+            <!-- 第6回以降を追加する場合は、上のSERIES CARDブロックをコピーして
+                 seriesLabel（第n回）・PITUITARY HORMONE MAP / n・ファイル名を書き換えて追記する -->
+          </div>
+        </section>
+
+        <!-- ============== RESOURCE CATEGORY: 治療と服薬 ============== -->
+        <section class="resource-category" id="cat-treatment" aria-labelledby="cat-treatment-title">
+          <div class="resource-category-heading">
+            <p class="section-number">03 / TREATMENT & MEDICATION</p>
+            <h2 id="cat-treatment-title">治療と服薬</h2>
+          </div>
+
+          <div class="resource-grid">
+            <article class="resource-card">
+              <div class="resource-thumb">
+                <img src="assets/medical-resources/thumbnails/steroid-replacement-and-long-term-excess.jpg" alt="「必要な薬。でも、多すぎると？」資料の1ページ目" loading="lazy" width="640" height="904" />
+              </div>
+              <div class="resource-body">
+                <p class="resource-kicker">TREATMENT & MEDICATION</p>
+                <h3 class="resource-title">必要な薬。でも、多すぎると？</h3>
+                <p class="resource-subtitle">副腎機能不全で使うステロイドと、長期的な過量の話</p>
+                <p class="resource-desc">副腎皮質ステロイドとアナボリックステロイドの違い、毎日の補充、一時的な増量、慢性的な過量の違いを整理した資料です。</p>
+                <p class="resource-meta"><span><b>8</b>ページ</span></p>
+                <a class="button button-primary resource-cta" href="manuals/medical-resources/steroid-replacement-and-long-term-excess.pdf" target="_blank" rel="noopener noreferrer" aria-label="必要な薬。でも、多すぎると？ のPDFを見る（新しいタブで開きます）">
+                  <svg class="resource-pdf-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2.75h8l4 4v14.5H6z"/><path d="M14 2.75v4h4M8.5 15.5h7M8.5 18.5h5"/></svg>
+                  <span>PDFを見る</span><i aria-hidden="true">↗</i>
+                </a>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <!--
+          ============== RESOURCE CATEGORY TEMPLATE（新カテゴリ追加用のひな形） ==============
+          <section class="resource-category" id="cat-xxxxx" aria-labelledby="cat-xxxxx-title">
+            <div class="resource-category-heading">
+              <p class="section-number">0X / ENGLISH LABEL</p>
+              <h2 id="cat-xxxxx-title">日本語カテゴリ名</h2>
+            </div>
+            <div class="resource-grid">
+              （RESOURCE CARD TEMPLATEを必要な数だけ追加）
+            </div>
+          </section>
+
+          今後追加予定のカテゴリ（現時点では資料なしのため非表示）：
+          ・ACTH単独欠損症
+          ・検査と診断
+          ・シックデイと緊急時対応
+          ・日常生活と就労
+          ・患者による記録・データ解析
+          ・研究・技術資料
+        -->
+
+        <aside class="medical-notice resources-disclaimer" aria-label="医療上の注意事項">
+          <span class="notice-mark" aria-hidden="true">!</span>
+          <div>
+            <strong>Medical Disclaimer</strong>
+            <p>本ページの資料は、疾患や治療に関する一般的な理解を助けることを目的としています。個別の診断、服薬量、治療方法については、医療機関の判断が優先されます。資料の内容は、今後の確認や更新により変更されることがあります。</p>
+          </div>
+        </aside>
+      </div>
+    </main>
+
+    <footer class="site-footer legal-footer">
+      <div class="footer-inner">
+        <a class="footer-brand" href="index.html"><img src="assets/systemlink-lockup-horizontal-safe.png" alt="SystemLink YandY" width="1040" height="320" /></a>
+        <div class="footer-nav"><a href="index.html">Home</a><a href="medical-resources.html" aria-current="page">Medical Resources</a><a href="privacy.html">Privacy Policy</a><a href="operator.html">Operator</a><a href="index.html#contact">Contact</a></div>
+        <p class="footer-disclaimer">本サイトおよび掲載ツールは、体調・環境・服薬・活動の記録と可視化を支援するためのものです。診断、治療、服薬量の決定を目的とするものではありません。</p>
+        <p class="copyright">© 2026 SystemLink YandY. Independent project by ケイ / Kei. All rights reserved.</p>
+      </div>
+    </footer>
+    <script type="module" src="main.js"></script>
+  </body>
+</html>
