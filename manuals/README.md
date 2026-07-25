@@ -4,7 +4,7 @@ SystemLink YandYの公開用PDFマニュアルは、この `manuals/` ディレ�
 
 | 対象アプリ | 配置ファイル | トップページからの相対リンク |
 |---|---|---|
-| 残コルチゾールHP | `cortisol_hp_manual_v0_1.pdf` | `manuals/cortisol_hp_manual_v0_1.pdf` |
+| 残コルチゾールHP | `cortisol_hp_manual_v0_2.pdf` | `manuals/cortisol_hp_manual_v0_2.pdf` |
 | 体調環境ログ | `HealthEnvLogger_manual_v2.pdf` | `manuals/HealthEnvLogger_manual_v2.pdf` |
 
 ## GitHub上で差し替える手順
