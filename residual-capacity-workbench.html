@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Residual Capacity Workbench（解析用デスクトップアプリ・AIなしプロトタイプ）の公開説明ページ">
+<title>Residual Capacity Workbench | SystemLink YandY</title>
+<style>
+:root{--bg:#202325;--panel:#2a2e30;--ink:#f4f5f2;--muted:#b9bfba;--lime:#86d900;--line:#4a504c}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.75}a{color:var(--lime)}header,main,footer{max-width:1080px;margin:auto;padding:28px}.brand{font-weight:800;letter-spacing:.08em}.eyebrow{color:var(--lime);font-size:.82rem;letter-spacing:.14em}h1{font-size:clamp(2.1rem,6vw,4.8rem);line-height:1.05;margin:.2em 0}h2{margin-top:2.4em;border-left:5px solid var(--lime);padding-left:.7em}.lead{font-size:1.15rem;color:var(--muted);max-width:850px}.notice,.card{border:1px solid var(--line);background:var(--panel);padding:22px;margin:18px 0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}.tag{display:inline-block;border:1px solid var(--lime);color:var(--lime);padding:.2em .6em;margin:.2em;font-size:.82rem}.button{display:inline-block;background:var(--lime);color:#172000;text-decoration:none;font-weight:800;padding:13px 18px;margin:8px 8px 8px 0}.sub{color:var(--muted)}ul{padding-left:1.3em}footer{color:var(--muted);border-top:1px solid var(--line);margin-top:44px}
+</style>
+</head>
+<body>
+<header><div class="brand">SystemLink YandY</div><p class="eyebrow">RESEARCH WORKBENCH / VISUAL PROTOTYPE / AI NOT CONNECTED</p><h1>Residual Capacity<br>Workbench</h1><p class="lead">症状、服薬、活動、環境・生体系列、身体部位ごとの所見を、時系列と部位別に並べて比較するための解析用デスクトップアプリです。現時点ではAIを接続していない視覚・操作感プロトタイプです。</p><a class="button" href="manuals/ResidualCapacityWorkbench_Public_Manual_2026-08-03.md">公開マニュアルを見る</a><a class="button" href="index.html">SystemLink YandY トップへ</a></header>
+<main>
+<div class="notice"><strong>位置づけ</strong><p>個人観測データの整理・比較・仮説検討のための研究用ワークベンチです。医療機器、診断支援、治療支援ソフトウェアではありません。因果関係や医学的原因を推定しません。</p></div>
+<h2>現在の2つのワークスペース</h2><div class="grid"><section class="card"><h3>Unified Timeline</h3><p>症状・服薬・活動・メモと、気圧・照度・温度・心拍を共通時間軸に並置します。現時点では組み込みデモデータの表示が中心です。</p></section><section class="card"><h3>Body Systems</h3><p>身体部位別の観測、姿勢、可動域、介入、症状伝播、左右差、類似エピソード、画像参照、頸椎近似モデルを扱います。保存先はローカルSQLiteです。</p></section></div>
+<h2>実装済みの主要機能</h2><div class="grid"><section class="card"><h3>Similar Episodes</h3><p>症状種別、身体部位、平均強度差、時間帯、服薬タイミング差を用いて、保存済みエピソードを単純比較します。AIや機械学習による医学的類似性判定ではありません。</p></section><section class="card"><h3>Left / Right Asymmetry</h3><p>保存済み観測から左右の記録分布、平均強度、件数、カバレッジを集計します。</p></section><section class="card"><h3>Imaging References</h3><p>DICOMフォルダや画像ファイルを参照登録し、メタデータと画像を読み取り専用で表示します。画像診断支援機能は未実装です。</p></section><section class="card"><h3>Cervical Approx Model</h3><p>AP・側面レントゲンを参照し、標準的な頸椎ブロックモデルを手動調整する近似モデルです。CT由来でもAI自動再構成でもありません。</p></section><section class="card"><h3>3D Body Map</h3><p>簡易人体モデル上で部位を選び、症状オーバーレイと観測記録を確認・追加します。</p></section><section class="card"><h3>Intervention / Propagation</h3><p>介入前後の時間窓比較と、記録された症状の出現順序を整理します。因果は主張しません。</p></section></div>
+<h2>現在できないこと</h2><ul><li>Unified Timelineへの実データ入力・CSVインポート</li><li>Filter、Lag Scan、Detect Episodes、Run Analysis、Export Evidence等の実処理</li><li>AI・外部API・ローカルLLMとの接続</li><li>画像診断支援、AI自動再構成、形状最適化</li><li>外部共有、レポート出力、API送信の実処理</li></ul>
+<h2>公開情報</h2><p><span class="tag">Prototype</span><span class="tag">AIなし</span><span class="tag">Local data</span><span class="tag">Research workbench</span></p><p class="sub">公開日: 2026-08-03<br>GitHub: <a href="https://github.com/systemlinkyandy-hub/systemlink-yandy-site">systemlinkyandy-hub/systemlink-yandy-site</a><br>連絡先: <a href="mailto:systemlink.yandy@gmail.com">systemlink.yandy@gmail.com</a></p>
+<div class="notice"><strong>スクリーンショットについて</strong><p>公開マニュアル用の7画面は匿名化・架空データ確認済みです。画像ファイルのサイト配置は、GitHub接続上のバイナリアップロード制約により別工程として残っています。本文の実装範囲と未実装点は先行公開済みです。</p></div>
+</main><footer>© 2026 SystemLink YandY. Independent project by Kei.</footer>
+</body></html>
