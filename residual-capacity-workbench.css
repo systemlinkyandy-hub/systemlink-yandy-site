@@ -1,0 +1,110 @@
+/*
+  Design philosophy: Clinical Data Craft / Residual Capacity Workbench public page
+  既存の legal-page（プライバシーポリシー・運営者情報・医療資料）の余白・罫線・
+  チャコール×Signal Limeを踏襲し、デスクトップアプリのスクリーンショット・ウォークスルー
+  のための最小限のコンポーネントのみを追加する。
+  index.css / medical-resources.css / 既存ページは変更しない。
+*/
+
+.rcw-status-row {
+  margin: 0 0 42px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.rcw-status-tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 0 12px;
+  border: 1px solid var(--rule-dark);
+  border-radius: 999px;
+  color: var(--charcoal-soft);
+  font: 700 10px/1 var(--font-tech);
+  letter-spacing: 0.08em;
+}
+.rcw-status-tag-accent {
+  border-color: var(--lime-deep);
+  color: var(--lime-deep);
+  background: rgba(134, 217, 0, 0.08);
+}
+
+.rcw-lead-grid {
+  margin: 0 0 8px;
+  display: grid;
+  gap: 14px;
+  grid-template-columns: 1fr;
+}
+.rcw-lead-card {
+  padding: 18px 20px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+}
+.rcw-lead-card h3 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+  letter-spacing: -0.01em;
+}
+.rcw-lead-card p { margin: 0; color: var(--charcoal-soft); font-size: 0.88rem; line-height: 1.8; }
+
+.rcw-list { margin: 0; padding-left: 1.2em; color: var(--charcoal-soft); font-size: 0.92rem; line-height: 1.9; }
+.rcw-list li { margin-bottom: 6px; }
+.rcw-list li:last-child { margin-bottom: 0; }
+.rcw-list-tight { padding-left: 1.1em; }
+
+.rcw-screens { margin-top: 8px; display: flex; flex-direction: column; gap: 54px; }
+.rcw-screen { scroll-margin-top: 110px; }
+.rcw-screen-head { margin-bottom: 14px; }
+.rcw-screen-kicker { margin: 0 0 4px; color: var(--lime-deep); font: 700 10px/1.3 var(--font-tech); letter-spacing: 0.1em; }
+.rcw-screen-head h3 { margin: 0; font-size: 1.2rem; letter-spacing: -0.02em; }
+
+.rcw-frame {
+  position: relative;
+  overflow: hidden;
+  border: 6px solid #151716;
+  border-radius: 16px;
+  background: #151716;
+  box-shadow: 0 18px 38px rgba(43, 45, 47, 0.18), 0 4px 10px rgba(43, 45, 47, 0.12);
+}
+.rcw-frame img { display: block; width: 100%; height: auto; }
+.rcw-frame .screen-caption { position: absolute; inset: 12px 14px auto; }
+
+.rcw-screen-note {
+  margin: 14px 0 0;
+  padding: 13px 14px;
+  border-left: 3px solid var(--lime);
+  background: var(--mist);
+  color: var(--charcoal-soft);
+  font-size: 0.8rem;
+  line-height: 1.75;
+}
+.rcw-screen-note strong { color: var(--charcoal); }
+
+.rcw-screen-desc { margin: 14px 0 0; color: var(--charcoal-soft); font-size: 0.92rem; line-height: 1.9; }
+.rcw-screen-desc + .rcw-screen-desc { margin-top: 10px; }
+
+.rcw-naming-note {
+  margin: 14px 0 0;
+  padding: 13px 14px;
+  border: 1px solid var(--rule-dark);
+  border-radius: var(--radius-sm);
+  background: var(--danger-soft);
+  color: var(--charcoal-soft);
+  font-size: 0.8rem;
+  line-height: 1.8;
+}
+.rcw-naming-note strong { display: block; margin-bottom: 4px; color: var(--charcoal); }
+
+.rcw-future { margin: 10px 0 0; color: var(--charcoal-soft); font-size: 0.78rem; letter-spacing: 0.01em; }
+.rcw-future b { color: var(--charcoal); font-weight: 700; }
+
+.rcw-cta-row { margin: 40px 0 0; display: flex; flex-wrap: wrap; gap: 12px; }
+
+@media (min-width: 640px) {
+  .rcw-lead-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 900px) {
+  .rcw-screens { gap: 70px; }
+}
