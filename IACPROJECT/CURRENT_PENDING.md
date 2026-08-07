@@ -14,6 +14,7 @@
 - Historical backlog reconciliation: INITIALIZED
 - Rule: `pending = 0` は、アークが対象原本を確認しこのインデックスへ反映した時のみ有効。
 - Gemini: GitHub Pull 不可のため、必要時はアーク作成の単一Packetへ該当セクションを同梱する。
+- Claude Code current-task entry: `IACPROJECT/CURRENT_TASK_CLAUDE_CODE.md`
 
 ---
 
@@ -42,6 +43,10 @@
 4. `pending > 0` の場合のみ、記載された固定パスの原本を読む。
 5. 処理後、結果を自分の `inbox/from_xxx/` または所定Handoffで返す。アークがインデックスを更新する。
 
+### Claude Code
+
+当日の実装タスク選択は `IACPROJECT/CURRENT_TASK_CLAUDE_CODE.md` を最優先入口とする。`CURRENT_PENDING.md` は未処理可視化用であり、当日タスク正本ではない。
+
 ### Gemini
 
 GitHub Pullを前提にしない。アークが必要時に作る単一Review/Operation Packetへ、このファイルのGemini該当セクションと必要原本を同梱する。
@@ -61,6 +66,7 @@ pending: 0
 
 ### Claude Code
 pending: 0
+current_task: `IACPROJECT/CURRENT_TASK_CLAUDE_CODE.md`
 
 ### Gemini
 pending: 0
@@ -100,5 +106,6 @@ pending: 0
 - `ACK/`: 受領証跡の原本。置き換えない。
 - `Questions queue`: 判断待ち・質問の原本。置き換えない。
 - `CURRENT_PENDING.md`: 上記を参照する可観測性インデックス。未処理0件を明示できる単一入口。
+- `CURRENT_TASK_CLAUDE_CODE.md`: Claude Codeが今やる唯一のタスクを示す当日作業入口。
 
-矛盾がある場合は原本を優先し、アークがこのインデックスを修正する。
+矛盾がある場合は原本を優先する。ただしClaude Codeの当日タスク選択は `CURRENT_TASK_CLAUDE_CODE.md` を優先し、矛盾はアークが整理する。
