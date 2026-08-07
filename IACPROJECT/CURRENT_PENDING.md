@@ -31,6 +31,17 @@
 
 ケイと欠月は通常更新を担当しない。
 
+### Wake-up ordering invariant
+
+外部AIを起床させる場合は、必ず次の順序で行う。
+
+1. 対象HandoffをREGISTEREDする。
+2. `CURRENT_PENDING.md` を更新する。
+3. 起床通知では、**対象Handoffの登録コミットではなく、`CURRENT_PENDING.md` 更新後のコミット**を指定する。
+4. 指定コミット時点で対象AIの `pending > 0` が確認できることをアークが検証してから通知する。
+
+これにより、Handoff登録とインデックス更新の間を読んで `pending = 0` と誤判定するレースを防ぐ。
+
 ---
 
 ## Wake-up minimum read procedure
