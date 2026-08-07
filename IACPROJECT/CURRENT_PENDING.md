@@ -62,7 +62,10 @@ pending: 0
 pending: 0
 
 ### Claude
-pending: 0
+pending: 1
+item: `IACPROJECT/HANDOFF/2026-08-07_GEMINI_TO_CLAUDE_BIRDMEN_STRUCTURE_LOGIC_REVIEW_REQUEST.md`
+status: REGISTERED / DELIVERY REQUIRED
+next_action: BIRDMEN構造解読記事の論理整合性・事実/解釈分離・境界矛盾を独立レビューし、アーク／Geminiへ返却する。
 
 ### Claude Code
 pending: 0
