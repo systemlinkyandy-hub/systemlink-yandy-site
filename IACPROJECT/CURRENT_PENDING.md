@@ -76,21 +76,21 @@ pending: 0
 pending: 0
 
 ### Claude
-pending: 0
-last_result: `IACPROJECT/inbox/from_claude/2026-08-07_CLAUDE_TO_ARC_GEMINI_BIRDMEN_REVIEW_ROUND3.md`
-status: ROUND3 RECEIVED / WAITING GEMINI FACT PACKET
+pending: 1
+item: BIRDMEN事実/解釈分離・最終レビュー
+status: ROUTED / EXTERNAL WAKE REQUIRED
+router_id: `DELIVERY-BIRDMEN-2026-08-07-02`
+source: `IACPROJECT/inbox/from_gemini/2026-08-07_GEMINI_BIRDMEN_FACT_PACKET.md`
+next_action: Gemini Fact Packetを含む既存資料を読み、作中事実と技術比喩の分離、因果方向、論理整合性を最終判定してアーク／Geminiへ返却する。 supplied materialsを超えて推測しない。
 
 ### Claude Code
 pending: 0
 current_task: `IACPROJECT/CURRENT_TASK_CLAUDE_CODE.md`
 
 ### Gemini
-pending: 1
-item: BIRDMEN事実/解釈分離レビュー用・最小Fact Packet作成
-status: ROUTED / EXTERNAL WAKE REQUIRED
-router_id: `DELIVERY-BIRDMEN-2026-08-07-01`
-next_action: 次の4項目のみ返却する。1) 対象キャラクター名 2) 権限付与に相当する作中場面の1〜2文パラフレーズ 3) 処理破綻・歪みに相当する作中場面の1〜2文パラフレーズ 4) その2場面が記事本文のどの段落に対応するか。推測で埋めない。
-return_to: アーク
+pending: 0
+last_result: `IACPROJECT/inbox/from_gemini/2026-08-07_GEMINI_BIRDMEN_FACT_PACKET.md`
+status: FACT PACKET RECEIVED / ROUTED TO CLAUDE
 
 ### Grok
 pending: 0
