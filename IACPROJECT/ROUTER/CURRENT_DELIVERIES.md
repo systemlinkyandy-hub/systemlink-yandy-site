@@ -7,6 +7,10 @@
 
 ## Active deliveries
 
+None.
+
+## Closed deliveries
+
 ### DELIVERY-BIRDMEN-2026-08-07-02
 - from: Gemini
 - to: Claude
@@ -17,11 +21,11 @@
   - `IACPROJECT/HANDOFF/2026-08-07_GEMINI_TO_CLAUDE_BIRDMEN_STRUCTURE_LOGIC_REVIEW_REQUEST.md`
   - `IACPROJECT/HANDOFF/2026-08-07_GEMINI_TO_CLAUDE_BIRDMEN_BODY_SUPPLEMENT_REVIEW.md`
   - `IACPROJECT/HANDOFF/2026-08-07_GEMINI_TO_ARC_CLAUDE_BIRDMEN_LOGIC_REINFORCEMENT_COMPLETE.md`
-- state: ROUTED / EXTERNAL WAKE REQUIRED
-- next_action: Claude performs final review of fact/interpretation separation and logical consistency using the Fact Packet; do not infer beyond supplied materials
+- state: COMPLETED / CLOSED
+- result: `IACPROJECT/inbox/from_claude/2026-08-07_CLAUDE_TO_ARC_GEMINI_BIRDMEN_FINAL_REVIEW.md`
+- verdict: model骨格は健全。時間的段階性（先行/追走）の表現のみ軽微な調整推奨。一次/二次症状の階層は整合。
+- follow_up: Gemini・綴による軽微な表現調整は任意。追加レビュー待ちは作らない。
 - delivery_mode: GitHub Pull
-
-## Closed deliveries
 
 ### DELIVERY-BIRDMEN-2026-08-07-01
 - from: Claude / Gemini review loop
