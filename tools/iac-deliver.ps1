@@ -44,10 +44,20 @@ $FromAliasMap = @{
 
 function Get-FromAlias {
     param([string]$FileBaseName)
-    if ($FileBaseName -match '^\d{4}-\d{2}-\d{2}(?:_\d{3,4})?_([A-Za-z][A-Za-z0-9]*)') {
-        $token = $Matches[1].ToLowerInvariant()
-        if ($FromAliasMap.ContainsKey($token)) {
-            return $FromAliasMap[$token]
+    # Claude と Claude Code のように2語のFROM名があるため、まず2語結合（例: claude+code -> claudecode）
+    # を試し、一致しなければ1語目単独で判定する。1語目だけで先に判定すると
+    # "CLAUDE_CODE_TO_ARC_..." が誤って claude（別人格）に分類されてしまう。
+    if ($FileBaseName -match '^\d{4}-\d{2}-\d{2}(?:_\d{3,4})?_([A-Za-z][A-Za-z0-9]*)(?:_([A-Za-z][A-Za-z0-9]*))?') {
+        $token1 = $Matches[1].ToLowerInvariant()
+        $token2 = $Matches[2]
+        if ($token2) {
+            $combined = $token1 + $token2.ToLowerInvariant()
+            if ($FromAliasMap.ContainsKey($combined)) {
+                return $FromAliasMap[$combined]
+            }
+        }
+        if ($FromAliasMap.ContainsKey($token1)) {
+            return $FromAliasMap[$token1]
         }
     }
     return $null
