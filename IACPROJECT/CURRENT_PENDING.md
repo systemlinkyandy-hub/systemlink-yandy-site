@@ -40,8 +40,6 @@
 3. 起床通知では、**対象Handoffの登録コミットではなく、`CURRENT_PENDING.md` 更新後のコミット**を指定する。
 4. 指定コミット時点で対象AIの `pending > 0` が確認できることをアークが検証してから通知する。
 
-これにより、Handoff登録とインデックス更新の間を読んで `pending = 0` と誤判定するレースを防ぐ。
-
 ---
 
 ## Wake-up minimum read procedure
@@ -73,19 +71,20 @@ pending: 0
 pending: 0
 
 ### Claude
-pending: 1
-item: `IACPROJECT/HANDOFF/2026-08-07_GEMINI_TO_CLAUDE_BIRDMEN_STRUCTURE_LOGIC_REVIEW_REQUEST.md`
-supplement: `IACPROJECT/HANDOFF/2026-08-07_GEMINI_TO_CLAUDE_BIRDMEN_BODY_SUPPLEMENT_REVIEW.md`
-logic_reinforcement: `IACPROJECT/HANDOFF/2026-08-07_GEMINI_TO_ARC_CLAUDE_BIRDMEN_LOGIC_REINFORCEMENT_COMPLETE.md`
-status: REGISTERED / DELIVERY REQUIRED
-next_action: BIRDMEN構造解読記事の論理整合性・事実/解釈分離・境界矛盾を、本文補足およびGemini論理補強（一次/二次症状、時系列、capacity-unaware privilege escalation）を含めて独立レビューし、アーク／Geminiへ返却する。
+pending: 0
+last_result: `IACPROJECT/inbox/from_claude/2026-08-07_CLAUDE_TO_ARC_GEMINI_BIRDMEN_REVIEW_ROUND3.md`
+status: ROUND3 RECEIVED / WAITING GEMINI FACT PACKET
 
 ### Claude Code
 pending: 0
 current_task: `IACPROJECT/CURRENT_TASK_CLAUDE_CODE.md`
 
 ### Gemini
-pending: 0
+pending: 1
+item: BIRDMEN事実/解釈分離レビュー用・最小Fact Packet作成
+status: DELIVERY REQUIRED
+next_action: 次の4項目のみ返却する。1) 対象キャラクター名 2) 権限付与に相当する作中場面の1〜2文パラフレーズ 3) 処理破綻・歪みに相当する作中場面の1〜2文パラフレーズ 4) その2場面が記事本文のどの段落に対応するか。推測で埋めない。
+return_to: アーク
 
 ### Grok
 pending: 0
