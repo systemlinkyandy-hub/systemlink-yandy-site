@@ -12,6 +12,9 @@
 
 - Index status: ACTIVE
 - Historical backlog reconciliation: INITIALIZED
+- Human bus bypass: ACTIVE
+- Delivery router: `IACPROJECT/ROUTER/CURRENT_DELIVERIES.md`
+- Delivery protocol: `IACPROJECT/OPERATING_RULES/HUMAN_BUS_BYPASS_PROTOCOL.md`
 - Rule: `pending = 0` は、アークが対象原本を確認しこのインデックスへ反映した時のみ有効。
 - Gemini: GitHub Pull 不可のため、必要時はアーク作成の単一Packetへ該当セクションを同梱する。
 - Claude Code current-task entry: `IACPROJECT/CURRENT_TASK_CLAUDE_CODE.md`
@@ -28,6 +31,7 @@
 4. Questions queue が追加・解決された時
 5. 重複・矛盾・滞留を検出／解消した時
 6. 担当境界や次担当が変わった時
+7. `CURRENT_DELIVERIES.md` の配送状態が変わった時
 
 ケイと欠月は通常更新を担当しない。
 
@@ -36,9 +40,10 @@
 外部AIを起床させる場合は、必ず次の順序で行う。
 
 1. 対象HandoffをREGISTEREDする。
-2. `CURRENT_PENDING.md` を更新する。
-3. 起床通知では、**対象Handoffの登録コミットではなく、`CURRENT_PENDING.md` 更新後のコミット**を指定する。
-4. 指定コミット時点で対象AIの `pending > 0` が確認できることをアークが検証してから通知する。
+2. `IACPROJECT/ROUTER/CURRENT_DELIVERIES.md` に配送項目をROUTEDする。
+3. `CURRENT_PENDING.md` を更新する。
+4. 起床通知では、**対象Handoffの登録コミットではなく、`CURRENT_PENDING.md` 更新後のコミット**を指定する。
+5. 指定コミット時点で対象AIの `pending > 0` が確認できることをアークが検証してから通知する。
 
 ---
 
@@ -49,8 +54,8 @@
 1. `IACPROJECT/CURRENT_PENDING.md` を1回取得する。
 2. 自分のセクションを読む。
 3. `pending = 0` なら、追加の inbox / ACK / Questions queue 一覧取得は不要。
-4. `pending > 0` の場合のみ、記載された固定パスの原本を読む。
-5. 処理後、結果を自分の `inbox/from_xxx/` または所定Handoffで返す。アークがインデックスを更新する。
+4. `pending > 0` の場合のみ `IACPROJECT/ROUTER/CURRENT_DELIVERIES.md` の自分宛項目を確認し、記載された固定パスの原本を読む。
+5. 処理後、結果を自分の `inbox/from_xxx/` または所定Handoffで返す。アークがインデックスと配送状態を更新する。
 
 ### Claude Code
 
@@ -58,7 +63,7 @@
 
 ### Gemini
 
-GitHub Pullを前提にしない。アークが必要時に作る単一Review/Operation Packetへ、このファイルのGemini該当セクションと必要原本を同梱する。
+GitHub Pullを前提にしない。アークが必要時に作る単一Review/Operation Packetへ、このファイルのGemini該当セクション、`CURRENT_DELIVERIES.md` の該当配送項目、必要原本、欲しい回答形式を1つに同梱する。ケイの操作はそのPacketを1回渡すことだけとする。
 
 ---
 
@@ -82,7 +87,8 @@ current_task: `IACPROJECT/CURRENT_TASK_CLAUDE_CODE.md`
 ### Gemini
 pending: 1
 item: BIRDMEN事実/解釈分離レビュー用・最小Fact Packet作成
-status: DELIVERY REQUIRED
+status: ROUTED / EXTERNAL WAKE REQUIRED
+router_id: `DELIVERY-BIRDMEN-2026-08-07-01`
 next_action: 次の4項目のみ返却する。1) 対象キャラクター名 2) 権限付与に相当する作中場面の1〜2文パラフレーズ 3) 処理破綻・歪みに相当する作中場面の1〜2文パラフレーズ 4) その2場面が記事本文のどの段落に対応するか。推測で埋めない。
 return_to: アーク
 
@@ -120,7 +126,9 @@ pending: 0
 - `inbox/`: 原本受信箱。置き換えない。
 - `ACK/`: 受領証跡の原本。置き換えない。
 - `Questions queue`: 判断待ち・質問の原本。置き換えない。
-- `CURRENT_PENDING.md`: 上記を参照する可観測性インデックス。未処理0件を明示できる単一入口。
+- `CURRENT_PENDING.md`: 未処理可視化の単一入口。
+- `IACPROJECT/ROUTER/CURRENT_DELIVERIES.md`: AI間配送状態の固定ルータ索引。
+- `IACPROJECT/OPERATING_RULES/HUMAN_BUS_BYPASS_PROTOCOL.md`: ケイを通信バスにしないための配送規約。
 - `CURRENT_TASK_CLAUDE_CODE.md`: Claude Codeが今やる唯一のタスクを示す当日作業入口。
 
-矛盾がある場合は原本を優先する。ただしClaude Codeの当日タスク選択は `CURRENT_TASK_CLAUDE_CODE.md` を優先し、矛盾はアークが整理する。
+矛盾がある場合は原本を優先する。ただしClaude Codeの当日タスク選択は `CURRENT_TASK_CLAUDE_CODE.md` を優先し、配送状態の矛盾はアークが整理する。
