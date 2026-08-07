@@ -42,7 +42,7 @@
 1. 対象HandoffをREGISTEREDする。
 2. `IACPROJECT/ROUTER/CURRENT_DELIVERIES.md` に配送項目をROUTEDする。
 3. `CURRENT_PENDING.md` を更新する。
-4. 起床通知では、**対象Handoffの登録コミットではなく、`CURRENT_PENDING.md` 更新後のコミット**を指定する。
+4. 起床通知では、対象Handoffの登録コミットではなく、`CURRENT_PENDING.md` 更新後のコミットを指定する。
 5. 指定コミット時点で対象AIの `pending > 0` が確認できることをアークが検証してから通知する。
 
 ---
@@ -76,12 +76,9 @@ pending: 0
 pending: 0
 
 ### Claude
-pending: 1
-item: BIRDMEN事実/解釈分離・最終レビュー
-status: ROUTED / EXTERNAL WAKE REQUIRED
-router_id: `DELIVERY-BIRDMEN-2026-08-07-02`
-source: `IACPROJECT/inbox/from_gemini/2026-08-07_GEMINI_BIRDMEN_FACT_PACKET.md`
-next_action: Gemini Fact Packetを含む既存資料を読み、作中事実と技術比喩の分離、因果方向、論理整合性を最終判定してアーク／Geminiへ返却する。 supplied materialsを超えて推測しない。
+pending: 0
+last_result: `IACPROJECT/inbox/from_claude/2026-08-07_CLAUDE_TO_ARC_GEMINI_BIRDMEN_FINAL_REVIEW.md`
+status: BIRDMEN FINAL REVIEW COMPLETED
 
 ### Claude Code
 pending: 0
@@ -90,13 +87,14 @@ current_task: `IACPROJECT/CURRENT_TASK_CLAUDE_CODE.md`
 ### Gemini
 pending: 0
 last_result: `IACPROJECT/inbox/from_gemini/2026-08-07_GEMINI_BIRDMEN_FACT_PACKET.md`
-status: FACT PACKET RECEIVED / ROUTED TO CLAUDE
+status: BIRDMEN REVIEW LOOP CLOSED / OPTIONAL WORDING ADJUSTMENT ONLY
 
 ### Grok
 pending: 0
 
 ### 綴
 pending: 0
+note: BIRDMEN軽微な表現調整は任意。未処理として数えない。
 
 ### 上原さん
 pending: 0
