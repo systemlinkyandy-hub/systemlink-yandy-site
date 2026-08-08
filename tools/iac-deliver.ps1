@@ -11,57 +11,15 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
+# メンバー名の判定・接続ログ関数は共有ライブラリに集約（iac-handoff-log.ps1 と共通）
+. (Join-Path $PSScriptRoot 'iac-handoff-lib.ps1')
+
 $RepoRoot      = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 $StagingRoot   = Join-Path $RepoRoot "staging"
 $DeliveredRoot = Join-Path $StagingRoot "delivered"
 $InboxRoot     = Join-Path $RepoRoot "IACPROJECT\inbox"
 $UnsortedDir   = Join-Path $InboxRoot "unsorted"
-
-# ファイル名の "YYYY-MM-DD_<FROM>_..." から FROM を判定するための既知エイリアス。
-# 未知のトークンは inbox\unsorted へ倒す（止まらないことを優先）。
-$FromAliasMap = @{
-    'claude'      = 'claude'
-    'claudecode'  = 'claude_code'
-    'claude_code' = 'claude_code'
-    'gemini'      = 'gemini'
-    'grok'        = 'grok'
-    'snake'       = 'grok'
-    'chatgpt'     = 'chatgpt'
-    'arc'         = 'arc'
-    'tsuzuri'     = 'tsuzuri'
-    'uehara'      = 'uehara'
-    'yue'         = 'yue'
-    'tanaka'      = 'tanaka'
-    'kaduki'      = 'ketsugetsu'
-    'ketsugetsu'  = 'ketsugetsu'
-    'ketsuzuki'   = 'ketsugetsu'
-    'yuimaru'     = 'yuimaru'
-    'rimi'        = 'rimi'
-    'masaru'      = 'masaru'
-    'matome'      = 'matome'
-    'kakezuki'    = 'kakezuki'
-}
-
-function Get-FromAlias {
-    param([string]$FileBaseName)
-    # Claude と Claude Code のように2語のFROM名があるため、まず2語結合（例: claude+code -> claudecode）
-    # を試し、一致しなければ1語目単独で判定する。1語目だけで先に判定すると
-    # "CLAUDE_CODE_TO_ARC_..." が誤って claude（別人格）に分類されてしまう。
-    if ($FileBaseName -match '^\d{4}-\d{2}-\d{2}(?:_\d{3,4})?_([A-Za-z][A-Za-z0-9]*)(?:_([A-Za-z][A-Za-z0-9]*))?') {
-        $token1 = $Matches[1].ToLowerInvariant()
-        $token2 = $Matches[2]
-        if ($token2) {
-            $combined = $token1 + $token2.ToLowerInvariant()
-            if ($FromAliasMap.ContainsKey($combined)) {
-                return $FromAliasMap[$combined]
-            }
-        }
-        if ($FromAliasMap.ContainsKey($token1)) {
-            return $FromAliasMap[$token1]
-        }
-    }
-    return $null
-}
+$LogPath       = Get-HandoffLogPath -RepoRoot $RepoRoot
 
 function Invoke-Git {
     param([string[]]$GitArgs)
@@ -98,8 +56,9 @@ if (-not $targets -or $targets.Count -eq 0) {
 $results = @()
 
 foreach ($file in $targets) {
-    $base  = [IO.Path]::GetFileNameWithoutExtension($file.Name)
-    $alias = Get-FromAlias -FileBaseName $base
+    $base   = [IO.Path]::GetFileNameWithoutExtension($file.Name)
+    $parsed = Get-HandoffFromTo -FileBaseName $base
+    $alias  = $parsed.From
 
     if ($alias) {
         $destDir = Join-Path $InboxRoot "from_$alias"
@@ -122,9 +81,13 @@ foreach ($file in $targets) {
             throw "git commit failed: $($commitResult.Output)"
         }
 
+        $hashResult = Invoke-Git @('rev-parse', '--short', 'HEAD')
+        $fileCommit = if ($hashResult.ExitCode -eq 0) { $hashResult.Output.Trim() } else { '-' }
+
         $results += [PSCustomObject]@{
             File = $file.Name; Original = $file.FullName; Dest = $relPath
             Alias = $alias; Success = $true; Error = $null
+            Commit = $fileCommit; ToMember = $parsed.To; Task = $parsed.Task; FileDate = $parsed.Date
         }
     } catch {
         $results += [PSCustomObject]@{
@@ -139,6 +102,30 @@ $failed    = @($results | Where-Object { -not $_.Success })
 
 $pushOk = $false
 $commitHash = $null
+
+# 接続ログ（HANDOFF_CONNECTION_LOG.md）へ自動追記する。
+# FROMが判定できた配送のみ記録する（unsorted行きは接続として数えない）。
+# 同じhandoff_pathは追記されないため、push失敗→再実行でも重複しない。
+if ($succeeded.Count -gt 0) {
+    $logChanged = $false
+    foreach ($r in ($succeeded | Where-Object { $_.Alias -ne 'unsorted' })) {
+        $toValue   = if ($r.ToMember) { $r.ToMember } else { '-' }
+        $dateValue = if ($r.FileDate) { $r.FileDate } else { Get-Date -Format 'yyyy-MM-dd' }
+        $added = Add-HandoffLogEntry -LogPath $LogPath -Date $dateValue -From $r.Alias -To $toValue `
+            -Task $r.Task -HandoffPath $r.Dest -Commit $r.Commit
+        if ($added) { $logChanged = $true }
+    }
+    if ($logChanged) {
+        $logRel = $LogPath.Substring($RepoRoot.Length).TrimStart('\')
+        $addLog = Invoke-Git @('add', $logRel)
+        if ($addLog.ExitCode -eq 0) {
+            $commitLog = Invoke-Git @('commit', '-m', 'log: record handoff connections', '--', $logRel)
+            if ($commitLog.ExitCode -ne 0 -and $commitLog.Output -notmatch 'nothing to commit') {
+                Write-Host "警告: 接続ログのcommitに失敗しました（配送自体は継続します）: $($commitLog.Output)"
+            }
+        }
+    }
+}
 
 if ($succeeded.Count -gt 0) {
     $pushResult = Invoke-Git @('push')
