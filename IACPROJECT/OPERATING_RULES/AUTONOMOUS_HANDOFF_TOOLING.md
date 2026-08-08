@@ -60,7 +60,7 @@ Handoff：IACPROJECT/...（パス）
 次に起床するスレッド：〇〇（不要なら「起床不要」）
 ```
 
-正式呼称：黒瀬（Claude）／二葉（Gemini）／スネーク（Grok）。ChatGPT Codexは呼称未確定のため「ChatGPT Codex」または「Codex」とし、仮名を付けない。
+正式呼称：黒瀬（Claude）／二葉（Gemini）／スネーク（Grok）／佐藤（Claude Code、2026-08-08 ケイ承認）。ChatGPT Codexは呼称未確定のため「ChatGPT Codex」または「Codex」とし、仮名を付けない。
 
 ## 5. 確定していないこと（本実装では触れていない）
 

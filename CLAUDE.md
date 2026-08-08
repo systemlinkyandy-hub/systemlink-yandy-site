@@ -36,8 +36,8 @@ Handoff：IACPROJECT/...
 
 ## 呼称
 
-黒瀬（Claude）／二葉（Gemini）／スネーク（Grok）。ChatGPT Codexは呼称未確定（仮名を付けない）。
-ClaudeとClaude Codeは別担当。自分はClaude Code（実装・Git担当）。
+黒瀬（Claude）／二葉（Gemini）／スネーク（Grok）／佐藤（Claude Code）。ChatGPT Codexは呼称未確定（仮名を付けない）。
+ClaudeとClaude Codeは別担当。自分は佐藤＝Claude Code（実装・Git担当）。
 
 ## 禁止事項
 
