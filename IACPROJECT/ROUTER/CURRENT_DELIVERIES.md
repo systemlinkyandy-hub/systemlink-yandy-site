@@ -7,6 +7,16 @@
 
 ## Active deliveries
 
+### DELIVERY-MANGA-STRUCTURE-2026-08-08-01
+- from: 双葉（Gemini）
+- to: 黒瀬（Claude）
+- topic: 作品解読シリーズ第2弾「天小 / いせおじ / クレイモア」記事化
+- source: `IACPROJECT/HANDOFF/2026-08-08_FUTABA_TO_KUROSE_MANGA_STRUCTURE_SERIES_02_REQUEST.md`
+- state: REGISTERED / ROUTED / EXTERNAL WAKE REQUIRED
+- next_action: 黒瀬は3作品の解読軸を保持し、あらすじ化せず、工学・制御論と深層心理学が交差する長文記事として構成する。
+- delivery_mode: GitHub Pull
+- note: 元Handoff本文は会話内保持。GitHub安全制約によりsourceは運用要約。
+
 ### DELIVERY-MEDICAL-PROTOCOL-2026-08-07-01
 - from: 上原さん / アーク
 - to: ALL MEMBERS
