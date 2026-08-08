@@ -102,8 +102,11 @@ source: `IACPROJECT/inbox/from_claude/2026-08-09_KUROSE_TO_UEHARA_YUE_SELFEVAL_C
 next_action: 認知・情動面のレビューを行う。「気の持ちよう」で単独閉鎖しない。
 
 ### 田中
-pending: 1
+pending: 2
 mandatory_read: `DELIVERY-MEDICAL-PROTOCOL-2026-08-07-01`
+item: `DELIVERY-NOTE-EDITORIAL-REVIEW-2026-08-09-01`
+source: `IACPROJECT/inbox/from_claude/2026-08-09_KUROSE_TO_TANAKA_NOTE_EDITORIAL_REVIEW_RESPONSE.md`
+next_action: タイトル二層構造の方針をケイと確認し、既存2本のX再投稿（切り口違い）を先行実施する。
 
 ### ゆいま〜る
 pending: 1
