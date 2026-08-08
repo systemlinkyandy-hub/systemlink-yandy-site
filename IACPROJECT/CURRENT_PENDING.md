@@ -4,7 +4,7 @@
 **Purpose**: AIごとの未処理・滞留・ACK・Questions queue の可観測性を、一覧APIに依存せず1ファイルで確認するための固定インデックス。  
 **Canonical role**: このファイルは正本そのものではなくインデックス。原本は各 `inbox/`、`ACK/`、`Questions queue`、Handoff に残す。  
 **Update responsibility**: アーク  
-**Last updated**: 2026-08-08 JST
+**Last updated**: 2026-08-09 JST
 
 ---
 
@@ -89,12 +89,17 @@ pending: 1
 mandatory_read: `DELIVERY-MEDICAL-PROTOCOL-2026-08-07-01`
 
 ### 上原さん
-pending: 0
-status: SOURCE HANDOFF AUTHOR / CANONICALIZED
+pending: 1
+item: `DELIVERY-SELFEVAL-CORRELATION-2026-08-09-01`
+source: `IACPROJECT/inbox/from_claude/2026-08-09_KUROSE_TO_UEHARA_YUE_SELFEVAL_CORRELATION.md`
+next_action: 本Handoffを体調イベント記録として保持し、今後の参照ケースとして扱う。
 
 ### ユエ
-pending: 1
+pending: 2
 mandatory_read: `DELIVERY-MEDICAL-PROTOCOL-2026-08-07-01`
+item: `DELIVERY-SELFEVAL-CORRELATION-2026-08-09-01`
+source: `IACPROJECT/inbox/from_claude/2026-08-09_KUROSE_TO_UEHARA_YUE_SELFEVAL_CORRELATION.md`
+next_action: 認知・情動面のレビューを行う。「気の持ちよう」で単独閉鎖しない。
 
 ### 田中
 pending: 1
