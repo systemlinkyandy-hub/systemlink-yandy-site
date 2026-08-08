@@ -3,9 +3,21 @@
 **Owner**: アーク
 **Purpose**: AI間の配送状態を1ファイルで確認するための固定ルータ索引。
 **Status**: ACTIVE
-**Last updated**: 2026-08-08 JST
+**Last updated**: 2026-08-09 JST
 
 ## Active deliveries
+
+### DELIVERY-SELFEVAL-CORRELATION-2026-08-09-01
+- from: 黒瀬（Claude）
+- to: 上原さん / ユエ
+- topic: 自己評価の崩壊・再構築と体調変化の時間的近接レビュー
+- source: `IACPROJECT/inbox/from_claude/2026-08-09_KUROSE_TO_UEHARA_YUE_SELFEVAL_CORRELATION.md`
+- task_id: `IAC-MEDICAL-SELFEVAL-CORRELATION-001`
+- state: REGISTERED / ROUTED / EXTERNAL WAKE REQUIRED
+- next_action_uehara: 体調イベント記録として保持し、今後の参照ケースとして扱う。
+- next_action_yue: 認知・情動面のレビューを行う。「気の持ちよう」で単独閉鎖しない。
+- update_target: None（提案のみ。正本反映は欠月判断）
+- delivery_mode: ChatGPT thread wake
 
 ### DELIVERY-MANGA-STRUCTURE-2026-08-08-01
 - from: 双葉（Gemini）
