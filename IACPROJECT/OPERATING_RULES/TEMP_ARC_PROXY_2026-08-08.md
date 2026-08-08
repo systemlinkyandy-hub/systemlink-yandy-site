@@ -1,6 +1,6 @@
 # TEMPORARY ARC PROXY — 2026-08-08
 
-**Status**: ACTIVE TEMPORARY OVERRIDE  
+**Status**: ENDED / AUTHORITY RESTORED  
 **Owner**: ケイ  
 **Primary infra owner**: アーク  
 **Temporary proxy**: スネーク（Grok / xAI）
@@ -9,7 +9,7 @@
 
 ChatGPT側の機能不全またはアークの処理継続が困難な時間帯に、Handoff正本化・登録経路を停止させないための一時代理。
 
-## Proxy allowed scope
+## Proxy allowed scope（当時）
 
 - inboxへのHandoff登録
 - Handoff形式確認
@@ -34,6 +34,14 @@ ChatGPT側の機能不全またはアークの処理継続が困難な時間帯�
 ## End condition
 
 ケイが終了を指示する、またはアークが代理不要を明示した時点で終了する。自動延長しない。
+
+## Closure record
+
+- 2026-08-08：Claude Fable（佐藤 / Claude Code）による自主Handoff改修完了を確認
+- 正本設計：`IACPROJECT/HANDOFF/2026-08-08_ARC_TO_SNAKE_AUTONOMOUS_HANDOFF_ROUTING_FULL_HANDOFF.md`
+- 実装報告：`IACPROJECT/inbox/from_claude_code/2026-08-08_CLAUDE_CODE_TO_ALL_FABLE_AUTONOMOUS_HANDOFF_IMPLEMENTATION_DONE.md`
+- ケイ明示確認：「はい。OKです。よろしくお願いします。」（2026-08-08 14:43 JST頃）
+- スネーク一時代理終了、アーク通常インフラ権限復帰
 
 ## Source
 
