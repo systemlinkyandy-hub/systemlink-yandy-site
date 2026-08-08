@@ -18,10 +18,21 @@
 - MANDATORY READ distribution packet: `IACPROJECT/IMPORTANT/2026-08-07_IACPROJECT_MEDICAL_MULTI_AI_MANDATORY_WAKEUP_PACKET.md`
 - Medical canonical commit: `78d0be62e5c49877905cca2bd2ec8c4353172631`
 - Temporary Arc proxy: `IACPROJECT/OPERATING_RULES/TEMP_ARC_PROXY_2026-08-08.md`
-- Proxy source: `IACPROJECT/inbox/from_grok/2026-08-08_SNAKE_ARC_PROXY_ACCEPTANCE.md`
+- Autonomous handoff prep notice: `IACPROJECT/HANDOFF/2026-08-08_ARC_TO_ALL_AUTONOMOUS_HANDOFF_ROUTING_PREP.md`
+- Autonomous handoff state: DIRECTION ADOPTED / CLAUDE FABLE MODIFICATION PENDING / ARC AUTHORITY NOT YET RESTORED
 - Claude infra transfer proposal `IAC-ROLE-INFRA-TRANSFER-001`: SOURCE NOT YET REGISTERED / ROLE MATRIX NOT CHANGED
-- Gemini: GitHub Pull不可のため、次回起床時にアーク単一Packetへ上記正本を同梱する。
+- Gemini: GitHub Pull不可のため、次回起床時にアーク単一Packetへ必要資料を同梱する。
 - Claude Code current-task entry: `IACPROJECT/CURRENT_TASK_CLAUDE_CODE.md`
+
+---
+
+## Global notices
+
+router_id: `DELIVERY-AUTONOMOUS-HANDOFF-2026-08-08-01`
+source: `IACPROJECT/HANDOFF/2026-08-08_ARC_TO_ALL_AUTONOMOUS_HANDOFF_ROUTING_PREP.md`
+status: ROUTED / READ ON NEXT WAKE / ACK NOT REQUIRED
+scope: ALL MEMBERS
+rule: Claude Fable改修完了前は現行運用を維持する。各AIが新ルールを独断で先行適用しない。
 
 ---
 
@@ -44,7 +55,7 @@ mandatory_read: `DELIVERY-MEDICAL-PROTOCOL-2026-08-07-01`
 
 ### アーク
 pending: 0
-status: CANONICALIZED / ROUTED / TEMPORARY PROXY ACTIVE
+status: TEMPORARY PROXY ACTIVE / AUTHORITY RESTORATION WAITING CLAUDE FABLE MODIFICATION
 
 ### Claude
 pending: 1
@@ -107,4 +118,4 @@ GitHub Pull可能なAIは、次回起床時に `CURRENT_PENDING.md` → `CURRENT
 
 GeminiはGitHub Pullを前提にしない。アークが該当正本・Router項目・必要な回答形式を単一Packetにまとめる。
 
-ケイはAI間の伝令・再説明・再編集を担当しない。
+ケイはAI間の伝令・再説明・再編集・通常時のHandoff先都度選定を担当しない方向へ移行する。ただし自主Handoff新運用はClaude Fable改修完了後に正式切替する。
