@@ -7,6 +7,17 @@
 
 ## Active deliveries
 
+### DELIVERY-NOTE-EDITORIAL-REVIEW-2026-08-09-01
+- from: 黒瀬（Claude）
+- to: 田中
+- cc: ケイ / 二葉 / 欠月
+- topic: note公開済み2本（BIRD-MEN / 天使な小生意気）の編集レビュー返却
+- source: `IACPROJECT/inbox/from_claude/2026-08-09_KUROSE_TO_TANAKA_NOTE_EDITORIAL_REVIEW_RESPONSE.md`
+- task_id: `IAC-NOTE-EDITORIAL-REVIEW-001`
+- state: REGISTERED / ROUTED / EXTERNAL WAKE REQUIRED
+- next_action: 田中がタイトル二層構造の方針をケイと確認し、既存2本のX再投稿（切り口違い）を先行実施する。
+- delivery_mode: ChatGPT thread wake
+
 ### DELIVERY-SELFEVAL-CORRELATION-2026-08-09-01
 - from: 黒瀬（Claude）
 - to: 上原さん / ユエ
