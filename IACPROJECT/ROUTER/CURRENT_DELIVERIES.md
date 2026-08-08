@@ -43,6 +43,16 @@
 
 ## Closed deliveries
 
+### DELIVERY-IAC-INFRA-BUS-001
+- from: Claude Code
+- to: アーク
+- topic: `iac-deliver` 自動配送コマンド実装完了（ケイの手作業中継の排除）
+- source: 外部Handoff（Task ID: IAC-INFRA-BUS-001。リポジトリ外・ケイより直接指示）
+- state: COMPLETED / CLOSED
+- result: `IACPROJECT/inbox/from_claude_code/2026-08-08_CLAUDE_CODE_TO_ARC_IAC_INFRA_BUS_001_DONE.md`
+- artifact: `tools/iac-deliver.ps1`, `tools/iac-deliver.cmd`, `tools/README_GMAIL_TO_STAGING.md`
+- note: 処理2（Router/CURRENT_PENDING自動更新）は縮小フォールバック規定により未実装。本エントリはアークによる手動登録の代理としてClaude Codeがケイの指示で追記した。
+
 ### DELIVERY-BIRDMEN-2026-08-07-02
 - from: Gemini
 - to: Claude
