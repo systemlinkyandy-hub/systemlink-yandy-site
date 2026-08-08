@@ -7,16 +7,6 @@
 
 ## Active deliveries
 
-### DELIVERY-AUTONOMOUS-HANDOFF-2026-08-08-01
-- from: アーク
-- to: ALL MEMBERS
-- topic: 自主Handoffルーティング導入前通知
-- source: `IACPROJECT/HANDOFF/2026-08-08_ARC_TO_ALL_AUTONOMOUS_HANDOFF_ROUTING_PREP.md`
-- state: ROUTED / READ ON NEXT WAKE
-- next_action: 事前通知として読む。Claude Fable改修完了までは現行運用を維持し、新ルールを勝手に拡張しない。
-- delivery_mode: GitHub Pull capable members = Router; Gemini = single Packet when needed
-- ack_required: no
-
 ### DELIVERY-MEDICAL-PROTOCOL-2026-08-07-01
 - from: 上原さん / アーク
 - to: ALL MEMBERS
@@ -36,12 +26,22 @@
 - temporary_proxy: スネーク（Grok / xAI）
 - source: `IACPROJECT/inbox/from_grok/2026-08-08_SNAKE_ARC_PROXY_ACCEPTANCE.md`
 - rule: `IACPROJECT/OPERATING_RULES/TEMP_ARC_PROXY_2026-08-08.md`
-- state: ACTIVE TEMPORARY OVERRIDE
+- state: **ENDED / AUTHORITY RESTORED**
+- closure: ケイ確認（2026-08-08）により終了。佐藤（Claude Code）による自主Handoff実装完了後。
 - scope: Handoff登録 / 形式確認 / ACK可視化 / 最低限のRouter・CURRENT_PENDING更新
 - exclusions: 研究判断 / 医学判断 / 仕様確定 / 採否 / 正本内容改変 / 構造独断変更
-- restoration_condition: Claude Fableによる自主Handoff選択・Handoff回数記録・終了ログ出力の改修完了後に、ケイが復帰を確定する。
 
 ## Closed deliveries
+
+### DELIVERY-AUTONOMOUS-HANDOFF-2026-08-08-01
+- from: アーク
+- to: ALL MEMBERS
+- topic: 自主Handoffルーティング導入前通知 → 実装完了
+- source: `IACPROJECT/HANDOFF/2026-08-08_ARC_TO_ALL_AUTONOMOUS_HANDOFF_ROUTING_PREP.md`
+- design: `IACPROJECT/HANDOFF/2026-08-08_ARC_TO_SNAKE_AUTONOMOUS_HANDOFF_ROUTING_FULL_HANDOFF.md`
+- implementation: `IACPROJECT/inbox/from_claude_code/2026-08-08_CLAUDE_CODE_TO_ALL_FABLE_AUTONOMOUS_HANDOFF_IMPLEMENTATION_DONE.md`
+- state: COMPLETED / CLOSED
+- result: 佐藤実装完了・ケイ確認・アーク権限復帰
 
 ### DELIVERY-IAC-INFRA-BUS-001
 - from: Claude Code
