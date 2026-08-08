@@ -36,7 +36,7 @@
 ### 記録の限界（了解事項）
 
 - ファイル名からの推定であり、**複数宛Handoffは先頭の宛先1名のみ**記録される（数え漏れ許容。回数は補助指標であり、止まらないことを優先）
-- `kakezuki` / `ketsugetsu` / `ketsuzuki` / `kaduki` / `ketsuki` は同一人物（欠月）のromanizationゆれとみなして `ketsugetsu` に統合した。誤りであればケイが指摘して分離に戻す
+- `kakezuki` / `ketsugetsu` / `ketsuzuki` / `kaduki` / `ketsuki` は同一人物（欠月）の表記ゆれとして **`kakezuki`（かけづき）** に統合する（2026-08-08 ケイ確認済み）
 - `snake→grok`、`kurose→claude`、`futaba→gemini`、`ark→arc` も同様に統合済み
 
 ## 3. 自主Handoff先の選択手順（全AI共通・Claude Codeは恒久指示化済み)

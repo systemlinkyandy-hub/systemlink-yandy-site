@@ -7,7 +7,7 @@ Handoff接続ログの共有関数ライブラリ。iac-deliver.ps1 / iac-handof
 
 # メンバー名トークンの正規化マップ。
 # 表記ゆれ（ARK/ARC、SNAKE/GROK、KUROSE/CLAUDE 等）をひとつの正規トークンへ寄せる。
-# kakezuki / ketsugetsu はどちらも欠月の romanization とみなして統合する（誤りならケイが指摘して戻す）。
+# 欠月の正規トークンは kakezuki（かけづき。2026-08-08 ケイ確認済み）。ketsugetsu等は表記ゆれとして統合する。
 $Script:MemberAliasMap = @{
     'claude'      = 'claude'
     'kurose'      = 'claude'
@@ -25,11 +25,11 @@ $Script:MemberAliasMap = @{
     'uehara'      = 'uehara'
     'yue'         = 'yue'
     'tanaka'      = 'tanaka'
-    'kaduki'      = 'ketsugetsu'
-    'ketsugetsu'  = 'ketsugetsu'
-    'ketsuzuki'   = 'ketsugetsu'
-    'ketsuki'     = 'ketsugetsu'
-    'kakezuki'    = 'ketsugetsu'
+    'kakezuki'    = 'kakezuki'
+    'kaduki'      = 'kakezuki'
+    'ketsugetsu'  = 'kakezuki'
+    'ketsuzuki'   = 'kakezuki'
+    'ketsuki'     = 'kakezuki'
     'yuimaru'     = 'yuimaru'
     'rimi'        = 'rimi'
     'masaru'      = 'masaru'
@@ -47,7 +47,7 @@ $Script:MemberDisplayMap = @{
     'grok'        = 'スネーク（Grok）'
     'chatgpt'     = 'ChatGPT Codex'
     'arc'         = 'アーク'
-    'ketsugetsu'  = '欠月'
+    'kakezuki'    = '欠月'
     'tsuzuri'     = '綴'
     'uehara'      = '上原さん'
     'yue'         = 'ユエ'
