@@ -14,10 +14,12 @@
       <input id="search" type="search" placeholder="キーワード、薬剤、疾患、出典…">
       <select id="type"><option value="">全分類</option><option value="literature">文献で確認</option><option value="interpretation">著者の解釈</option><option value="experience">個人体験</option><option value="unresolved">未検証・適用注意</option></select>
       <select id="status"><option value="">全照合状態</option><option value="verified">原典照合済み</option><option value="partial">部分照合</option><option value="unverified">未照合</option></select>
+      <select id="etiology"><option value="">全病型・病因</option><option value="primary">原発性</option><option value="central">中枢性／ACTH分泌低下症</option><option value="drug-induced">薬剤性</option><option value="idiopathic">原因不明</option><option value="mixed">混合集団</option><option value="personal">個人事例</option></select>
     </section>
     <section class="legend"><span class="literature">青：文献</span><span class="interpretation">黄：解釈</span><span class="experience">緑：個人体験</span><span class="unresolved">灰：未検証・注意</span></section>
     <p id="count" aria-live="polite"></p>
     <section id="cards" class="cards"></section>
+    <p class="audit-link"><a href="pages/audit.html">出典・照合ログを開く →</a></p>
   </main>
   <footer>調査日: 2026-08-09 · 対象本文の大量転載はせず、要約とリンクで構成 · DIRECT / NO ARC</footer>
   <script src="assets/app.js"></script>
