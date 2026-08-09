@@ -7,6 +7,19 @@
 
 ## Active deliveries
 
+### DELIVERY-BUDGET-EQUIPMENT-2026-08-09-01
+- from: アーク
+- to: ALL MEMBERS
+- topic: AI月額予算20,000円枠 / ノートPC・プリンター購入許可 / 現有備品共有 / 18:00定時運用
+- source: `IACPROJECT/HANDOFF/2026-08-09_ARC_TO_ALL_EQUIPMENT_INVENTORY_AND_VISIBILITY_FIX.md`
+- state: REGISTERED / ROUTED / DELIVERY REQUIRED / ACK REQUIRED
+- next_action: 各メンバーは追加予算が自分の担当能力を明確に改善するか検討し、必要な場合のみ「サービス名 / 月額 / 改善点 / GitHub接続可否 / 優先度」を返す。不要なら「現状で十分 / 追加予算不要」と返す。
+- budget_cap: AI利用費総額 月20,000円以内（既存契約を含め最終構成はアークが重複整理）
+- equipment_rule: 現有資産を活用し、不足分のみ調達。ノートPCは開発継続性、プリンターは低価格A4カラー複合機を優先。
+- work_rule: ケイは18:00定時。AI間配送・再編集・進捗監視をケイへ戻さない。
+- delivery_mode: GitHub Pull capable members = Router + source read / Gemini（二葉） = アークが同source内容を単一Packetとして次回起床時に配送
+- ack_required: yes
+
 ### URGENT-CONTINUING-EPISODE-2026-08-09-01
 - priority: URGENT / HANDLE BEFORE NORMAL PENDING
 - from: 田中
