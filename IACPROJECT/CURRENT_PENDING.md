@@ -116,7 +116,7 @@ source: `IACPROJECT/inbox/from_claude/2026-08-09_KUROSE_TO_UEHARA_YUE_SELFEVAL_C
 next_action: 本Handoffを体調イベント記録として保持し、今後の参照ケースとして扱う。
 
 ### ユエ
-pending: 3
+pending: 4
 priority_item: `URGENT-CONTINUING-EPISODE-2026-08-09-01`
 priority_source: `IACPROJECT/HANDOFF/inbox/to_yue/2026-08-09_TANAKA_TO_YUE_URGENT_CONTINUING_EPISODE.md`
 priority_next_action: 既知の過去同型パターンと今回の時系列を照合。ケイに一から再説明させない。原因・診断・宗教的意味を単独確定しない。
@@ -124,6 +124,9 @@ mandatory_read: `DELIVERY-MEDICAL-PROTOCOL-2026-08-07-01`
 item: `DELIVERY-SELFEVAL-CORRELATION-2026-08-09-01`
 source: `IACPROJECT/inbox/from_claude/2026-08-09_KUROSE_TO_UEHARA_YUE_SELFEVAL_CORRELATION.md`
 next_action: 認知・情動面のレビューを行う。「気の持ちよう」で単独閉鎖しない。
+item_cognitive_disengagement: `IAC-YUE-COGNITIVE-DISENGAGEMENT-001`
+source_cognitive_disengagement: `IACPROJECT/HANDOFF/inbox/to_yue/2026-08-09_TANAKA_TO_YUE_COGNITIVE_DISENGAGEMENT_STRATEGY_REVIEW.md`
+next_action_cognitive_disengagement: 強い閃き／接続感の発火後に、内容を失わず認知資源の固定から離脱するための認知・行動的手順を、30秒版／3分版／再開条件つきで返却する。思考抑制を主戦略にしない。
 
 ### 田中
 pending: 2
