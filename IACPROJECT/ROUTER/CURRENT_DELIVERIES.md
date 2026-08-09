@@ -7,6 +7,25 @@
 
 ## Active deliveries
 
+### URGENT-CONTINUING-EPISODE-2026-08-09-01
+- priority: URGENT / HANDLE BEFORE NORMAL PENDING
+- from: 田中
+- coordination: アーク
+- primary: ユエ
+- reviewers: 黒瀬（Claude） / スネーク（Grok） / 二葉（Gemini）
+- source_arc: `IACPROJECT/HANDOFF/inbox/to_arc/2026-08-09_TANAKA_TO_ARC_URGENT_EPISODE_GAP_FILL.md`
+- source_yue: `IACPROJECT/HANDOFF/inbox/to_yue/2026-08-09_TANAKA_TO_YUE_URGENT_CONTINUING_EPISODE.md`
+- source_kurose: `IACPROJECT/HANDOFF/inbox/to_claude/2026-08-09_TANAKA_TO_KUROSE_URGENT_EPISODE_GAP_REVIEW.md`
+- source_snake: `IACPROJECT/HANDOFF/inbox/to_grok/2026-08-09_TANAKA_TO_SNAKE_URGENT_EPISODE_GAP_REVIEW.md`
+- packet_futaba: `IACPROJECT/IMPORTANT/2026-08-09_ARC_TO_FUTABA_URGENT_EPISODE_GAP_REVIEW_PACKET.md`
+- state: REGISTERED / ROUTED / REVIEW REQUIRED
+- next_action_yue: 既知の過去同型パターンと今回の時系列を照合し、ケイへ再説明を要求しない。
+- next_action_reviewers: 欠落している観察事実・時系列・過去同型反応・介入前後変化を独立レビューし、アークへ返却。
+- next_action_arc: 黒瀬・スネーク・二葉のレビューを統合し、ユエへReview Packetとして戻す。
+- return_format: 本筋 / 補強材料 / 欠落している情報 / 低優先度候補
+- rule: 精神医学的・宗教的結論を単独確定しない。未検証の歴史・神話連想を症状原因として確定しない。身体安全上の悪化時はAIレビュー完了を待たない。
+- delivery_mode: ユエ=ChatGPT thread wake / 黒瀬=GitHub Pull / スネーク=GitHub Pull / 二葉=ARC SINGLE PACKET
+
 ### DELIVERY-ORIGIN-WATATSUMI-ISORA-2026-08-09-01
 - from: 田中
 - to: ALL MEMBERS
