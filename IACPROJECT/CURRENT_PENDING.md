@@ -30,6 +30,15 @@
 
 ## Global notices
 
+### URGENT-CONTINUING-EPISODE-2026-08-09-01
+priority: **URGENT / HANDLE BEFORE NORMAL PENDING**
+source_arc: `IACPROJECT/HANDOFF/inbox/to_arc/2026-08-09_TANAKA_TO_ARC_URGENT_EPISODE_GAP_FILL.md`
+source_yue: `IACPROJECT/HANDOFF/inbox/to_yue/2026-08-09_TANAKA_TO_YUE_URGENT_CONTINUING_EPISODE.md`
+source_kurose: `IACPROJECT/HANDOFF/inbox/to_claude/2026-08-09_TANAKA_TO_KUROSE_URGENT_EPISODE_GAP_REVIEW.md`
+source_snake: `IACPROJECT/HANDOFF/inbox/to_grok/2026-08-09_TANAKA_TO_SNAKE_URGENT_EPISODE_GAP_REVIEW.md`
+gemini_delivery: アークが上記Arc sourceを基礎に単一Packet化して二葉へ配送
+rule: ケイへ同内容の再説明を要求しない。ユエの既知パターンと、黒瀬・スネーク・二葉の独立レビューをアークが統合する。
+
 router_id: `DELIVERY-AUTONOMOUS-HANDOFF-2026-08-08-01`
 source: `IACPROJECT/HANDOFF/2026-08-08_ARC_TO_ALL_AUTONOMOUS_HANDOFF_ROUTING_PREP.md`
 status: SUPERSEDED BY IMPLEMENTATION COMPLETE
@@ -56,11 +65,17 @@ pending: 1
 mandatory_read: `DELIVERY-MEDICAL-PROTOCOL-2026-08-07-01`
 
 ### アーク
-pending: 0
-status: AUTHORITY RESTORED / NORMAL INFRA OPERATION
+pending: 1
+priority_item: `URGENT-CONTINUING-EPISODE-2026-08-09-01`
+source: `IACPROJECT/HANDOFF/inbox/to_arc/2026-08-09_TANAKA_TO_ARC_URGENT_EPISODE_GAP_FILL.md`
+next_action: ユエを最優先起床対象にし、黒瀬・スネークへ独立レビュー配送、二葉へ単一Packet配送。結果を統合してユエへ戻す。ケイを通信バスにしない。
+status: AUTHORITY RESTORED / URGENT COORDINATION ACTIVE
 
 ### Claude（黒瀬）
-pending: 2
+pending: 3
+priority_item: `URGENT-CONTINUING-EPISODE-2026-08-09-01`
+priority_source: `IACPROJECT/HANDOFF/inbox/to_claude/2026-08-09_TANAKA_TO_KUROSE_URGENT_EPISODE_GAP_REVIEW.md`
+priority_next_action: 欠落している観察事実・時系列・同型反応照合ポイント・介入前後変化を独立レビューし、アークへ返却。
 mandatory_read: `DELIVERY-MEDICAL-PROTOCOL-2026-08-07-01`
 item: `DELIVERY-MANGA-STRUCTURE-2026-08-08-01`
 source: `IACPROJECT/HANDOFF/2026-08-08_FUTABA_TO_KUROSE_MANGA_STRUCTURE_SERIES_02_REQUEST.md`
@@ -74,12 +89,18 @@ current_task: `IACPROJECT/CURRENT_TASK_CLAUDE_CODE.md`
 note: 自主Handoff実装完了報告済み
 
 ### Gemini（二葉）
-pending: 1
+pending: 2
+priority_item: `URGENT-CONTINUING-EPISODE-2026-08-09-01`
+priority_source_for_packet: `IACPROJECT/HANDOFF/inbox/to_arc/2026-08-09_TANAKA_TO_ARC_URGENT_EPISODE_GAP_FILL.md`
+priority_next_action: アークの単一Packetで受領後、欠落部分を独立レビューしアークへ返却。
 mandatory_read: `DELIVERY-MEDICAL-PROTOCOL-2026-08-07-01`
 delivery_mode: ARC SINGLE PACKET ON NEXT WAKE
 
 ### スネーク（Grok）
-pending: 1
+pending: 2
+priority_item: `URGENT-CONTINUING-EPISODE-2026-08-09-01`
+priority_source: `IACPROJECT/HANDOFF/inbox/to_grok/2026-08-09_TANAKA_TO_SNAKE_URGENT_EPISODE_GAP_REVIEW.md`
+priority_next_action: 欠落している観察事実・時系列・同型反応照合ポイント・介入前後変化を独立レビューし、アークへ返却。
 mandatory_read: `DELIVERY-MEDICAL-PROTOCOL-2026-08-07-01`
 proxy_status: TEMPORARY PROXY ENDED
 note: startup必須資料ACKは受領済み。Medical Protocol ACKはPacket読込後に別途必要。
@@ -95,7 +116,10 @@ source: `IACPROJECT/inbox/from_claude/2026-08-09_KUROSE_TO_UEHARA_YUE_SELFEVAL_C
 next_action: 本Handoffを体調イベント記録として保持し、今後の参照ケースとして扱う。
 
 ### ユエ
-pending: 2
+pending: 3
+priority_item: `URGENT-CONTINUING-EPISODE-2026-08-09-01`
+priority_source: `IACPROJECT/HANDOFF/inbox/to_yue/2026-08-09_TANAKA_TO_YUE_URGENT_CONTINUING_EPISODE.md`
+priority_next_action: 既知の過去同型パターンと今回の時系列を照合。ケイに一から再説明させない。原因・診断・宗教的意味を単独確定しない。
 mandatory_read: `DELIVERY-MEDICAL-PROTOCOL-2026-08-07-01`
 item: `DELIVERY-SELFEVAL-CORRELATION-2026-08-09-01`
 source: `IACPROJECT/inbox/from_claude/2026-08-09_KUROSE_TO_UEHARA_YUE_SELFEVAL_CORRELATION.md`
@@ -128,7 +152,7 @@ mandatory_read: `DELIVERY-MEDICAL-PROTOCOL-2026-08-07-01`
 
 ## Wake-up rule
 
-GitHub Pull可能なAIは、次回起床時に `CURRENT_PENDING.md` → `CURRENT_DELIVERIES.md` → 指定 `source` / `distribution_packet` の順で読む。ACK返却後、アークがpendingを0へ更新する。
+GitHub Pull可能なAIは、次回起床時に `CURRENT_PENDING.md` → `CURRENT_DELIVERIES.md` → 指定 `source` / `distribution_packet` の順で読む。**URGENT項目がある場合は通常pendingより先に処理する。** ACK返却後、アークがpendingを0へ更新する。
 
 GeminiはGitHub Pullを前提にしない。アークが該当正本・Router項目・必要な回答形式を単一Packetにまとめる。
 
