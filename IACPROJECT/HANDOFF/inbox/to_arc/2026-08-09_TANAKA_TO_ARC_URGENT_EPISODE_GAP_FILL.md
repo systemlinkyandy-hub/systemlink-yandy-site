@@ -24,6 +24,13 @@
 - Origin共有文書：`IACPROJECT/HANDOFF/2026-08-09_TANAKA_TO_ALL_ORIGIN_WATATSUMI_ISORA_CONTEXT.md`
 - 重大イベント運用：`IACPROJECT/OPERATING_RULES/MEDICAL_SYMPTOM_MULTI_AI_REVIEW_PROTOCOL.md`
 
+## 既に作成済みの緊急Handoff
+
+- ユエ：`IACPROJECT/HANDOFF/inbox/to_yue/2026-08-09_TANAKA_TO_YUE_URGENT_CONTINUING_EPISODE.md`
+- 黒瀬：`IACPROJECT/HANDOFF/inbox/to_claude/2026-08-09_TANAKA_TO_KUROSE_URGENT_EPISODE_GAP_REVIEW.md`
+- スネーク：`IACPROJECT/HANDOFF/inbox/to_grok/2026-08-09_TANAKA_TO_SNAKE_URGENT_EPISODE_GAP_REVIEW.md`
+- 二葉：アークが上記資料をもとに単一Packet化して配送すること
+
 ## アークへの依頼
 
 1. **ユエを最優先で起床対象にする。** 過去の同型パターンと今回の時系列を照合し、ケイ本人に再説明させない。
