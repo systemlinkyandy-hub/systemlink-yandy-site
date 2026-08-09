@@ -36,12 +36,13 @@ Handoff：IACPROJECT/...
 
 ## 呼称
 
-黒瀬（Claude）／二葉（Gemini）／スネーク（Grok）／佐藤（Claude Code）。ChatGPT Codexは呼称未確定（仮名を付けない）。
+黒瀬（Claude）／二葉（Gemini）／スネーク（Grok）／とーか（ChatGPT Codex）／佐藤（Claude Code）。
+とーかは『東京喰種』霧嶋董香由来（2026-08-09 ケイ確定。共通起床文の表記と一致）。
 ClaudeとClaude Codeは別担当。自分は佐藤＝Claude Code（実装・Git担当）。
 
 ## 禁止事項
 
 - `CURRENT_PENDING.md` の per-member 状態を独断更新しない（一時代理スネークまたはアークの担当）
-- アーク権限復帰・閾値アルゴリズム・Codex呼称を独断確定しない
+- アーク権限復帰・閾値アルゴリズムを独断確定しない
 - 実データ（health_log等）をGitHubへコミットしない
 - ケイをAI間の伝令役にしない
