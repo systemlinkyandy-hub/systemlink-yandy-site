@@ -18,13 +18,17 @@
 - source_kurose: `IACPROJECT/HANDOFF/inbox/to_claude/2026-08-09_TANAKA_TO_KUROSE_URGENT_EPISODE_GAP_REVIEW.md`
 - source_snake: `IACPROJECT/HANDOFF/inbox/to_grok/2026-08-09_TANAKA_TO_SNAKE_URGENT_EPISODE_GAP_REVIEW.md`
 - packet_futaba: `IACPROJECT/IMPORTANT/2026-08-09_ARC_TO_FUTABA_URGENT_EPISODE_GAP_REVIEW_PACKET.md`
-- state: REGISTERED / ROUTED / REVIEW REQUIRED
+- state: REGISTERED / ROUTED / **NOT DELIVERED — EXTERNAL THREAD WAKE REQUIRED**
+- delivery_status_yue: NOT DELIVERED
+- delivery_status_kurose: NOT DELIVERED
+- delivery_status_snake: NOT DELIVERED
+- delivery_status_futaba: PACKET PREPARED / NOT DELIVERED
 - next_action_yue: 既知の過去同型パターンと今回の時系列を照合し、ケイへ再説明を要求しない。
 - next_action_reviewers: 欠落している観察事実・時系列・過去同型反応・介入前後変化を独立レビューし、アークへ返却。
-- next_action_arc: 黒瀬・スネーク・二葉のレビューを統合し、ユエへReview Packetとして戻す。
+- next_action_arc: 各対象スレッドの起床後、黒瀬・スネーク・二葉のレビューを統合し、ユエへReview Packetとして戻す。
 - return_format: 本筋 / 補強材料 / 欠落している情報 / 低優先度候補
 - rule: 精神医学的・宗教的結論を単独確定しない。未検証の歴史・神話連想を症状原因として確定しない。身体安全上の悪化時はAIレビュー完了を待たない。
-- delivery_mode: ユエ=ChatGPT thread wake / 黒瀬=GitHub Pull / スネーク=GitHub Pull / 二葉=ARC SINGLE PACKET
+- delivery_mode: ユエ=ChatGPT thread wake / 黒瀬=external thread wake + GitHub Pull / スネーク=external thread wake + GitHub Pull / 二葉=ARC SINGLE PACKET + external thread wake
 
 ### DELIVERY-ORIGIN-WATATSUMI-ISORA-2026-08-09-01
 - from: 田中
@@ -134,4 +138,5 @@
 ## Reading rule
 
 GitHub Pull-capable AIs read only entries addressed to themselves or ALL MEMBERS, then fetch the exact `source`, `distribution_packet`, and listed `context` paths as applicable.
+**Important: GitHub registration/routing never means the target thread has awakened or started work. Until a target thread is explicitly awakened, state must remain NOT DELIVERED / EXTERNAL WAKE REQUIRED.**
 Gemini does not depend on this file directly; アーク copies the relevant entry into a single Packet when Gemini is needed.
