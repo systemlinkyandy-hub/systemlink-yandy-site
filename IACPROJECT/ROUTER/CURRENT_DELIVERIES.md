@@ -13,7 +13,7 @@
 - topic: ケイのOrigin context（ワタツミ／イソラ／海人文化／旧ブランド／初期X／ハンドメイド／過去の人間関係）共有
 - source: `IACPROJECT/HANDOFF/2026-08-09_TANAKA_TO_ALL_ORIGIN_WATATSUMI_ISORA_CONTEXT.md`
 - state: REGISTERED / MANDATORY CONTEXT READ / DELIVERY REQUIRED
-- next_action: 各メンバーは次回起床時にOrigin contextとして読み、事実・記憶・仮説・連想を分離したまま保持する。現時点で歴史検証・医学的解釈・ブランド改名・実装は不要。
+- next_action: 各メンバーは次回起床時にOrigin contextとして読み、事実・記憶・仮説・連想を分離したまま保持する。現時点で歴史検証・ブランド改名・実装は不要。
 - delivery_mode: GitHub Pull capable members = Router; Gemini = アークが単一Packet化して次回起床時に配送
 - ack_required: no
 
