@@ -44,9 +44,3 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           pwsh -NoProfile -File tools/iac-gemini-bridge.ps1 run -Push
-          Write-Host "--- DEBUG: git status after bridge ---"
-          git status
-          Write-Host "--- DEBUG: git log -3 ---"
-          git log --oneline -3
-          Write-Host "--- DEBUG: remote -v ---"
-          git remote -v

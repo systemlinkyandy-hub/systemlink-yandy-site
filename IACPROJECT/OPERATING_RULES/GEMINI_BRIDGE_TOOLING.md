@@ -116,9 +116,25 @@ iac-gemini-bridge status           状態・コストログの要約（読み取
 
 **リポジトリ権限**：workflow内で`git push`するため、リポジトリ設定 Settings → Actions → General → Workflow permissions を「Read and write permissions」にする必要がある（既定は読み取りのみで、その場合push権限エラーになる）。
 
-**未確認（実行環境がないため）**：
-- 実際にActions上でjobが動くか（windows-latest runnerでのpwsh実行、checkout、push）は未検証。selftestはロジックのみでActions実行自体は検証していない。
-- Secrets登録・Workflow permissions変更はケイのGitHub操作待ち。両方揃うまでworkflowは`push`されても`FAILED_NO_API_KEY`または権限エラーで失敗する。
+**実疎通テスト結果（2026-08-11、ケイのSecrets登録・Workflow permissions変更後に実施）**：
+
+1. **1回目のテストで不具合発見**：`run 31436080377`はAPI呼び出し・HELD判定まで正常動作（応答に宛先ヘッダが
+   ないためテストHandoff通り`HELD_NO_TO_HEADER`として保留）したが、`git commit`は成功したのに`git push`が
+   実行された形跡がなく、リポジトリに全く反映されなかった。
+2. **原因**：`iac-console.ps1`が同名の`[switch]$Push`paramを持っており、`iac-gemini-bridge.ps1`が
+   `iac-console.ps1`をdot-sourceする際に呼び出し元の`$Push`がデフォルト（`$false`）で上書きされていた
+   （§13冒頭で追加した`-Push`スイッチ自体が、既存の`$Command`衝突バグ―§本文中に既出―と全く同型の
+   バグを新たに持ち込んでいた）。デバッグ用に`git status`をworkflow内に一時追加して`Your branch is
+   ahead of 'origin/main' by 1 commit` / `nothing to commit`というログで確定した。
+3. **修正**：dot-source前に`$Script:BridgePush = [bool]$Push`へ退避し、`Publish-GeminiBridgeFile`内の
+   参照もそちらに変更（`tools/iac-gemini-bridge.ps1`）。selftest 33/33成功、既存ロジックへの影響なし。
+4. **再検証**：修正後`run 31440029489`で、テストHandoff3件すべてが正しく検出・処理され、`GEMINI_BRIDGE_
+   STATE.md`・`GEMINI_BRIDGE_COST_LOG.md`の更新がActionsから自動commit・pushされることを確認
+   （commit `1ee78b4`）。コスト計上：3回×3円=9円（月次上限2000円のうち、cap_status: OK）。
+
+これによりActions化は実疎通確認まで完了した。テスト用に投入した3件のHandoff
+（`IACPROJECT/inbox/from_arc/2026-08-11_ARC_TO_GEMINI_BRIDGE_ACTIONS_{LIVE_TEST,DEBUG_TEST,FIX_VERIFY}.md`）
+はTask IDに`TEST`と明記済み・実害なし（断定語なし、宛先ヘッダなしで保留のみ）。
 
 ## 11. selftest結果
 
