@@ -24,9 +24,11 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
-# iac-console.ps1 は同名の $Command param を持つため、dot-source時に呼び出し元の
-# $Command を空文字で上書きしてしまう。dot-source前に退避し、switch文では退避値を使う。
+# iac-console.ps1 は同名の $Command / $Push param を持つため、dot-source時に呼び出し元の
+# $Command / $Push を上書きしてしまう（$Pushはswitchのデフォルト$falseで上書きされる）。
+# dot-source前に退避し、以降は退避値を使う。
 $Script:BridgeCommand = $Command
+$Script:BridgePush    = [bool]$Push
 
 . (Join-Path $PSScriptRoot 'iac-handoff-lib.ps1')
 . (Join-Path $PSScriptRoot 'iac-gemini-bridge-lib.ps1')
@@ -72,7 +74,7 @@ function Publish-GeminiBridgeFile {
         Write-GeminiBridgeLog "git commit失敗: $($commit.Output)"
         return
     }
-    if (-not $Push) { return }
+    if (-not $Script:BridgePush) { return }
 
     $pushResult = Invoke-GeminiBridgeGit @('push')
     if ($pushResult.ExitCode -ne 0) {
