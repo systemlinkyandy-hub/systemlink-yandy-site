@@ -40,6 +40,32 @@ Handoff：IACPROJECT/...
 とーかは『東京喰種』霧嶋董香由来（2026-08-09 ケイ確定。共通起床文の表記と一致）。
 ClaudeとClaude Codeは別担当。自分は佐藤＝Claude Code（実装・Git担当）。
 
+## PowerShellツール実装時の注意（dot-source変数名衝突）
+
+`tools/*.ps1`には、他スクリプトからdot-source（`. (Join-Path $PSScriptRoot 'xxx.ps1')`）される
+ファイルと、独立実行される（`param()`+メイン処理を持つ）ファイルが混在している。dot-source先の
+`param()`は、呼び出し元スクリプトの同名変数を**呼び出し元の値ごと上書きする**（PowerShellの
+dot-sourceはスクリプトスコープを共有するため）。
+
+**既知の実例**（2026-08-10 `$Command`衝突、2026-08-11 `$Push`衝突。いずれも
+`iac-gemini-bridge.ps1`が`iac-console.ps1`をdot-sourceする際に発生。詳細：
+`IACPROJECT/OPERATING_RULES/GEMINI_BRIDGE_TOOLING.md` §13）：
+
+- `iac-console.ps1`のparam名：`Command, Member, To, SinceDays, Push`
+- `iac-gemini-bridge.ps1`のparam名：`Command, WhatIf, NoGit, Push`
+
+**新しいparamを追加する時、または新しいdot-source関係を作る時は必ず**：
+1. dot-source先ファイルの`param()`ブロックを確認し、追加しようとしている変数名と重複していないか
+   チェックする
+2. 重複する場合、dot-source**前**に`$Script:<接頭辞><Name> = $<Name>`へ退避し、以降のロジックは
+   すべて退避値を参照する（呼び出し元の`param()`自体は変更しない。既存の`$Script:BridgeCommand` /
+   `$Script:BridgePush`が実装例）
+3. selftestファイル（`*-selftest.ps1`）を新規に書く／dot-source対象を増やす場合も同様に確認する
+
+根治策（関数定義のみの`-lib.ps1`と`param()`+メイン処理を分離し、他スクリプトは`-lib.ps1`のみ
+dot-sourceする構造への分離）は今は着手しない。チャットUI実装が一段落してから独立タスクとして扱う
+（2026-08-11 ケイ判断）。
+
 ## 禁止事項
 
 - `CURRENT_PENDING.md` の per-member 状態を独断更新しない（一時代理スネークまたはアークの担当）
