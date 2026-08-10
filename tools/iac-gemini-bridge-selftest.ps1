@@ -182,6 +182,24 @@ try {
     $eNoHeader = Get-BridgeEntry -Pattern 'EXISTINGNOHEADER' -Direction 'from_gemini'
     Assert-True ($eNoHeader.Status -eq 'HELD_NO_TO_HEADER') '既存ファイル検証: 宛先ヘッダなしはHELD_NO_TO_HEADER'
 
+    Write-Host '--- 13. 複数宛先Handoff → HELD_MULTI_RECIPIENT・自動送信しない（2026-08-10追加） ---'
+    Remove-Item (Join-Path $TempFromArc '*') -Force
+    $multiPath = Join-Path $TempFromArc '2026-02-09_ARC_TO_GEMINI_TEST_MULTIRECIPIENT.md'
+    @(
+        '# HANDOFF', '', '## From / To', '',
+        'From: アーク', 'To: 黒瀬（Claude）, 二葉（Gemini）, スネーク（Grok）', '',
+        '## Task ID', '', 'TEST-MULTIRECIPIENT-001', '',
+        '## Required next action', '', 'selftest request', ''
+    ) | Set-Content -LiteralPath $multiPath -Encoding UTF8
+    $multiCallCount = 0
+    Invoke-GeminiBridgeRun -ApiCallOverride { param($prompt, $attempt) $Script:multiCallCount++; "To: アーク`n応答" }
+    $e8 = Get-BridgeEntry -Pattern 'TEST_MULTIRECIPIENT'
+    Assert-True ($e8.Status -eq 'HELD_MULTI_RECIPIENT') '複数宛先: state=HELD_MULTI_RECIPIENT'
+    Assert-True ($multiCallCount -eq 0) '複数宛先: APIを呼ばない'
+    Assert-True (@(Get-ChildItem $TempFromGemini -Filter '*MULTIRECIPIENT*').Count -eq 0) '複数宛先: inboxへは送信しない'
+    $multiStagingFiles = @(Get-ChildItem (Join-Path $TempRoot 'staging\gemini_held') -Filter '*multi_recipient*' -ErrorAction SilentlyContinue)
+    Assert-True ($multiStagingFiles.Count -eq 1) '複数宛先: stagingへ生保存'
+
     Write-Host ''
     Write-Host "selftest: 成功 $pass / 失敗 $fail"
 } finally {

@@ -31,8 +31,10 @@ $Script:GeminiBridgeMaxRoundTrips = 3
 $Script:GeminiBridgeMaxRetries = 3
 $Script:GeminiBridgeRetryBackoffSeconds = @(2, 4, 8)
 
-# 既定モデル（環境変数 GEMINI_BRIDGE_MODEL で上書き可能）
-$Script:GeminiBridgeDefaultModel = 'gemini-2.0-flash'
+# 既定モデル（環境変数 GEMINI_BRIDGE_MODEL で上書き可能）。
+# 2026-08-10 ケイ確定：-latestエイリアスは本番非推奨のため固定IDを使う。世代交代は
+# `GET https://generativelanguage.googleapis.com/v1beta/models` を都度確認して手動更新する運用。
+$Script:GeminiBridgeDefaultModel = 'gemini-3.6-flash'
 
 # ロック有効期限（分）。これを超えたロックは停止プロセスの残骸とみなし奪取する。
 $Script:GeminiBridgeLockStaleMinutes = 15
@@ -127,7 +129,7 @@ function Initialize-GeminiBridgeState {
         '**Writer**: iac-gemini-bridge のみ（one writer原則。他ツール・手動編集は禁止）',
         '**Purpose**: Handoff⇄Gemini API連携の冪等性・ACK/PENDING状態を管理する。',
         '**Note**: `IACPROJECT/CURRENT_PENDING.md`（アーク管理）とは別系統。混同しないこと。',
-        '**Status values**: PENDING / SENT / ACK / HELD_NO_TO_HEADER / HELD_DECISION_LANGUAGE / HELD_ROUNDTRIP_LIMIT / HELD_COST_CAP / FAILED_NO_API_KEY / FAILED_RETRY_EXHAUSTED',
+        '**Status values**: PENDING / SENT / ACK / HELD_NO_TO_HEADER / HELD_DECISION_LANGUAGE / HELD_ROUNDTRIP_LIMIT / HELD_COST_CAP / HELD_MULTI_RECIPIENT / FAILED_NO_API_KEY / FAILED_RETRY_EXHAUSTED',
         '',
         '| handoff_id | thread_key | direction | status | attempts | round_trip | last_updated | note |',
         '|---|---|---|---|---|---|---|---|'
@@ -211,7 +213,7 @@ function Test-GeminiBridgeAlreadyTerminal {
     param([string]$StatePath, [string]$HandoffId)
     $entry = Get-GeminiBridgeStateEntry -StatePath $StatePath -HandoffId $HandoffId
     if (-not $entry) { return $false }
-    $terminal = @('SENT', 'ACK', 'HELD_NO_TO_HEADER', 'HELD_DECISION_LANGUAGE', 'HELD_ROUNDTRIP_LIMIT', 'FAILED_RETRY_EXHAUSTED', 'FAILED_NO_API_KEY')
+    $terminal = @('SENT', 'ACK', 'HELD_NO_TO_HEADER', 'HELD_DECISION_LANGUAGE', 'HELD_ROUNDTRIP_LIMIT', 'HELD_MULTI_RECIPIENT', 'FAILED_RETRY_EXHAUSTED', 'FAILED_NO_API_KEY')
     return $terminal -contains $entry.Status
 }
 
@@ -322,6 +324,21 @@ function Test-GeminiResponseHasDecisionLanguage {
     param([string]$ResponseText)
     if (-not $ResponseText) { return $false }
     return ($ResponseText -match $Script:GeminiBridgeDecisionPattern)
+}
+
+function Test-GeminiBridgeSingleRecipient {
+    <#
+    自動送信は宛先ヘッダが二葉単独の場合に限る（2026-08-10 ケイ確定・必須要件）。
+    複数宛先を含むHandoff（一斉通知等）は誤ってGemini APIへ送られる事故を防ぐため対象外とする。
+    ToRaw（本文Toヘッダ）が解決できる場合はそれを正とし、解決トークンがgemini 1件のみかで判定する。
+    ToRawが無い場合のみ、ファイル名/フォルダ由来のToToken（単一メンバー前提の命名規約）で判定する。
+    #>
+    param($Doc)
+    if ($Doc.ToRaw) {
+        $tokens = @(Get-ToFieldTokens -ToRaw $Doc.ToRaw)
+        return ($tokens.Count -eq 1 -and $tokens[0] -eq 'gemini')
+    }
+    return ($Doc.ToToken -eq 'gemini')
 }
 
 # ---------------------------------------------------------------------------

@@ -100,6 +100,20 @@ function Invoke-GeminiBridgeRun {
             }
 
             $threadKey = Get-GeminiBridgeThreadKey -Doc $doc
+
+            if (-not (Test-GeminiBridgeSingleRecipient -Doc $doc)) {
+                if (-not $WhatIf) {
+                    $heldPath = Save-GeminiBridgeHeldResponse -RepoRoot $Script:RepoRoot -SourceRel $rel `
+                        -ResponseText ([System.IO.File]::ReadAllText($f.FullName)) -Reason 'multi_recipient'
+                    Set-GeminiBridgeStateEntry -StatePath $Script:StatePath -HandoffId $rel -ThreadKey $threadKey `
+                        -Direction 'to_gemini' -Status 'HELD_MULTI_RECIPIENT' -Attempts 0 -RoundTrip 0 `
+                        -Note "複数宛先検出。自動送信対象外。staging保存: $heldPath"
+                }
+                Write-GeminiBridgeLog "HELD（複数宛先検出。自動送信対象外）: $rel"
+                $held++
+                continue
+            }
+
             $roundTrip = (Get-GeminiBridgeRoundTripCount -StatePath $Script:StatePath -ThreadKey $threadKey) + 1
 
             if ($roundTrip -gt $Script:GeminiBridgeMaxRoundTrips) {

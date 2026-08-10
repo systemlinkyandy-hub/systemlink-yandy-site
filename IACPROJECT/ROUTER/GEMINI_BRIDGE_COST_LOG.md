@@ -7,4 +7,3 @@
 
 | month | calls | est_cost_yen | cap_yen | cap_status |
 |---|---|---|---|---|
-| 2026-08 | 1 | 3 | 2000 | OK |
