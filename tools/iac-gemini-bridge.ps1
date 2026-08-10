@@ -8,6 +8,8 @@ Gemini Bridge — Handoff(inbox/from_arc)⇄Gemini API⇄応答保存(inbox/from
 使い方:
   iac-gemini-bridge run           inbox/from_arc・inbox/from_gemini を1回スキャンして処理する
   iac-gemini-bridge run -WhatIf   送信対象を表示するだけで、API呼び出し・書き込みを行わない
+  iac-gemini-bridge run -Push     commit後にgit pushまで行う（GitHub Actions等、使い捨て実行環境向け。
+                                   通常のローカル運用ではケイ/佐藤が内容を見てから手動pushするためデフォルトでは付けない）
   iac-gemini-bridge status        状態ファイル・コストログの要約を表示する（読み取り専用）
 
 前提: 環境変数 GEMINI_API_KEY にAPIキーを設定しておくこと（リポジトリ・ログへの直書き禁止）。
@@ -16,7 +18,8 @@ Gemini Bridge — Handoff(inbox/from_arc)⇄Gemini API⇄応答保存(inbox/from
 param(
     [Parameter(Position = 0)][string]$Command = 'run',
     [switch]$WhatIf,
-    [switch]$NoGit
+    [switch]$NoGit,
+    [switch]$Push
 )
 
 $ErrorActionPreference = 'Stop'
@@ -67,6 +70,18 @@ function Publish-GeminiBridgeFile {
     $commit = Invoke-GeminiBridgeGit @('commit', '-m', $Message)
     if ($commit.ExitCode -ne 0 -and $commit.Output -notmatch 'nothing to commit|nothing added to commit') {
         Write-GeminiBridgeLog "git commit失敗: $($commit.Output)"
+        return
+    }
+    if (-not $Push) { return }
+
+    $pushResult = Invoke-GeminiBridgeGit @('push')
+    if ($pushResult.ExitCode -ne 0) {
+        $rebase = Invoke-GeminiBridgeGit @('pull', '--rebase')
+        if ($rebase.ExitCode -eq 0) { $pushResult = Invoke-GeminiBridgeGit @('push') }
+    }
+    if ($pushResult.ExitCode -ne 0) {
+        Write-GeminiBridgeLog "git push失敗: $($pushResult.Output)"
+        throw "Gemini Bridge: git pushに失敗しました。実行環境は使い捨てのためローカルcommitは失われます。ジョブを失敗として扱います。"
     }
 }
 

@@ -1,0 +1,46 @@
+name: Gemini Bridge Auto Run
+
+# Task ID: IAC-GEMINI-BRIDGE-001（トリガーのローカル手動実行→GitHub Actions化）
+# 正本: IACPROJECT/OPERATING_RULES/GEMINI_BRIDGE_TOOLING.md
+# 監視対象は同ファイル §3 の inbox/from_arc・inbox/from_gemini のみ（Bridge内部ロジックが
+# 二葉宛以外を自動で除外するため、他の from_* ディレクトリはトリガー対象に含めない）。
+#
+# GITHUB_TOKENによるpushはデフォルトで新たなworkflow runをトリガーしないため、
+# from_gemini/ への応答保存commit&pushが本workflowを再起動する無限ループにはならない。
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'IACPROJECT/inbox/from_arc/**'
+      - 'IACPROJECT/inbox/from_gemini/**'
+
+concurrency:
+  group: gemini-bridge
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  run-bridge:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure git identity
+        shell: pwsh
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Run Gemini Bridge
+        shell: pwsh
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          pwsh -NoProfile -File tools/iac-gemini-bridge.ps1 run -Push

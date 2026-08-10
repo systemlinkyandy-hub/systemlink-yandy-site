@@ -86,6 +86,7 @@ APIは呼ばない。宛先ヘッダの有無・断定語の有無だけを検�
 | `tools/iac-gemini-bridge.cmd` | cmdラッパー |
 | `tools/iac-gemini-bridge-selftest.ps1` | 人工fixture・一時ディレクトリ・モックAPIのみを使うロジック自己テスト（実API・実リポジトリ・gitに触れない） |
 | `tools/tests/fixtures/gemini_bridge/` | selftest用の人工Handoff fixture（実案件を含まない） |
+| `.github/workflows/gemini-bridge.yml` | トリガーをローカル手動実行からGitHub Actionsへ移す場合のworkflow（§13） |
 
 ## 10. 使い方
 
@@ -93,10 +94,31 @@ APIは呼ばない。宛先ヘッダの有無・断定語の有無だけを検�
 iac-gemini-bridge run              inbox/from_arc・from_gemini をスキャンして処理
 iac-gemini-bridge run -WhatIf      送信対象を表示するだけ（API呼び出し・書き込みなし）
 iac-gemini-bridge run -NoGit       処理は行うがgit commitはしない
+iac-gemini-bridge run -Push        commit後にgit pushまで行う（§13のActions実行専用。ローカルでは使わない）
 iac-gemini-bridge status           状態・コストログの要約（読み取り専用）
 ```
 
 前提：`$env:GEMINI_API_KEY` を設定しておくこと。未設定の場合は`FAILED_NO_API_KEY`として記録され、実APIへは到達しない。
+
+## 13. GitHub Actions化（トリガーのクラウド移行、2026-08-11 黒瀬要件→佐藤実装）
+
+**目的**：スマホから`inbox/from_arc/`等へGitHub Pushするだけで、Surface/PCの起動なしにBridgeを自動実行する。
+
+**トリガー**：`.github/workflows/gemini-bridge.yml`。`push`イベント、対象パスは`IACPROJECT/inbox/from_arc/**`・`IACPROJECT/inbox/from_gemini/**`のみ（§3の監視対象と一致。他の`from_*`はBridge内部で対象外になるため監視しない）。
+
+**状態・コストログの永続化**：既存設計のまま変更なし。`GEMINI_BRIDGE_STATE.md`・`GEMINI_BRIDGE_COST_LOG.md`は元々`IACPROJECT/ROUTER/`配下のリポジトリ管理ファイル（.gitignore対象外）で、Bridge自身がcommitする。Actions環境が使い捨てでも、commit後に`git push`まで行えばリポジトリ側に状態が残る。この`push`だけをローカル運用と切り分けるため`-Push`スイッチを追加した（§10）。ローカルではケイ/佐藤が内容を確認してから手動push、Actionsでは`-Push`で自動push、という分岐。
+
+**push失敗時の扱い**：`-Push`時、push失敗→`pull --rebase`→再pushを1回だけ試み、それでも失敗したらジョブを失敗させる（`throw`）。ローカルcommitがActions環境の消滅とともに失われることを明示するため。
+
+**無限ループの検討**：`from_gemini/`への応答保存commitをActionsがpushしても、GITHUB_TOKENによるpushはデフォルトで新たなworkflow runをトリガーしないため、自己再帰は起きない。
+
+**認証・秘密情報**：`GEMINI_API_KEY`はGitHub Secrets（リポジトリ Settings → Secrets and variables → Actions）に登録する。Windows環境変数の値はActions環境からは参照できないため、Secretsへの登録がケイ側で別途必要（§7の「APIキーは環境変数のみ」という制約はActions内でも`env:`経由で維持している）。
+
+**リポジトリ権限**：workflow内で`git push`するため、リポジトリ設定 Settings → Actions → General → Workflow permissions を「Read and write permissions」にする必要がある（既定は読み取りのみで、その場合push権限エラーになる）。
+
+**未確認（実行環境がないため）**：
+- 実際にActions上でjobが動くか（windows-latest runnerでのpwsh実行、checkout、push）は未検証。selftestはロジックのみでActions実行自体は検証していない。
+- Secrets登録・Workflow permissions変更はケイのGitHub操作待ち。両方揃うまでworkflowは`push`されても`FAILED_NO_API_KEY`または権限エラーで失敗する。
 
 ## 11. selftest結果
 
