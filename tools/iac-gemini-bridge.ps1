@@ -21,6 +21,10 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
+# iac-console.ps1 は同名の $Command param を持つため、dot-source時に呼び出し元の
+# $Command を空文字で上書きしてしまう。dot-source前に退避し、switch文では退避値を使う。
+$Script:BridgeCommand = $Command
+
 . (Join-Path $PSScriptRoot 'iac-handoff-lib.ps1')
 . (Join-Path $PSScriptRoot 'iac-gemini-bridge-lib.ps1')
 
@@ -242,7 +246,7 @@ function Show-GeminiBridgeStatus {
 }
 
 if ($env:IAC_GEMINI_BRIDGE_NO_MAIN -ne '1') {
-    switch (($Command + '').ToLowerInvariant()) {
+    switch (($Script:BridgeCommand + '').ToLowerInvariant()) {
         'run'    { Invoke-GeminiBridgeRun -WhatIf:$WhatIf }
         'status' { Show-GeminiBridgeStatus }
         default  {
