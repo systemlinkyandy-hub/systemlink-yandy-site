@@ -10,7 +10,53 @@ Status: ACTIVE / COLLECTION IN PROGRESS
 - 明確な運用改善があるものだけ採用候補に残す
 - ケイのHuman Bus化を減らす投資を高優先度とする
 
-## Received requests
+## Owner priorities — ケイ
+status: RECEIVED / OWNER DIRECTION
+
+### 1. 二葉（Gemini）直結
+- direction: GitHub/IACProject配送ラインへ実際に接続できることを確認できるなら有料化する
+- candidate: Gemini Developer API Paid Tier
+- purpose: 二葉Packetの手動コピペを廃止し、Human Busを解消
+- note: consumer Gemini subscriptionとAPI課金を混同しない。IACProject側の接続実装が必要。
+
+### 2. Cursor
+- direction: 契約候補
+- purpose: 開発処理高速化、コード編集・エージェント作業の効率向上
+- action: 現行料金・必要プラン・既存Claude Code/Codexとの重複を確認して最終案へ
+
+### 3. 音声生成
+- candidates: ElevenLabs / 無料または低価格代替
+- direction: 比較後に決定
+- purpose: 既存動画へのナレーション・音声生成
+- rule: 無料枠で必要品質を満たすなら課金しない
+
+### 4. 長尺動画生成
+- candidate: Seedance 2.0等
+- direction: 必要時課金候補。常時契約とは限らない
+- purpose: 長めの広報・説明映像制作
+- action: 日本からの公式利用経路、料金、尺、品質を確認して比較
+
+### 5. 自律エージェント開発
+- direction: 予算を確保する
+- purpose: AI間Handoff、起床・配送、ACK、GitHub反映等のHuman Bus排除を進める
+- action: Gemini API/Cursor等と重複するため、独立サービス購入前に必要構成を設計する
+
+### 6. プリンター
+- direction: アーク推奨の安価なA4カラー複合機で可
+- requirements: A4 / カラー / コピー / スキャン / Wi-Fi
+- priority: low-cost
+
+### 7. ノートPC
+- direction: 現在のデスクトップ開発アプリの改修・拡張が十分できる機種
+- workload: Python / PySide6 / VS Code / GitHub / RCW / Yura / HealthEnvLogger / AI開発 / 複数AI利用
+- rule: 極端な廉価機ではなく開発継続性を優先。現有デスクトップ/Surfaceと役割分担できること。
+
+### 8. ウェアラブル
+- requested capabilities: 血圧・体温系の観測、可能ならAndroid/Wear OS等で独自アプリを載せられること
+- purpose: 体調環境ログ/研究開発との接続可能性
+- action: 医療機器としての測定可否とウェルネス推定値を分離して候補比較。SDK/API/独自アプリ導入可否も確認する。
+
+## Received AI requests
 
 ### 二葉（Gemini）
 - status: RECEIVED / TECHNICAL FACT CHECK APPLIED
