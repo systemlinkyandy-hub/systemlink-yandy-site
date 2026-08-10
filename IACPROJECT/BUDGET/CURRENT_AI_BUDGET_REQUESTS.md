@@ -2,7 +2,7 @@
 
 Owner: アーク
 Date: 2026-08-10 JST
-Status: ACTIVE / COLLECTION IN PROGRESS
+Status: ACTIVE / OWNER PROCUREMENT IN PROGRESS
 
 ## Budget ceiling
 - AI利用費総額：月20,000円以内
@@ -10,14 +10,30 @@ Status: ACTIVE / COLLECTION IN PROGRESS
 - 明確な運用改善があるものだけ採用候補に残す
 - ケイのHuman Bus化を減らす投資を高優先度とする
 
+## Confirmed procurement / subscription
+
+### プリンター
+- status: PURCHASED
+- model: EPSON EW-056A1
+- price: 8,610円
+- purpose: A4カラー / コピー / スキャン / Wi-Fi の低価格複合機
+- decision: CLOSED / 追加比較不要
+
+### 二葉（Gemini）API
+- status: CONTRACTED / FUNDED
+- service: Gemini Developer API Paid Tier / billing enabled
+- initial_payment: 2,000円
+- purpose: IACProject/GitHub配送ラインへ二葉を接続し、Human Busを削減する
+- note: APIキーや決済情報はGitHubへ保存しない。接続実装は別タスクとして行う。
+- next_action: Gemini bridge実装とAPI利用量監視の設定
+
 ## Owner priorities — ケイ
 status: RECEIVED / OWNER DIRECTION
 
 ### 1. 二葉（Gemini）直結
-- direction: GitHub/IACProject配送ラインへ実際に接続できることを確認できるなら有料化する
-- candidate: Gemini Developer API Paid Tier
+- direction: 採用・契約済み
 - purpose: 二葉Packetの手動コピペを廃止し、Human Busを解消
-- note: consumer Gemini subscriptionとAPI課金を混同しない。IACProject側の接続実装が必要。
+- next_action: IACProject側の接続実装
 
 ### 2. Cursor
 - direction: 契約候補
@@ -34,7 +50,6 @@ status: RECEIVED / OWNER DIRECTION
 - candidate: Seedance 2.0等
 - direction: 必要時課金候補。常時契約とは限らない
 - purpose: 長めの広報・説明映像制作
-- action: 日本からの公式利用経路、料金、尺、品質を確認して比較
 
 ### 5. 自律エージェント開発
 - direction: 予算を確保する
@@ -42,14 +57,15 @@ status: RECEIVED / OWNER DIRECTION
 - action: Gemini API/Cursor等と重複するため、独立サービス購入前に必要構成を設計する
 
 ### 6. プリンター
-- direction: アーク推奨の安価なA4カラー複合機で可
-- requirements: A4 / カラー / コピー / スキャン / Wi-Fi
-- priority: low-cost
+- direction: PURCHASED / CLOSED
+- model: EPSON EW-056A1
+- price: 8,610円
 
 ### 7. ノートPC
 - direction: 現在のデスクトップ開発アプリの改修・拡張が十分できる機種
 - workload: Python / PySide6 / VS Code / GitHub / RCW / Yura / HealthEnvLogger / AI開発 / 複数AI利用
-- rule: 極端な廉価機ではなく開発継続性を優先。現有デスクトップ/Surfaceと役割分担できること。
+- current_target: RAM 32GB / SSD 512GB以上 / Ryzen 7級または同等 / 10万円前後以下を優先
+- status: SEARCH PAUSED / 候補不足のため無理に買わない
 
 ### 8. ウェアラブル
 - requested capabilities: 血圧・体温系の観測、可能ならAndroid/Wear OS等で独自アプリを載せられること
@@ -59,18 +75,17 @@ status: RECEIVED / OWNER DIRECTION
 ## Received AI requests
 
 ### 二葉（Gemini）
-- status: RECEIVED / TECHNICAL FACT CHECK APPLIED
+- status: APPROVED / CONTRACTED
 - priority: HIGH
 - requested capability: Gemini Developer APIをIACProject配送ラインへ接続し、二葉Packetの手動コピペを減らす
 - service_candidate: Gemini Developer API Paid Tier
 - billing: usage-based
-- initial_budget_cap_candidate: 3,000〜4,000円/月
+- initial_payment: 2,000円
 - GitHub integration: indirect; IACProject側のスクリプト / GitHub Actions / ローカルツール実装が必要
 - consumer_subscription: Gemini AdvancedはAPI接続の必須条件として扱わない
 - source: `IACPROJECT/inbox/from_gemini/2026-08-10_FUTABA_TO_ARC_AI_BUDGET_REQUEST_REVISED.md`
-- decision: NOT YET FINAL; 全員の回答回収後にアークが重複整理し、必要な採否判断を欠月/ケイへ圧縮して返す
 
-## Awaiting
+## Awaiting / optional review
 - 欠月
 - 黒瀬
 - スネーク
@@ -86,4 +101,4 @@ status: RECEIVED / OWNER DIRECTION
 - ゆいま〜る
 
 ## Rule
-各担当は、追加予算が不要なら「現状で十分 / 追加予算不要」と返す。追加希望時はサービス名 / 月額または課金方式 / 改善点 / GitHub接続可否 / 優先度を返す。
+各担当は、追加予算が不要なら「現状で十分 / 追加予算不要」と返す。追加希望時はサービス名 / 月額または課金方式 / 改善点 / GitHub接続可否 / 優先度を返す。Ownerが確定した購入・契約は待ち行列を理由に再オープンしない。
