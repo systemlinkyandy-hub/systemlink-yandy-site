@@ -1,2 +1,5 @@
 # iac-deliver working directory (local-only, not part of the site/repo content)
 /staging/
+
+# iac-gemini-bridge lock file (local-only, process coordination)
+/IACPROJECT/ROUTER/.gemini_bridge.lock
