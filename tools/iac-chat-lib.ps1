@@ -249,16 +249,54 @@ namespace IacChat {
 '@
 }
 
+function Get-ChatRawBodyFallback {
+    <#
+    HANDOFF形式（# HANDOFF見出し等）を持たない生テキスト応答（例: Gemini Bridgeがそのまま保存した
+    Gemini応答）は、Get-HandoffDocumentがRequiredNextActionを抽出できず本文が空になる。
+    その場合のフォールバックとして、ファイル全体を読み込み、先頭の宛先ヘッダ行（To:/宛先:）を
+    除いた残りをそのまま返す（Bridge/既存パーサーには一切手を入れず、表示側だけで吸収する）。
+    #>
+    param([string]$Path)
+    try {
+        $rawText = [System.IO.File]::ReadAllText($Path).Trim()
+    } catch {
+        return $null
+    }
+    if (-not $rawText) { return $null }
+    $lines = @($rawText -split "`r?`n")
+    if ($lines.Count -gt 0 -and $lines[0] -match '^\s*(To|宛先)\s*[:：]') {
+        $rawText = ($lines[1..($lines.Count - 1)] -join "`r`n").Trim()
+    }
+    if (-not $rawText) { return $null }
+    return $rawText
+}
+
 function ConvertTo-ChatMessageItem {
     <# Get-HandoffDocument の返すHandoffドキュメントを、WPFにバインドするChatMessageItemへ変換する。
        From欄が空の場合はFromTokenから表示名を解決し、それも無ければファイル名を使う（止めない設計）。 #>
     param($Doc)
-    $displayName = if ($Doc.From) { $Doc.From }
-        elseif ($Doc.FromToken) { Get-MemberDisplayName -Token $Doc.FromToken }
-        else { $Doc.FileName }
-    $body = if ($Doc.RequiredNextAction) { $Doc.RequiredNextAction }
-        elseif ($Doc.Status) { $Doc.Status }
-        else { '(本文を抽出できませんでした)' }
+    # Get-HandoffDocumentは本文にFrom:行が無い場合、ファイル名由来の正規トークンをそのまま
+    # $Doc.Fromへ代入することがある（iac-console.ps1の既存挙動、共有パーサーのため変更しない）。
+    # そのトークンをここで表示名に変換する。
+    $displayName =
+        if ($Doc.From -and $Script:MemberDisplayMap.ContainsKey($Doc.From)) {
+            Get-MemberDisplayName -Token $Doc.From
+        } elseif ($Doc.From) {
+            $Doc.From
+        } elseif ($Doc.FromToken) {
+            Get-MemberDisplayName -Token $Doc.FromToken
+        } else {
+            $Doc.FileName
+        }
+    $body =
+        if ($Doc.RequiredNextAction) {
+            $Doc.RequiredNextAction
+        } elseif ($Doc.Status) {
+            $Doc.Status
+        } else {
+            $fallback = Get-ChatRawBodyFallback -Path $Doc.Path
+            if ($fallback) { $fallback } else { '(本文を抽出できませんでした)' }
+        }
     $item = New-Object IacChat.ChatMessageItem
     $item.DisplayName = $displayName
     $item.DateText    = $Doc.Date

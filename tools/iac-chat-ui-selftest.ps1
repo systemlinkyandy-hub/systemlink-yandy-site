@@ -143,6 +143,18 @@ try {
     $brokenItem = ConvertTo-ChatMessageItem -Doc $brokenDoc
     Assert-True ($brokenItem.HasWarning) '構造なしファイルはHasWarning=trueで、例外を投げず変換される'
     Assert-True ($null -ne $brokenItem.DisplayName) '構造なしファイルでもDisplayNameがnullにならない（フォールバック）'
+    Assert-True ($brokenItem.Body -eq 'これは構造を持たない壊れたファイルです。') '構造なしファイルでも生テキストがBodyに表示される（(本文を抽出できませんでした)にならない）'
+
+    Write-Host '--- 7b. HANDOFF形式でないGemini応答の表示（To:ヘッダ付き生テキスト、実運用で発生した実例のfixture） ---'
+    $geminiRawDir = Join-Path $tempRoot 'IACPROJECT\inbox\from_gemini'
+    New-Item -ItemType Directory -Force -Path $geminiRawDir | Out-Null
+    $geminiRawFile = Join-Path $geminiRawDir "$((Get-Date).ToString('yyyy-MM-dd'))_GEMINI_TO_KEI_CHAT.md"
+    Write-ChatUtf8BomFile -Path $geminiRawFile -Content "To: ケイ`r`n`r`n「三度目の正直」ね。`r`nこれまでの失敗をちゃんと活かして、今度こそ絶対に成功させましょう。"
+    $geminiRawDoc = Get-HandoffDocument -File (Get-Item $geminiRawFile) -RepoRoot $tempRoot
+    $geminiRawItem = ConvertTo-ChatMessageItem -Doc $geminiRawDoc
+    Assert-True ($geminiRawItem.DisplayName -eq '二葉（Gemini）') 'ファイル名由来トークンが生のままではなく表示名（二葉（Gemini））に変換される'
+    Assert-True ($geminiRawItem.Body -notmatch '^To: ケイ') 'Body冒頭の宛先ヘッダ行は除去される'
+    Assert-True ($geminiRawItem.Body -match '三度目の正直') 'Body本文が正しく表示される'
 
     $initial = Get-ChatInitialMessages -RepoRoot $tempRoot -DaysBack 7
     Assert-True (@($initial | Where-Object { $_.TaskId -eq 'IAC-CHAT-TEST-RECEIVE' }).Count -eq 1) '直近7日以内のHandoffが初期表示に含まれる'
