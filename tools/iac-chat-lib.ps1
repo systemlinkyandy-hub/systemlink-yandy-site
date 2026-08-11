@@ -128,6 +128,43 @@ function Write-ChatUtf8BomFile {
 }
 
 # ---------------------------------------------------------------------------
+# 定期同期（git pull + diffベースの新着検知）
+# バックグラウンドRunspace内でも使えるよう、iac-handoff-lib.ps1/iac-console.ps1への依存を持たない。
+# ---------------------------------------------------------------------------
+function Invoke-ChatGitCommand {
+    param([string]$RepoRoot, [string[]]$GitArgs)
+    Push-Location $RepoRoot
+    try {
+        $output = & git @GitArgs 2>&1 | ForEach-Object { $_.ToString() }
+        return [PSCustomObject]@{ ExitCode = $LASTEXITCODE; Output = ($output -join "`n") }
+    } finally {
+        Pop-Location
+    }
+}
+
+function Sync-ChatInboxFromRemote {
+    <#
+    git pull --ff-only を実行し、新着（IACPROJECT/inbox配下の.md）の相対パス一覧を返す。
+    fast-forwardできない・pull失敗時は自動rebase等をせず失敗理由を返すだけで止める
+    （既存ツール群の「勝手に解決しない」原則。iac-chat-ui.ps1側でステータス表示のみ行う）。
+    戻り値: @{ Success; Reason('no_change'|'updated'|'pull_failed'); Output; ChangedRelPaths }
+    #>
+    param([string]$RepoRoot)
+    $oldHead = (Invoke-ChatGitCommand -RepoRoot $RepoRoot -GitArgs @('rev-parse', 'HEAD')).Output.Trim()
+    $pullResult = Invoke-ChatGitCommand -RepoRoot $RepoRoot -GitArgs @('pull', '--ff-only')
+    if ($pullResult.ExitCode -ne 0) {
+        return [PSCustomObject]@{ Success = $false; Reason = 'pull_failed'; Output = $pullResult.Output; ChangedRelPaths = @() }
+    }
+    $newHead = (Invoke-ChatGitCommand -RepoRoot $RepoRoot -GitArgs @('rev-parse', 'HEAD')).Output.Trim()
+    if ($oldHead -eq $newHead) {
+        return [PSCustomObject]@{ Success = $true; Reason = 'no_change'; Output = ''; ChangedRelPaths = @() }
+    }
+    $diffResult = Invoke-ChatGitCommand -RepoRoot $RepoRoot -GitArgs @('diff', '--name-only', $oldHead, $newHead)
+    $changed = @($diffResult.Output -split "`r?`n" | Where-Object { $_ -like 'IACPROJECT/inbox/*' -and $_ -like '*.md' })
+    return [PSCustomObject]@{ Success = $true; Reason = 'updated'; Output = ''; ChangedRelPaths = $changed }
+}
+
+# ---------------------------------------------------------------------------
 # 送信対象の組み立て（単一宛先 / ALL宛先分解）
 # ---------------------------------------------------------------------------
 function Build-ChatOutgoingHandoffs {
@@ -228,6 +265,22 @@ function ConvertTo-ChatMessageItem {
     $item.WarningText = if ($Doc.Warnings.Count -gt 0) { '警告: ' + ($Doc.Warnings -join ' / ') } else { '' }
     $item.RelPath     = $Doc.RelPath
     $item.FromToken   = $Doc.FromToken
+    return $item
+}
+
+function ConvertTo-ChatOutgoingMessageItem {
+    <# 送信直後の楽観的UI更新用。Build-ChatOutgoingHandoffsの1アイテムから簡易的にChatMessageItemを作る。
+       受信ポーリングが同一RelPathを検知した際は重複追加せず、既知セットから外すだけにする（4.5節）。 #>
+    param($OutgoingItem, [datetime]$Now, [string]$MessageText)
+    $item = New-Object IacChat.ChatMessageItem
+    $item.DisplayName = "ケイ → $($OutgoingItem.DisplayName)"
+    $item.DateText    = $Now.ToString('yyyy-MM-dd HH:mm') + ' JST'
+    $item.TaskId      = ''
+    $item.Body        = $MessageText
+    $item.HasWarning  = $false
+    $item.WarningText = ''
+    $item.RelPath     = $OutgoingItem.RelInboxPath
+    $item.FromToken   = 'kei'
     return $item
 }
 
