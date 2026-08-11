@@ -82,6 +82,40 @@ function Initialize-ChatToCombo {
 Initialize-ChatToCombo
 
 # ---------------------------------------------------------------------------
+# 受信表示（起動時フルスキャン）
+# ---------------------------------------------------------------------------
+$Script:ChatMessages = New-Object System.Collections.ObjectModel.ObservableCollection[object]
+$MessageList.ItemsSource = $Script:ChatMessages
+
+function Initialize-ChatMessageList {
+    $SyncStatusText.Text = '読込中...'
+    $items = Get-ChatInitialMessages -RepoRoot $Script:RepoRoot -DaysBack 7
+    foreach ($item in $items) { $Script:ChatMessages.Add($item) }
+    if ($MessageScroll.Content) { $MessageScroll.ScrollToBottom() }
+    $SyncStatusText.Text = "最終同期 $(Get-Date -Format 'HH:mm') JST（初期表示・直近7日分）"
+}
+Initialize-ChatMessageList
+
+# 黒瀬提案文などの「コピー→入力欄へ」ボタンは各メッセージ吹き出しに複製されるため、
+# 個別にFindNameでは取得できない。ItemsControlの親でClickイベントをバブリング捕捉する
+# （WPFのRoutedEventはツリーを上へバブリングするため、親でAddHandlerすれば子孫のボタンも拾える）。
+$MessageList.AddHandler(
+    [System.Windows.Controls.Button]::ClickEvent,
+    [System.Windows.RoutedEventHandler]{
+        param($sender, $e)
+        $source = $e.OriginalSource
+        if ($source -isnot [System.Windows.Controls.Button]) { return }
+        $msg = $source.Tag
+        if (-not $msg) { return }
+        $text = if ($msg.Body) { $msg.Body } else { '' }
+        if (-not $text) { return }
+        try { [System.Windows.Clipboard]::SetText($text) } catch { }
+        $InputBox.Text = $text
+        $InputBox.Focus() | Out-Null
+    }
+)
+
+# ---------------------------------------------------------------------------
 # 送信処理
 # ---------------------------------------------------------------------------
 function Invoke-ChatDeliver {

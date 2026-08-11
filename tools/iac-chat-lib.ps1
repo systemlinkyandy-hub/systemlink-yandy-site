@@ -190,8 +190,59 @@ function Save-ChatOutgoingHandoffs {
 }
 
 # ---------------------------------------------------------------------------
-# dot-source変数衝突の自己防御チェック（CLAUDE.mdの恒久ルールを機械的に担保する）
+# 受信表示（Get-HandoffDocumentの結果 → WPFバインド用オブジェクトへの変換）
 # ---------------------------------------------------------------------------
+if (-not ([System.Management.Automation.PSTypeName]'IacChat.ChatMessageItem').Type) {
+    Add-Type -Language CSharp -TypeDefinition @'
+namespace IacChat {
+    public class ChatMessageItem {
+        public string DisplayName { get; set; }
+        public string DateText { get; set; }
+        public string TaskId { get; set; }
+        public string Body { get; set; }
+        public bool HasWarning { get; set; }
+        public string WarningText { get; set; }
+        public string RelPath { get; set; }
+        public string FromToken { get; set; }
+    }
+}
+'@
+}
+
+function ConvertTo-ChatMessageItem {
+    <# Get-HandoffDocument の返すHandoffドキュメントを、WPFにバインドするChatMessageItemへ変換する。
+       From欄が空の場合はFromTokenから表示名を解決し、それも無ければファイル名を使う（止めない設計）。 #>
+    param($Doc)
+    $displayName = if ($Doc.From) { $Doc.From }
+        elseif ($Doc.FromToken) { Get-MemberDisplayName -Token $Doc.FromToken }
+        else { $Doc.FileName }
+    $body = if ($Doc.RequiredNextAction) { $Doc.RequiredNextAction }
+        elseif ($Doc.Status) { $Doc.Status }
+        else { '(本文を抽出できませんでした)' }
+    $item = New-Object IacChat.ChatMessageItem
+    $item.DisplayName = $displayName
+    $item.DateText    = $Doc.Date
+    $item.TaskId      = $Doc.TaskId
+    $item.Body        = $body
+    $item.HasWarning  = ($Doc.Warnings.Count -gt 0)
+    $item.WarningText = if ($Doc.Warnings.Count -gt 0) { '警告: ' + ($Doc.Warnings -join ' / ') } else { '' }
+    $item.RelPath     = $Doc.RelPath
+    $item.FromToken   = $Doc.FromToken
+    return $item
+}
+
+function Get-ChatInitialMessages {
+    <# 起動時フルスキャン。Get-HandoffFiles / Get-HandoffDocument / Get-DocDate / Select-DocsSince
+       （いずれも iac-console.ps1 由来、事前にdot-source済みであること）を使い、直近DaysBack日分を
+       日付昇順でChatMessageItemのリストとして返す。宛先での絞り込みはしない（要件通りの簡易表示）。 #>
+    param([string]$RepoRoot, [int]$DaysBack = 7)
+    $files = Get-HandoffFiles -RepoRoot $RepoRoot
+    $docs = @($files | ForEach-Object { Get-HandoffDocument -File $_ -RepoRoot $RepoRoot })
+    $filtered = @(Select-DocsSince -Docs $docs -Days $DaysBack)
+    $sorted = $filtered | Sort-Object { Get-DocDate $_ }
+    return @($sorted | ForEach-Object { ConvertTo-ChatMessageItem -Doc $_ })
+}
+
 function Test-ChatDotSourceVariableCollision {
     <#
     iac-console.ps1 の param() ブロックにある変数名が、iac-chat-lib.ps1 / iac-chat-ui.ps1 の

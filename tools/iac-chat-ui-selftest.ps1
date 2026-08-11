@@ -112,6 +112,33 @@ try {
     }
     Assert-True (@($allOut.Warnings -match '二葉').Count -gt 0) 'ALL送信時に二葉（Gemini）への配送に関する注記が出る'
 
+    Write-Host '--- 7. ConvertTo-ChatMessageItem / Get-ChatInitialMessages（受信表示） ---'
+    $inboxDir = Join-Path $tempRoot 'IACPROJECT\inbox\from_claude'
+    New-Item -ItemType Directory -Force -Path $inboxDir | Out-Null
+    $recentFile = Join-Path $inboxDir "$((Get-Date).ToString('yyyy-MM-dd'))_KUROSE_TO_KEI_TEST_RECEIVE.md"
+    $recentBody = New-ChatHandoffBody -ToDisplayName 'ケイ' -TaskId 'IAC-CHAT-TEST-RECEIVE' -Now (Get-Date) -MessageText '受信表示テスト用メッセージ'
+    Write-ChatUtf8BomFile -Path $recentFile -Content $recentBody
+    $oldFile = Join-Path $inboxDir '2020-01-01_KUROSE_TO_KEI_TEST_OLD.md'
+    $oldBody = New-ChatHandoffBody -ToDisplayName 'ケイ' -TaskId 'IAC-CHAT-TEST-OLD' -Now ([datetime]'2020-01-01') -MessageText '期間外メッセージ'
+    Write-ChatUtf8BomFile -Path $oldFile -Content $oldBody
+
+    $doc = Get-HandoffDocument -File (Get-Item $recentFile) -RepoRoot $tempRoot
+    $msgItem = ConvertTo-ChatMessageItem -Doc $doc
+    Assert-True ($msgItem.DisplayName -eq 'ケイ') 'ConvertTo-ChatMessageItem: From欄からDisplayNameを設定'
+    Assert-True ($msgItem.Body -eq '受信表示テスト用メッセージ') 'ConvertTo-ChatMessageItem: Bodyに本文が入る'
+    Assert-True (-not $msgItem.HasWarning) '警告なしのHandoffはHasWarning=false'
+
+    $brokenFile = Join-Path $inboxDir "$((Get-Date).ToString('yyyy-MM-dd'))_broken_no_structure.md"
+    Write-ChatUtf8BomFile -Path $brokenFile -Content 'これは構造を持たない壊れたファイルです。'
+    $brokenDoc = Get-HandoffDocument -File (Get-Item $brokenFile) -RepoRoot $tempRoot
+    $brokenItem = ConvertTo-ChatMessageItem -Doc $brokenDoc
+    Assert-True ($brokenItem.HasWarning) '構造なしファイルはHasWarning=trueで、例外を投げず変換される'
+    Assert-True ($null -ne $brokenItem.DisplayName) '構造なしファイルでもDisplayNameがnullにならない（フォールバック）'
+
+    $initial = Get-ChatInitialMessages -RepoRoot $tempRoot -DaysBack 7
+    Assert-True (@($initial | Where-Object { $_.TaskId -eq 'IAC-CHAT-TEST-RECEIVE' }).Count -eq 1) '直近7日以内のHandoffが初期表示に含まれる'
+    Assert-True (@($initial | Where-Object { $_.TaskId -eq 'IAC-CHAT-TEST-OLD' }).Count -eq 0) '期間外(2020年)のHandoffは初期表示から除外される'
+
     Write-Host ''
     Write-Host "selftest: 成功 $pass / 失敗 $fail"
 } finally {
