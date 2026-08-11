@@ -23,3 +23,4 @@
 | IACPROJECT/inbox/from_kei/2026-08-11_1308_KEI_TO_GEMINI_CHAT.md | IAC-CHAT-20260811-130846-gemini | to_gemini | HELD_NO_TO_HEADER | 1 | 1 | 2026-08-11 04:09:16 | 宛先ヘッダ欠落。staging保存: D:\a\systemlink-yandy-site\systemlink-yandy-site\staging\gemini_held\2026-08-11_040916_HELD_no_to_header_CHAT.md |
 | IACPROJECT/inbox/from_kei/2026-08-11_1314_KEI_TO_GEMINI_CHAT.md | IAC-CHAT-20260811-131446-gemini | to_gemini | SENT | 1 | 1 | 2026-08-11 04:18:04 | 応答保存: IACPROJECT/inbox/from_gemini/2026-08-11_GEMINI_TO_KEI_CHAT.md |
 | IACPROJECT/inbox/from_gemini/2026-08-11_GEMINI_TO_KEI_CHAT.md | CHAT | from_gemini | ACK | 0 | 0 | 2026-08-11 04:18:04 | 検証済み・既存配送物として登録 |
+| IACPROJECT/inbox/from_kei/2026-08-11_1333_KEI_TO_GEMINI_CHAT.md | IAC-CHAT-20260811-133318-gemini | to_gemini | HELD_NO_TO_HEADER | 1 | 1 | 2026-08-11 04:33:43 | 宛先ヘッダ欠落。staging保存: D:\a\systemlink-yandy-site\systemlink-yandy-site\staging\gemini_held\2026-08-11_043343_HELD_no_to_header_CHAT.md |
