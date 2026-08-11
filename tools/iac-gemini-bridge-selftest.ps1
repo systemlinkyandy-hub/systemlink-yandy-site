@@ -42,16 +42,19 @@ function Get-BridgeEntry {
 # --- 一時リポジトリ構造（実リポジトリには一切触れない） ---
 $TempRoot = Join-Path ([System.IO.Path]::GetTempPath()) ("iac_gemini_bridge_selftest_" + [guid]::NewGuid().ToString('N'))
 $TempFromArc = Join-Path $TempRoot 'IACPROJECT\inbox\from_arc'
+$TempFromKei = Join-Path $TempRoot 'IACPROJECT\inbox\from_kei'
 $TempFromGemini = Join-Path $TempRoot 'IACPROJECT\inbox\from_gemini'
 $TempRouter = Join-Path $TempRoot 'IACPROJECT\ROUTER'
-New-Item -ItemType Directory -Force -Path $TempFromArc, $TempFromGemini, $TempRouter | Out-Null
+New-Item -ItemType Directory -Force -Path $TempFromArc, $TempFromKei, $TempFromGemini, $TempRouter | Out-Null
 
 # dot-source済みのため $Script: スコープが共有されている。実パスを一時ディレクトリへ差し替える。
 $Script:RepoRoot      = $TempRoot
 $Script:StatePath     = Join-Path $TempRouter 'GEMINI_BRIDGE_STATE.md'
 $Script:CostLogPath   = Join-Path $TempRouter 'GEMINI_BRIDGE_COST_LOG.md'
 $Script:FromArcDir    = $TempFromArc
+$Script:FromKeiDir    = $TempFromKei
 $Script:FromGeminiDir = $TempFromGemini
+$Script:GeminiWatchDirs = @($Script:FromArcDir, $Script:FromKeiDir)
 $NoGit = $true
 
 try {
@@ -199,6 +202,36 @@ try {
     Assert-True (@(Get-ChildItem $TempFromGemini -Filter '*MULTIRECIPIENT*').Count -eq 0) '複数宛先: inboxへは送信しない'
     $multiStagingFiles = @(Get-ChildItem (Join-Path $TempRoot 'staging\gemini_held') -Filter '*multi_recipient*' -ErrorAction SilentlyContinue)
     Assert-True ($multiStagingFiles.Count -eq 1) '複数宛先: stagingへ生保存'
+
+    Write-Host '--- 14. inbox/from_kei（チャットUI送信元）も監視対象・二葉宛のみ処理（2026-08-11追加） ---'
+    Remove-Item (Join-Path $TempFromArc '*') -Force -ErrorAction SilentlyContinue
+    Remove-Item (Join-Path $TempFromKei '*') -Force -ErrorAction SilentlyContinue
+    # テスト10でコストログを月次上限まで積み上げているため、このテスト専用にリセットする
+    Remove-Item -LiteralPath $Script:CostLogPath -Force -ErrorAction SilentlyContinue
+
+    $keiGeminiPath = Join-Path $TempFromKei '2026-08-11_KEI_TO_GEMINI_TEST_CHAT.md'
+    @(
+        '# HANDOFF', '', '## From / To', '',
+        'From: ケイ', 'To: 二葉（Gemini）', '',
+        '## Task ID', '', 'IAC-CHAT-TEST-GEMINI-001', '',
+        '## Required next action', '', 'selftest request from chat ui', ''
+    ) | Set-Content -LiteralPath $keiGeminiPath -Encoding UTF8
+
+    $keiClaudePath = Join-Path $TempFromKei '2026-08-11_KEI_TO_CLAUDE_TEST_CHAT.md'
+    @(
+        '# HANDOFF', '', '## From / To', '',
+        'From: ケイ', 'To: 黒瀬（Claude）', '',
+        '## Task ID', '', 'IAC-CHAT-TEST-CLAUDE-001', '',
+        '## Required next action', '', 'selftest request not for gemini', ''
+    ) | Set-Content -LiteralPath $keiClaudePath -Encoding UTF8
+
+    $keiCallCount = 0
+    Invoke-GeminiBridgeRun -ApiCallOverride { param($prompt, $attempt) $Script:keiCallCount++; "To: ケイ`n応答" }
+    $eKeiGemini = Get-BridgeEntry -Pattern 'KEI_TO_GEMINI_TEST_CHAT'
+    Assert-True ($eKeiGemini.Status -eq 'SENT') 'from_kei: 二葉宛は正しく検出されSENTになる（チャットUIからの直接到達）'
+    Assert-True ($keiCallCount -eq 1) 'from_kei: 二葉宛のみAPIが1回呼ばれる（黒瀬宛は呼ばれない）'
+    $eKeiClaude = Get-BridgeEntry -Pattern 'KEI_TO_CLAUDE_TEST_CHAT'
+    Assert-True ($null -eq $eKeiClaude) 'from_kei: 二葉宛でないHandoffは宛先フィルタでスキップされstateに登録されない'
 
     Write-Host ''
     Write-Host "selftest: 成功 $pass / 失敗 $fail"

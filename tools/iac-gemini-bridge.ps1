@@ -45,7 +45,12 @@ $Script:StatePath      = Get-GeminiBridgeStatePath -RepoRoot $Script:RepoRoot
 $Script:CostLogPath    = Get-GeminiBridgeCostLogPath -RepoRoot $Script:RepoRoot
 $Script:InboxRoot      = Join-Path $Script:RepoRoot 'IACPROJECT\inbox'
 $Script:FromArcDir     = Join-Path $Script:InboxRoot 'from_arc'
+$Script:FromKeiDir     = Join-Path $Script:InboxRoot 'from_kei'
 $Script:FromGeminiDir  = Join-Path $Script:InboxRoot 'from_gemini'
+# 二葉宛の送信元として自動検出する監視対象（2026-08-11 チャットUI追加に伴い from_kei を追加。
+# 宛先フィルタ Test-HandoffAddressedTo -Token 'gemini' が冪等性チェックより先に効くため、
+# from_kei配下の二葉宛以外のHandoffは自動的にスキップされ誤送信しない）
+$Script:GeminiWatchDirs = @($Script:FromArcDir, $Script:FromKeiDir)
 
 function Invoke-GeminiBridgeGit {
     param([string[]]$GitArgs)
@@ -102,9 +107,12 @@ function Invoke-GeminiBridgeRun {
     $processed = 0; $skipped = 0; $held = 0; $failed = 0
     $touchedRelPaths = New-Object System.Collections.Generic.List[string]
 
-    # === 1. inbox/from_arc: 二葉宛のHandoffをAPIへ送る ===
-    if (Test-Path $Script:FromArcDir) {
-        $files = Get-ChildItem -LiteralPath $Script:FromArcDir -Filter '*.md' -File -ErrorAction SilentlyContinue
+    # === 1. inbox/from_arc・inbox/from_kei: 二葉宛のHandoffをAPIへ送る ===
+    # from_kei（チャットUIの送信元）は2026-08-11追加。宛先フィルタが冪等性チェックより先に効くため、
+    # 二葉宛以外のHandoffは以下のループ内で自動的にスキップされる（誤送信しない）。
+    foreach ($watchDir in $Script:GeminiWatchDirs) {
+    if (Test-Path $watchDir) {
+        $files = Get-ChildItem -LiteralPath $watchDir -Filter '*.md' -File -ErrorAction SilentlyContinue
         foreach ($f in $files) {
             $rel = $f.FullName.Substring($Script:RepoRoot.Length).TrimStart('\') -replace '\\', '/'
             $doc = Get-HandoffDocument -File $f -RepoRoot $Script:RepoRoot
@@ -204,7 +212,8 @@ function Invoke-GeminiBridgeRun {
             $processed++
         }
     } else {
-        Write-GeminiBridgeLog "警告: $Script:FromArcDir が存在しません"
+        Write-GeminiBridgeLog "警告: $watchDir が存在しません"
+    }
     }
 
     # === 2. inbox/from_gemini: 既存/手動投入分の検証・登録（APIは呼ばない） ===

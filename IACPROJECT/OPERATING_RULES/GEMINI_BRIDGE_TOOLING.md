@@ -27,11 +27,19 @@ Gemini Bridgeは、この受け渡しのうち機械的な部分（Handoff検出
 
 ```
 IACPROJECT/inbox/from_arc/    ─┐
-                                ├─→ iac-gemini-bridge run
+IACPROJECT/inbox/from_kei/    ─┼─→ iac-gemini-bridge run
 IACPROJECT/inbox/from_gemini/ ─┘
 ```
 
-### 3.1 `from_arc/`（二葉宛Handoffの送信）
+`from_kei/`は2026-08-11追加（`$Script:GeminiWatchDirs`、`tools/iac-gemini-bridge.ps1`）。チャット
+UI（`IAC-CHAT-UI-001`）からの送信元がケイ固定のため`inbox/from_kei/`に配送されるが、当初Bridgeの
+監視対象に含まれておらず、チャットUIから二葉へ送っても自動でAPIが呼ばれない不具合があった
+（ケイ・黒瀬・アーク経由のHandoffで指摘、修正依頼）。`from_arc/`と同じ処理ロジックを`from_kei/`にも
+適用する形で解消。§3.1の宛先フィルタ（`Test-HandoffAddressedTo -Token gemini`）が冪等性チェックより
+先に効くため、`from_kei/`配下の二葉宛以外のHandoff（黒瀬宛・アーク宛等）は自動的にスキップされ、
+誤ってGemini APIへ送られることはない（selftest §14で検証済み）。
+
+### 3.1 `from_arc/`・`from_kei/`（二葉宛Handoffの送信）
 
 1. `Get-HandoffDocument`（`iac-console.ps1`のパーサを再利用）でHandoffを解析
 2. 宛先が二葉（`Test-HandoffAddressedTo -Token gemini`）でなければ対象外
@@ -91,7 +99,7 @@ APIは呼ばない。宛先ヘッダの有無・断定語の有無だけを検�
 ## 10. 使い方
 
 ```
-iac-gemini-bridge run              inbox/from_arc・from_gemini をスキャンして処理
+iac-gemini-bridge run              inbox/from_arc・from_kei・from_gemini をスキャンして処理
 iac-gemini-bridge run -WhatIf      送信対象を表示するだけ（API呼び出し・書き込みなし）
 iac-gemini-bridge run -NoGit       処理は行うがgit commitはしない
 iac-gemini-bridge run -Push        commit後にgit pushまで行う（§13のActions実行専用。ローカルでは使わない）
@@ -104,7 +112,7 @@ iac-gemini-bridge status           状態・コストログの要約（読み取
 
 **目的**：スマホから`inbox/from_arc/`等へGitHub Pushするだけで、Surface/PCの起動なしにBridgeを自動実行する。
 
-**トリガー**：`.github/workflows/gemini-bridge.yml`。`push`イベント、対象パスは`IACPROJECT/inbox/from_arc/**`・`IACPROJECT/inbox/from_gemini/**`のみ（§3の監視対象と一致。他の`from_*`はBridge内部で対象外になるため監視しない）。
+**トリガー**：`.github/workflows/gemini-bridge.yml`。`push`イベント、対象パスは`IACPROJECT/inbox/from_arc/**`・`IACPROJECT/inbox/from_kei/**`・`IACPROJECT/inbox/from_gemini/**`のみ（§3の監視対象と一致。`from_kei/**`は2026-08-11追加。他の`from_*`はBridge内部で対象外になるため監視しない）。
 
 **状態・コストログの永続化**：既存設計のまま変更なし。`GEMINI_BRIDGE_STATE.md`・`GEMINI_BRIDGE_COST_LOG.md`は元々`IACPROJECT/ROUTER/`配下のリポジトリ管理ファイル（.gitignore対象外）で、Bridge自身がcommitする。Actions環境が使い捨てでも、commit後に`git push`まで行えばリポジトリ側に状態が残る。この`push`だけをローカル運用と切り分けるため`-Push`スイッチを追加した（§10）。ローカルではケイ/佐藤が内容を確認してから手動push、Actionsでは`-Push`で自動push、という分岐。
 
