@@ -402,9 +402,9 @@ $InputBox.Add_TextChanged({
     $len = $InputBox.Text.Length
     $CharCountText.Text = "$len / 300"
     if ($len -gt 300) {
-        $CharCountText.Foreground = 'Red'
+        $CharCountText.Foreground = [System.Windows.Media.Brushes]::Red
     } else {
-        $CharCountText.Foreground = 'Gray'
+        $CharCountText.Foreground = [System.Windows.Media.Brushes]::Gray
     }
 })
 
