@@ -127,7 +127,19 @@ function Initialize-ChatToCombo {
     }
     $ToCombo.SelectedIndex = 0
 }
+
+function Update-ChatWakeButtonState {
+    <# wakeボタンは単一メンバー選択時のみ活性。ALL・二葉（Gemini）は無効化する
+       （New-WakePacketがgemini宛は生成せず「単一Packet方式で配送してください」と
+       表示するだけの既存仕様のため、UI側で先に弾いておく）。 #>
+    $selectedItem = $ToCombo.SelectedItem
+    if (-not $selectedItem) { $WakeButton.IsEnabled = $false; return }
+    $token = $selectedItem.Tag
+    $WakeButton.IsEnabled = ($token -ne 'all' -and $token -ne 'gemini')
+}
+$ToCombo.Add_SelectionChanged({ Update-ChatWakeButtonState })
 Initialize-ChatToCombo
+Update-ChatWakeButtonState
 
 # ---------------------------------------------------------------------------
 # 受信表示（起動時フルスキャン）
@@ -324,6 +336,67 @@ $Global:SyncTimer.Add_Tick({ Start-ChatSync })
 $Global:SyncTimer.Start()
 
 $ResyncButton.Add_Click({ Start-ChatSync })
+
+# ---------------------------------------------------------------------------
+# wake / chat ボタン
+# wake: 単一メンバー選択時のみ活性。iac-console.ps1 wake をサブプロセス実行
+#       （iac-wake-interactive.ps1 と同じ呼び出し形。重い・書き込みを伴う操作のため
+#       Invoke-ChatDeliver同様にdot-sourceせずサブプロセスで呼ぶ）。
+# chat: 軽量な定型文を入力欄に挿入するのみ（Handoff化・配送は通常の送信フローに乗せる）。
+# ---------------------------------------------------------------------------
+$Global:WakeAction = {
+    param([string]$RepoRoot, [string]$Token)
+    $consoleScript = Join-Path $RepoRoot 'tools\iac-console.ps1'
+    $argList = @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', $consoleScript, 'wake', $Token, '-Push')
+    $outLog = [System.IO.Path]::GetTempFileName()
+    $errLog = [System.IO.Path]::GetTempFileName()
+    try {
+        $proc = Start-Process -FilePath 'powershell.exe' -ArgumentList $argList -Wait -PassThru `
+            -WindowStyle Hidden -RedirectStandardOutput $outLog -RedirectStandardError $errLog
+        $output = (Get-Content -LiteralPath $outLog -Raw -ErrorAction SilentlyContinue) + "`n" + (Get-Content -LiteralPath $errLog -Raw -ErrorAction SilentlyContinue)
+        return [PSCustomObject]@{ ExitCode = $proc.ExitCode; Output = $output }
+    } finally {
+        Remove-Item -LiteralPath $outLog, $errLog -ErrorAction SilentlyContinue
+    }
+}
+
+$WakeButton.Add_Click({
+    if ($Global:ChatGitBusy) { return }
+    $selectedItem = $ToCombo.SelectedItem
+    if (-not $selectedItem) { return }
+    $token = $selectedItem.Tag
+    if ($token -eq 'all' -or $token -eq 'gemini') { return }
+
+    $Global:ChatGitBusy = $true
+    $WakeButton.IsEnabled = $false
+    $SyncStatusText.Text = 'wakeパケット生成中...'
+
+    Invoke-ChatBackgroundAction -Action $Global:WakeAction -ArgumentList @($Global:RepoRoot, $token) -OnComplete {
+        param($results)
+        $wakeResult = $results[0]
+        try {
+            if ($wakeResult.ExitCode -eq 0) {
+                $SyncStatusText.Text = "wakeパケットを送信しました $(Get-Date -Format 'HH:mm') JST"
+            } else {
+                $SyncStatusText.Text = "wakeパケット送信に失敗しました $(Get-Date -Format 'HH:mm') JST"
+                Write-Host "[エラー] wake失敗: $($wakeResult.Output.Trim())"
+            }
+        } finally {
+            $Global:ChatGitBusy = $false
+            Update-ChatWakeButtonState
+        }
+    }.GetNewClosure()
+})
+
+$ChatButton.Add_Click({
+    $preset = 'チャット開始の合図です。応答はこのUI宛にHandoff形式で返してください。'
+    if ($InputBox.Text) {
+        $InputBox.Text = $InputBox.Text.TrimEnd() + "`r`n" + $preset
+    } else {
+        $InputBox.Text = $preset
+    }
+    $InputBox.Focus() | Out-Null
+})
 
 $InputBox.Add_TextChanged({
     $len = $InputBox.Text.Length
