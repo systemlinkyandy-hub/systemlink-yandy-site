@@ -106,3 +106,4 @@
 | 2026-08-11 | kei | gemini | CHAT | IACPROJECT/inbox/from_kei/2026-08-11_1250_KEI_TO_GEMINI_CHAT.md | 68d0bbd |
 | 2026-08-11 | kei | gemini | CHAT | IACPROJECT/inbox/from_kei/2026-08-11_1308_KEI_TO_GEMINI_CHAT.md | 9771fe6 |
 | 2026-08-11 | kei | gemini | CHAT | IACPROJECT/inbox/from_kei/2026-08-11_1314_KEI_TO_GEMINI_CHAT.md | ada888a |
+| 2026-08-11 | claude_code | claude | CHAT_UI_GEMINI_FIX_DONE | IACPROJECT/inbox/from_claude_code/2026-08-11_CLAUDE_CODE_TO_KUROSE_CHAT_UI_GEMINI_FIX_DONE.md | 93b95fd |
