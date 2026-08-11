@@ -101,3 +101,4 @@
 | 2026-08-11 | kei | claude | CHAT | IACPROJECT/inbox/from_kei/2026-08-11_1037_KEI_TO_CLAUDE_CHAT.md | 19de929 |
 | 2026-08-11 | kei | claude | CHAT | IACPROJECT/inbox/from_kei/2026-08-11_1104_KEI_TO_CLAUDE_CHAT.md | 5cea4a3 |
 | 2026-08-11 | claude_code | claude | CHAT_UI_REVIEW | IACPROJECT/inbox/from_claude_code/2026-08-11_CLAUDE_CODE_TO_KUROSE_CHAT_UI_REVIEW.md | 992f90d |
+| 2026-08-11 | claude_code | arc | CHAT_UI_CONDITIONS_CONFIRMED | IACPROJECT/inbox/from_claude_code/2026-08-11_CLAUDE_CODE_TO_ARC_CHAT_UI_CONDITIONS_CONFIRMED.md | 185abe8 |
