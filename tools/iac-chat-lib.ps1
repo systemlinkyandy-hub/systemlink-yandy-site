@@ -187,9 +187,6 @@ function Build-ChatOutgoingHandoffs {
         $allResult = Get-ChatAllRecipientTokens
         $tokens = $allResult.Tokens
         $warnings += $allResult.Warnings
-        if ($tokens -contains 'gemini') {
-            $warnings += '二葉（Gemini）宛は個別配送されますが、Gemini Bridgeの自動処理対象（inbox/from_arc・from_gemini）には入りません。実際に届けるには別途アークによる単一Packet工程が必要です。'
-        }
     } else {
         $tokens = @($TargetToken)
     }
@@ -202,7 +199,13 @@ function Build-ChatOutgoingHandoffs {
             $ccNames = @($tokens | Where-Object { $_ -ne $token } | ForEach-Object { Get-MemberDisplayName -Token $_ })
         }
         $taskId = (Get-ChatTaskId -Now $Now) + "-$token"
-        $body = New-ChatHandoffBody -ToDisplayName $displayName -CcDisplayNames $ccNames -TaskId $taskId -Now $Now -MessageText $MessageText
+        $messageForToken = $MessageText
+        if ($token -eq 'gemini') {
+            # 2026-08-11: 二葉の応答に宛先ヘッダ（To:）が無いとGemini BridgeがHELD_NO_TO_HEADERで
+            # 保留してしまう（実例で確認済み）。宛先ヘッダを付けて返信するよう自動で指示を追記する。
+            $messageForToken = $MessageText + "`r`n`r`n（返信の最初の行に `To: ケイ` と書いてください）"
+        }
+        $body = New-ChatHandoffBody -ToDisplayName $displayName -CcDisplayNames $ccNames -TaskId $taskId -Now $Now -MessageText $messageForToken
         $fileName = Get-ChatHandoffFileName -RepoRoot $RepoRoot -Token $token -Now $Now
         $fullPath = Join-Path (Join-Path $RepoRoot 'staging') $fileName
         $relInboxPath = "IACPROJECT/inbox/from_kei/$fileName"

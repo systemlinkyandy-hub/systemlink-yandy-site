@@ -110,7 +110,16 @@ try {
             $Script:pass++
         }
     }
-    Assert-True (@($allOut.Warnings -match '二葉').Count -gt 0) 'ALL送信時に二葉（Gemini）への配送に関する注記が出る'
+    $geminiItem = $allOut.Items | Where-Object { $_.Token -eq 'gemini' } | Select-Object -First 1
+    Assert-True ($geminiItem.Content -match 'To: ケイ') 'ALL送信の二葉宛のみ、返信にTo:ヘッダを付けるよう自動で指示文が追記される'
+    $claudeItem = $allOut.Items | Where-Object { $_.Token -eq 'claude' } | Select-Object -First 1
+    Assert-True ($claudeItem.Content -notmatch 'To: ケイ.{0,20}書いてください') '二葉宛以外には指示文が追記されない'
+
+    Write-Host '--- 6b. Build-ChatOutgoingHandoffs（単一宛先=二葉） ---'
+    $singleGemini = Build-ChatOutgoingHandoffs -RepoRoot $tempRoot -TargetToken 'gemini' -MessageText '単一宛先で二葉に送るテスト' -Now $now
+    Assert-True ($singleGemini.Items.Count -eq 1) '単一宛先(gemini)は1件のみ生成'
+    Assert-True ($singleGemini.Items[0].Content -match '単一宛先で二葉に送るテスト') '元のメッセージ本文がそのまま含まれる'
+    Assert-True ($singleGemini.Items[0].Content -match 'To: ケイ.{0,20}書いてください') '単一宛先での二葉宛にも指示文が自動追記される'
 
     Write-Host '--- 7. ConvertTo-ChatMessageItem / Get-ChatInitialMessages（受信表示） ---'
     $inboxDir = Join-Path $tempRoot 'IACPROJECT\inbox\from_claude'

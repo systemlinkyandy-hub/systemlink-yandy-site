@@ -23,8 +23,9 @@ MTA（PowerShell 7/pwsh）で起動された場合は自動的に`-STA`で自己
   入る（`iac-console wake`の転記元セクションと一致させ、追加セクション種別を新設しない設計）。
 - **ALL送信**：1通の複数宛先Handoffにはせず、`AI_MEMBER_DIRECTORY.md`登録順に1人ずつ個別Handoffへ分解
   する。各Handoffの本文`To:`行は常に単一メンバー名のみ（誤配送防止ルールとの整合）。二葉（Gemini）宛は
-  個別配送はされるが、Gemini Bridgeの自動処理対象（`inbox/from_arc`・`from_gemini`）には入らないため、
-  実際に届けるには別途アークによる単一Packet工程が必要（UI上に注記あり）。
+  `inbox/from_kei/`がGemini Bridgeの監視対象（2026-08-11追加）に入っているため自動的にAPIへ届く。
+  二葉の応答に`To:`ヘッダが無いとBridgeが`HELD_NO_TO_HEADER`で保留してしまうため、二葉宛メッセージの
+  本文末尾には「返信の最初の行に`To: ケイ`と書いてください」を自動追記する。
 - **受信表示**：起動時に`IACPROJECT/inbox`配下を直近7日分フルスキャンして時系列表示。以降は90秒間隔
   （`IAC_CHAT_POLL_SECONDS`環境変数で上書き可）で`git pull --ff-only`＋diffベースの新着検知を行い、
   新着Handoffをそのまま吹き出しに追加する。宛先での絞り込みはしない（誰から誰宛かに関わらず全件表示）。
