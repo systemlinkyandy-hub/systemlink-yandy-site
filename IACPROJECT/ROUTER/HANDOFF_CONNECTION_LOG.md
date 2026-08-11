@@ -100,3 +100,4 @@
 | 2026-08-11 | kei | yura | CHAT | IACPROJECT/inbox/from_kei/2026-08-11_1032_KEI_TO_YURA_CHAT.md | da16563 |
 | 2026-08-11 | kei | claude | CHAT | IACPROJECT/inbox/from_kei/2026-08-11_1037_KEI_TO_CLAUDE_CHAT.md | 19de929 |
 | 2026-08-11 | kei | claude | CHAT | IACPROJECT/inbox/from_kei/2026-08-11_1104_KEI_TO_CLAUDE_CHAT.md | 5cea4a3 |
+| 2026-08-11 | claude_code | claude | CHAT_UI_REVIEW | IACPROJECT/inbox/from_claude_code/2026-08-11_CLAUDE_CODE_TO_KUROSE_CHAT_UI_REVIEW.md | 992f90d |
