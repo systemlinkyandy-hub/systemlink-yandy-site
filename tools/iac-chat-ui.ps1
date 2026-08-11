@@ -137,7 +137,7 @@ function Update-ChatWakeButtonState {
     $token = $selectedItem.Tag
     $WakeButton.IsEnabled = ($token -ne 'all' -and $token -ne 'gemini')
 }
-$ToCombo.Add_SelectionChanged({ Update-ChatWakeButtonState })
+$ToCombo.Add_SelectionChanged({ Update-ChatWakeButtonState }.GetNewClosure())
 Initialize-ChatToCombo
 Update-ChatWakeButtonState
 
@@ -159,20 +159,21 @@ Initialize-ChatMessageList
 # 黒瀬提案文などの「コピー→入力欄へ」ボタンは各メッセージ吹き出しに複製されるため、
 # 個別にFindNameでは取得できない。ItemsControlの親でClickイベントをバブリング捕捉する
 # （WPFのRoutedEventはツリーを上へバブリングするため、親でAddHandlerすれば子孫のボタンも拾える）。
+$Global:CopyToInputHandlerScript = {
+    param($sender, $e)
+    $source = $e.OriginalSource
+    if ($source -isnot [System.Windows.Controls.Button]) { return }
+    $msg = $source.Tag
+    if (-not $msg) { return }
+    $text = if ($msg.Body) { $msg.Body } else { '' }
+    if (-not $text) { return }
+    try { [System.Windows.Clipboard]::SetText($text) } catch { }
+    $InputBox.Text = $text
+    $InputBox.Focus() | Out-Null
+}.GetNewClosure()
 $MessageList.AddHandler(
     [System.Windows.Controls.Button]::ClickEvent,
-    [System.Windows.RoutedEventHandler]{
-        param($sender, $e)
-        $source = $e.OriginalSource
-        if ($source -isnot [System.Windows.Controls.Button]) { return }
-        $msg = $source.Tag
-        if (-not $msg) { return }
-        $text = if ($msg.Body) { $msg.Body } else { '' }
-        if (-not $text) { return }
-        try { [System.Windows.Clipboard]::SetText($text) } catch { }
-        $InputBox.Text = $text
-        $InputBox.Focus() | Out-Null
-    }
+    [System.Windows.RoutedEventHandler]$Global:CopyToInputHandlerScript
 )
 
 # ---------------------------------------------------------------------------
@@ -252,7 +253,7 @@ function Send-ChatMessage {
     }.GetNewClosure()
 }
 
-$SendButton.Add_Click({ Send-ChatMessage })
+$SendButton.Add_Click({ Send-ChatMessage }.GetNewClosure())
 
 $RetryButton.Add_Click({
     if ($Global:ChatGitBusy -or $Global:LastFailedPaths.Count -eq 0) { return }
@@ -274,7 +275,7 @@ $RetryButton.Add_Click({
             $RetryButton.IsEnabled = $true
         }
     }.GetNewClosure()
-})
+}.GetNewClosure())
 
 # ---------------------------------------------------------------------------
 # 定期同期（git pull + diffベースの新着検知）
@@ -332,10 +333,15 @@ function Start-ChatSync {
 $Global:PollSeconds = if ($env:IAC_CHAT_POLL_SECONDS) { [int]$env:IAC_CHAT_POLL_SECONDS } else { 90 }
 $Global:SyncTimer = New-Object System.Windows.Threading.DispatcherTimer
 $Global:SyncTimer.Interval = [TimeSpan]::FromSeconds($Global:PollSeconds)
-$Global:SyncTimer.Add_Tick({ Start-ChatSync })
+# 重要: .GetNewClosure() を付けないスクリプトブロックをDispatcherTimer.Add_Tickへ直接渡すと、
+# PowerShellのガベージコレクションの癖により初回発火後にハンドラへの参照が失われ、2回目以降
+# Tickが発火しなくなることを実機検証で確認した（詳細はGEMINI_BRIDGE_TOOLING.md等と同様、
+# 2026-08-11に実運用で発覚。デバッグ用ログ付き別プロセスで20秒間隔×6回連続発火を確認して
+# 修正を検証済み）。全てのAdd_XXXイベント登録で.GetNewClosure()を付けること。
+$Global:SyncTimer.Add_Tick({ Start-ChatSync }.GetNewClosure())
 $Global:SyncTimer.Start()
 
-$ResyncButton.Add_Click({ Start-ChatSync })
+$ResyncButton.Add_Click({ Start-ChatSync }.GetNewClosure())
 
 # ---------------------------------------------------------------------------
 # wake / chat ボタン
@@ -386,7 +392,7 @@ $WakeButton.Add_Click({
             Update-ChatWakeButtonState
         }
     }.GetNewClosure()
-})
+}.GetNewClosure())
 
 $ChatButton.Add_Click({
     $preset = 'チャット開始の合図です。応答はこのUI宛にHandoff形式で返してください。'
@@ -396,7 +402,7 @@ $ChatButton.Add_Click({
         $InputBox.Text = $preset
     }
     $InputBox.Focus() | Out-Null
-})
+}.GetNewClosure())
 
 $InputBox.Add_TextChanged({
     $len = $InputBox.Text.Length
@@ -406,6 +412,6 @@ $InputBox.Add_TextChanged({
     } else {
         $CharCountText.Foreground = [System.Windows.Media.Brushes]::Gray
     }
-})
+}.GetNewClosure())
 
 $Window.ShowDialog() | Out-Null
