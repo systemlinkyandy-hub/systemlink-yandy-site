@@ -53,6 +53,8 @@ dot-sourceはスクリプトスコープを共有するため）。
 
 - `iac-console.ps1`のparam名：`Command, Member, To, SinceDays, Push`
 - `iac-gemini-bridge.ps1`のparam名：`Command, WhatIf, NoGit, Push`
+- `iac-chat-ui.ps1`も`iac-console.ps1`をdot-sourceする（`iac-chat-lib.ps1`は独自のparamブロックを
+  持たないため衝突なし。詳細：`tools/README_IAC_CHAT_UI.md`）
 
 **新しいparamを追加する時、または新しいdot-source関係を作る時は必ず**：
 1. dot-source先ファイルの`param()`ブロックを確認し、追加しようとしている変数名と重複していないか
@@ -63,8 +65,19 @@ dot-sourceはスクリプトスコープを共有するため）。
 3. selftestファイル（`*-selftest.ps1`）を新規に書く／dot-source対象を増やす場合も同様に確認する
 
 根治策（関数定義のみの`-lib.ps1`と`param()`+メイン処理を分離し、他スクリプトは`-lib.ps1`のみ
-dot-sourceする構造への分離）は今は着手しない。チャットUI実装が一段落してから独立タスクとして扱う
-（2026-08-11 ケイ判断）。
+dot-sourceする構造への分離）は今は着手しない。チャットUI実装（`iac-chat-ui.ps1`）は完了したため、
+着手するなら独立タスクとして次に扱ってよい（2026-08-11 ケイ判断）。
+
+## PowerShellツール実装時の注意（非同期処理と`$Script:`スコープ）
+
+WPF UI（`iac-chat-ui.ps1`）でバックグラウンドRunspace＋`.GetNewClosure()`による非同期処理の完了
+ハンドラを書く場合、ハンドラ内部で`$Script:`スコープ修飾子付き変数を参照すると、元のトップレベル
+スクリプトスコープとは別物として解決され「null値のメソッド呼び出し」エラーになることを実機検証で
+確認した（UI Automationでボタン操作を自動化し、デバッグログで原因を特定。詳細：`iac-chat-ui.ps1`
+冒頭コメント、commit `fa67dbe`）。
+
+この種のUIプロセスでは状態変数を`$Script:`ではなく`$Global:`スコープに置くこと。専用のSTAプロセス
+として起動され他スクリプトと同居しないため、グローバル汚染のリスクは実質的にない。
 
 ## 禁止事項
 
