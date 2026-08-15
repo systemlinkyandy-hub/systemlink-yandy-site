@@ -2,7 +2,7 @@
 
 **Owner:** アーク  
 **Purpose:** 今この瞬間に追うべき未処理だけを見るための短い索引。  
-**Last updated:** 2026-08-10 JST
+**Last updated:** 2026-08-15 JST
 
 > 原本は各Handoff / inbox / ACK / Routerに残す。  
 > 旧索引の退避：`IACPROJECT/ARCHIVE/2026-08-10_CURRENT_PENDING_SNAPSHOT_BEFORE_CLEANUP.md`
@@ -55,7 +55,28 @@ Next:
 
 ---
 
-### 3. Standing rule — Human Bus禁止
+### 3. IBM / OpenAI関連3ノート統合
+**Priority:** NORMAL  
+**Owner:** 欠月（canonical decision）  
+**Integration / Router:** アーク
+
+Source:
+`IACPROJECT/inbox/from_arc/2026-08-15_ARC_TO_KAKEZUKI_IBM_OPENAI_THREE_NOTE_INTEGRATION.md`
+
+Current state:
+- スネークのIBM / OpenAI関連3件：読込済み
+- アークによる統合整理：完了
+- 公表事実とケイの現場観察を別レイヤーとして保持
+- アークは正本採否を判断していない
+
+Next:
+1. 欠月が正本採用 / 参考保持 / 一部採用 / 不採用を判断
+2. 判断後、アークが必要な反映・状態更新のみ実施
+3. ケイを伝令役にしない
+
+---
+
+### 4. Standing rule — Human Bus禁止
 これはタスクではなく常設ルール。
 
 - ケイをAI間の伝令・再編集・進捗監視役にしない
