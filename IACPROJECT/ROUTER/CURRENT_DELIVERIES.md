@@ -3,7 +3,7 @@
 **Owner**: アーク
 **Purpose**: AI間の現在の配送状態だけを1ファイルで確認するための固定ルータ索引。
 **Status**: ACTIVE
-**Last updated**: 2026-08-10 JST
+**Last updated**: 2026-08-15 JST
 **Archive**: `IACPROJECT/ARCHIVE/2026-08-10_ROUTER_CLOSED_AND_TEMP.md`
 
 ## Active deliveries
@@ -29,7 +29,9 @@
 - source_kurose: `IACPROJECT/HANDOFF/inbox/to_claude/2026-08-09_TANAKA_TO_KUROSE_URGENT_EPISODE_GAP_REVIEW.md`
 - source_snake: `IACPROJECT/HANDOFF/inbox/to_grok/2026-08-09_TANAKA_TO_SNAKE_URGENT_EPISODE_GAP_REVIEW.md`
 - packet_futaba: `IACPROJECT/IMPORTANT/2026-08-09_ARC_TO_FUTABA_URGENT_EPISODE_GAP_REVIEW_PACKET.md`
-- state: REGISTERED / ROUTED / EXTERNAL THREAD WAKE REQUIRED
+- response_yue: `IACPROJECT/HANDOFF/2026-08-09_YUE_TO_ARC_UEHARA_URGENT_CONTINUING_EPISODE_REVIEW.md`
+- state: PRIMARY REVIEW RECEIVED / YUE READ COMPLETE / EXTERNAL REVIEW ACKS UNCONFIRMED
+- next_action: アークが黒瀬・スネーク・二葉の返却有無のみ追跡する。ケイへ再説明・再送を要求しない。研究・医学上の採否判断は欠月へ委ねる。
 
 ### DELIVERY-ORIGIN-WATATSUMI-ISORA-2026-08-09-01
 - from: 田中
@@ -71,4 +73,5 @@ GitHub登録だけで対象スレッドが起床・受領済みとは扱わな�
 二葉は当面Separate Packet運用を維持する。
 
 ## Archive rule
+
 完了済み・一時運用終了済みの配送はCURRENTに残さず `IACPROJECT/ARCHIVE/` へ退避する。
