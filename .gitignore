@@ -3,3 +3,4 @@
 
 # iac-gemini-bridge lock file (local-only, process coordination)
 /IACPROJECT/ROUTER/.gemini_bridge.lock
+research/cocolifestyle/monitor/.site-check-state.json

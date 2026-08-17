@@ -1,0 +1,79 @@
+{
+  "checkedAt": "2026-08-18T07:00:00+09:00",
+  "scope": [
+    "https://cocolifestyle.net/",
+    "https://x.com/stay_sparkle",
+    "https://x.com/AIstudylog"
+  ],
+  "overall": {
+    "publicTargetingObserved": false,
+    "viralSpreadObserved": false,
+    "note": "確認できた公開範囲では、特定個人を識別できる言及や、炎上と判断できる反応拡大は確認されなかった。非公開投稿、削除済み投稿、ログイン状態でのみ表示される引用・返信は確認範囲外。"
+  },
+  "observations": [
+    {
+      "id": "site-home-20260818",
+      "kind": "website",
+      "url": "https://cocolifestyle.net/",
+      "observedAt": "2026-08-18T07:00:00+09:00",
+      "summary": "公開トップページを確認。確認時点で2026年8月17日・18日付の新着記事、およびケイを識別できる記載は確認されなかった。",
+      "identifiableReference": false,
+      "metrics": null
+    },
+    {
+      "id": "stay-sparkle-dose-post-20260817",
+      "kind": "x-post",
+      "url": "https://x.com/stay_sparkle/status/2089252430223417560",
+      "observedAt": "2026-08-18T07:00:00+09:00",
+      "publishedAt": "2026-08-17T16:26:00+09:00",
+      "summary": "『体調が悪い＝とりあえず増量』を続けることへの一般的な懸念と、増量せずQOLを維持することを課題とする投稿。",
+      "identifiableReference": false,
+      "metrics": {
+        "views": 871,
+        "likes": 17,
+        "reposts": 2,
+        "bookmarks": 1,
+        "visibleReplies": 0
+      }
+    },
+    {
+      "id": "stay-sparkle-selfcare-post-20260817",
+      "kind": "x-post",
+      "url": "https://x.com/stay_sparkle/status/2089263079356088726",
+      "observedAt": "2026-08-18T07:00:00+09:00",
+      "summary": "栄養・睡眠・ペーシング等により、余計なコートリルを増やさず暮らす体調管理が可能だとする個人的見解。",
+      "identifiableReference": false,
+      "metrics": {
+        "views": 546,
+        "likes": 13,
+        "reposts": 0
+      }
+    },
+    {
+      "id": "aistudylog-optimal-dose-20260817",
+      "kind": "x-post",
+      "url": "https://x.com/AIstudylog/status/2089157787188425175",
+      "observedAt": "2026-08-18T07:00:00+09:00",
+      "summary": "一律量ではなく個人ごとの至適補充量を探すという説明。",
+      "identifiableReference": false,
+      "metrics": {
+        "views": 230,
+        "likes": 7,
+        "reposts": 1
+      }
+    },
+    {
+      "id": "aistudylog-add-on-framing-20260816",
+      "kind": "x-post",
+      "url": "https://x.com/AIstudylog/status/2088975081347436600",
+      "observedAt": "2026-08-18T07:00:00+09:00",
+      "summary": "不調のたびにコートリルを追加する発想を、欧米では過去のものと位置づける投稿。原典が主張全体を直接支えるかは別途照合が必要。",
+      "identifiableReference": false,
+      "metrics": {
+        "views": 763,
+        "likes": 15,
+        "reposts": 2
+      }
+    }
+  ]
+}
