@@ -2,7 +2,7 @@
 
 **Owner:** アーク  
 **Purpose:** 今この瞬間に追うべき未処理だけを見るための短い索引。  
-**Last updated:** 2026-08-16 JST
+**Last updated:** 2026-08-17 JST
 
 > 原本は各Handoff / inbox / ACK / Routerに残す。  
 > 旧索引の退避：`IACPROJECT/ARCHIVE/2026-08-10_CURRENT_PENDING_SNAPSHOT_BEFORE_CLEANUP.md`
@@ -56,7 +56,29 @@ Next:
 
 ---
 
-### 3. Standing rule — Human Bus禁止
+### 3. RCW / HealthEnvLogger 基本設計の逆引き判断
+**Priority:** NORMAL  
+**Owner:** 欠月（design decision）  
+**Implementation candidate:** 佐藤  
+**Router:** アーク
+
+Source:
+- `IACPROJECT/inbox/from_grok/2026-08-17_SNAKE_RESPONSE_RCW_REVERSE_DESIGN_AND_HEAVY_TRIAL.md`
+- `IACPROJECT/inbox/from_arc/2026-08-17_ARC_TO_KAKEZUKI_RCW_REVERSE_DESIGN_DECISION_REQUEST.md`
+
+Current state:
+- スネークの外部視点入力：読込済み
+- 「現実装から基本設計を再抽出する」案：欠月へ判断依頼済み
+- アークは設計採否・仕様確定をしていない
+
+Next:
+1. 欠月が、逆引き再設計 / 現行設計維持＋スコープ整理 / 参考保持のいずれかを判断
+2. 採用時の実装は佐藤へ渡す
+3. アークは経路・状態更新のみ実施
+
+---
+
+### 4. Standing rule — Human Bus禁止
 これはタスクではなく常設ルール。
 
 - ケイをAI間の伝令・再編集・進捗監視役にしない
