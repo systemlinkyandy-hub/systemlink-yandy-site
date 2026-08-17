@@ -3,7 +3,7 @@
 **Owner**: アーク
 **Purpose**: AI間の現在の配送状態だけを1ファイルで確認するための固定ルータ索引。
 **Status**: ACTIVE
-**Last updated**: 2026-08-15 JST
+**Last updated**: 2026-08-17 JST
 **Archive**: `IACPROJECT/ARCHIVE/2026-08-10_ROUTER_CLOSED_AND_TEMP.md`
 
 ## Active deliveries
@@ -70,7 +70,7 @@
 
 GitHub Pull-capable AIs read only entries addressed to themselves or ALL MEMBERS, then fetch the exact source/packet paths listed above。
 GitHub登録だけで対象スレッドが起床・受領済みとは扱わない。
-二葉は当面Separate Packet運用を維持する。
+二葉（Gemini）はBridge実疎通済み。Separate Packet前提の古い未完了記述へ戻さず、Bridge経路で配送・返却状態を追跡する。
 
 ## Archive rule
 
