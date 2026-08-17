@@ -24,6 +24,32 @@ node tools/cocolifestyle-site-check.mjs
 
 初回は比較元がないため `baseline` になります。2回目以降、内容ハッシュが変わったページだけ `changed` と表示されます。
 
+### 公開アカウントの確認状況を見る
+
+```powershell
+node tools/cocolifestyle-account-check.mjs list
+```
+
+`@stay_sparkle` と `@AIstudylog` の最新記録日時と公開URLを表示します。Xへログインしたり、DMを取得したりはしません。
+
+### 公開投稿の確認結果を追記する
+
+```powershell
+node tools/cocolifestyle-account-check.mjs record `
+  --url "https://x.com/stay_sparkle/status/投稿ID" `
+  --summary "投稿内容の短い要約" `
+  --views 100 --likes 5 --reposts 1 --replies 0 `
+  --identifiable no
+```
+
+同じアカウントの前回記録があれば、表示数・いいね・リポスト・公開返信数の差分を表示します。`--identifiable` は、第三者が特定人物を識別できる公開情報がある場合だけ `yes` にします。
+
+自己テスト：
+
+```powershell
+node tools/cocolifestyle-account-check.mjs selftest
+```
+
 ## 人による確認手順
 
 1. `changed` のURLだけを開く。
