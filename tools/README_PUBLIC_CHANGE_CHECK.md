@@ -2,6 +2,11 @@
 
 公開サイトの変更候補と、公開SNS投稿の確認結果を、人物評価や医療判断から分離して記録するための汎用ツールです。特定の疾患、サイト、アカウントには依存しません。
 
+個別の手順は、次の簡単マニュアルでも確認できます。
+
+- `tools/README_PUBLIC_SITE_CHANGE_CHECK.md`
+- `tools/README_PUBLIC_ACCOUNT_CHECK.md`
+
 ## 初期設定
 
 `tools/public-change-check.config.example.json` を `tools/public-change-check.config.json` へコピーし、自分が確認する公開URLと公開アカウント名を設定します。実際の設定ファイルはGit管理されません。
