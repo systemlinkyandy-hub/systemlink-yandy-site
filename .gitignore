@@ -4,3 +4,12 @@
 # iac-gemini-bridge lock file (local-only, process coordination)
 /IACPROJECT/ROUTER/.gemini_bridge.lock
 research/cocolifestyle/monitor/.site-check-state.json
+
+# Local-only monitoring projects and private target configuration
+/cocolifestyle-reference/
+/research/cocolifestyle/
+/tools/cocolifestyle-site-check.mjs
+/tools/cocolifestyle-account-check.mjs
+/tools/README_COCOLIFESTYLE_PUBLIC_CHECK.md
+/tools/public-change-check.config.json
+/.local/public-change-check/

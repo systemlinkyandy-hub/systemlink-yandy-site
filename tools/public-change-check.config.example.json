@@ -1,0 +1,12 @@
+{
+  "targets": [
+    "https://example.org/",
+    "https://example.org/news"
+  ],
+  "accounts": [
+    "example_account"
+  ],
+  "statePath": ".local/public-change-check/site-state.json",
+  "reportPath": ".local/public-change-check/latest-site-report.json",
+  "accountDataPath": ".local/public-change-check/account-observations.json"
+}
