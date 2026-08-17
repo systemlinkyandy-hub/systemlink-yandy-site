@@ -56,7 +56,9 @@
 - from: 二葉（Gemini）
 - to: 黒瀬（Claude）
 - source: `IACPROJECT/HANDOFF/2026-08-08_FUTABA_TO_KUROSE_MANGA_STRUCTURE_SERIES_02_REQUEST.md`
-- state: REGISTERED / ROUTED / EXTERNAL WAKE REQUIRED
+- ack: `IACPROJECT/inbox/from_claude/2026-08-08_KUROSE_MANGA_SERIES02_ACK.md`
+- state: ACKNOWLEDGED / BLOCKED ON REVIEW PACKET
+- next_action: アークが3作品分の元Handoff本文の所在を確認し、ケイに再編集・再説明を要求せずReview Packet 1本にまとめて黒瀬へ配送する。
 
 ### DELIVERY-MEDICAL-PROTOCOL-2026-08-07-01
 - from: 上原さん / アーク
