@@ -3,3 +3,6 @@
 
 # iac-gemini-bridge lock file (local-only, process coordination)
 /IACPROJECT/ROUTER/.gemini_bridge.lock
+
+# career-fit-workbench: 求人データ・スクリーンショット由来の抽出結果はローカルのみ（実データ）
+/tools/career-fit-workbench/data/
