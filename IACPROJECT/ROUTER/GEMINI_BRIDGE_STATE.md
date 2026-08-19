@@ -45,3 +45,7 @@
 | IACPROJECT/inbox/from_arc/ARC_TO_TANAKA_SNAKE_FUTABA_KUROSE_DROPBOX_EVALUATION_2026-08-13.md | 2026-08-13 | to_gemini | HELD_MULTI_RECIPIENT | 0 | 0 | 2026-08-12 17:14:30 | 複数宛先検出。自動送信対象外。staging保存: D:\a\systemlink-yandy-site\systemlink-yandy-site\staging\gemini_held\2026-08-12_171430_HELD_multi_recipient_2026-08-13.md |
 | IACPROJECT/inbox/from_kei/2026-08-13_0234_KEI_TO_GEMINI_CHAT.md | IAC-CHAT-20260813-023434-gemini | to_gemini | SENT | 1 | 1 | 2026-08-12 17:35:08 | 応答保存: IACPROJECT/inbox/from_gemini/20260812173508_2026-08-12_GEMINI_TO_KEI_CHAT.md |
 | IACPROJECT/inbox/from_gemini/20260812173508_2026-08-12_GEMINI_TO_KEI_CHAT.md | 20260812173508_2026-08-12_GEMINI_TO_KEI_CHAT | from_gemini | ACK | 0 | 0 | 2026-08-12 17:35:08 | 検証済み・既存配送物として登録 |
+| IACPROJECT/inbox/from_kei/2026-08-15_2129_KEI_TO_GEMINI_CHAT.md | IAC-CHAT-20260815-212940-gemini | to_gemini | SENT | 1 | 1 | 2026-08-19 09:38:38 | 応答保存: IACPROJECT/inbox/from_gemini/2026-08-19_GEMINI_TO_KEI_CHAT.md |
+| IACPROJECT/inbox/from_kei/2026-08-15_2131_KEI_TO_GEMINI_CHAT.md | IAC-CHAT-20260815-213123-gemini | to_gemini | SENT | 1 | 1 | 2026-08-19 09:38:44 | 応答保存: IACPROJECT/inbox/from_gemini/20260819093844_2026-08-19_GEMINI_TO_KEI_CHAT.md |
+| IACPROJECT/inbox/from_gemini/2026-08-19_GEMINI_TO_KEI_CHAT.md | CHAT | from_gemini | ACK | 0 | 0 | 2026-08-19 09:38:44 | 検証済み・既存配送物として登録 |
+| IACPROJECT/inbox/from_gemini/20260819093844_2026-08-19_GEMINI_TO_KEI_CHAT.md | 20260819093844_2026-08-19_GEMINI_TO_KEI_CHAT | from_gemini | ACK | 0 | 0 | 2026-08-19 09:38:44 | 検証済み・既存配送物として登録 |
