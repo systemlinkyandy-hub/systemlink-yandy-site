@@ -3,7 +3,7 @@
 **Owner**: アーク
 **Purpose**: AI間の現在の配送状態だけを1ファイルで確認するための固定ルータ索引。
 **Status**: ACTIVE
-**Last updated**: 2026-08-18 JST
+**Last updated**: 2026-08-19 JST
 **Archive**: `IACPROJECT/ARCHIVE/2026-08-10_ROUTER_CLOSED_AND_TEMP.md`
 
 ## Active deliveries
@@ -62,14 +62,6 @@
 - to: 上原さん / ユエ
 - source: `IACPROJECT/inbox/from_claude/2026-08-09_KUROSE_TO_UEHARA_YUE_SELFEVAL_CORRELATION.md`
 - state: REGISTERED / ROUTED / EXTERNAL WAKE REQUIRED
-
-### DELIVERY-MANGA-STRUCTURE-2026-08-08-01
-- from: 二葉（Gemini）
-- to: 黒瀬（Claude）
-- source: `IACPROJECT/HANDOFF/2026-08-08_FUTABA_TO_KUROSE_MANGA_STRUCTURE_SERIES_02_REQUEST.md`
-- ack: `IACPROJECT/inbox/from_claude/2026-08-08_KUROSE_MANGA_SERIES02_ACK.md`
-- state: ACKNOWLEDGED / BLOCKED ON REVIEW PACKET
-- next_action: アークが3作品分の元Handoff本文の所在を確認し、ケイに再編集・再説明を要求せずReview Packet 1本にまとめて黒瀬へ配送する。
 
 ### DELIVERY-MEDICAL-PROTOCOL-2026-08-07-01
 - from: 上原さん / アーク
