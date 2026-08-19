@@ -125,3 +125,4 @@
 | 2026-08-13 | claude | arc | dropbox-evaluation-response | IACPROJECT/inbox/from_claude/2026-08-13_KUROSE_TO_ARC_DROPBOX_EVALUATION.md | 0db1e39 |
 | 2026-08-15 | kei | gemini | CHAT | IACPROJECT/inbox/from_kei/2026-08-15_2129_KEI_TO_GEMINI_CHAT.md | c78999d |
 | 2026-08-15 | kei | gemini | CHAT | IACPROJECT/inbox/from_kei/2026-08-15_2131_KEI_TO_GEMINI_CHAT.md | 9716f6c |
+| 2026-08-19 | claude_code | tanaka | IAC-CAREER-FIT-001 | IACPROJECT/inbox/from_claude_code/2026-08-19_CLAUDE_CODE_TO_TANAKA_CAREER_FIT_WORKBENCH_V0_1_IMPL_DONE.md | - |
