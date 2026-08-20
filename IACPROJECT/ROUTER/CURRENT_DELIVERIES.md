@@ -8,16 +8,6 @@
 
 ## Active deliveries
 
-### URGENT-HATARAKU-HAGURUMA-REVIEW-2026-08-19-01
-- priority: URGENT
-- from: ユエ
-- coordination: アーク
-- reviewers: 黒瀬（作品レビュー） / スネーク（事実・整合性監査）
-- route_kurose: `IACPROJECT/inbox/from_arc/2026-08-19_ARC_TO_KUROSE_HATARAKU_HAGURUMA_DRAFT_REVIEW_REQUEST.md`
-- route_snake: `IACPROJECT/inbox/from_arc/2026-08-19_ARC_TO_SNAKE_HATARAKU_HAGURUMA_FACT_INTEGRITY_REVIEW_REQUEST.md`
-- state: ROUTED / RESPONSES NOT YET FOUND
-- next_action: アークが黒瀬・スネークのGitHub返却を回収し、両系統を混ぜずに集約してユエへ返す。ケイへ転記・配送・要約を要求しない。
-
 ### DELIVERY-STRUCTURAL-RESOLUTION-GI-2026-08-20-01
 - priority: HIGH
 - from: 上原
