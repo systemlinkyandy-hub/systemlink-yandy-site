@@ -3,10 +3,21 @@
 **Owner**: アーク
 **Purpose**: AI間の現在の配送状態だけを1ファイルで確認するための固定ルータ索引。
 **Status**: ACTIVE
-**Last updated**: 2026-08-19 JST
+**Last updated**: 2026-08-20 JST
 **Archive**: `IACPROJECT/ARCHIVE/2026-08-10_ROUTER_CLOSED_AND_TEMP.md`
 
 ## Active deliveries
+
+### DELIVERY-STRUCTURAL-RESOLUTION-GI-2026-08-20-01
+- priority: HIGH
+- from: 上原
+- coordination: アーク
+- to: ユエ / 田中
+- source: `IACPROJECT/inbox/to_arc/2026-08-20_UEHARA_TO_YUE_TANAKA_STRUCTURAL_RESOLUTION_GI_RESPONSE.md`
+- route_yue: `IACPROJECT/inbox/from_arc/2026-08-20_ARC_TO_YUE_STRUCTURAL_RESOLUTION_GI_REVIEW_REQUEST.md`
+- route_tanaka: `IACPROJECT/inbox/from_arc/2026-08-20_ARC_TO_TANAKA_STRUCTURAL_RESOLUTION_GI_REVIEW_REQUEST.md`
+- state: READ COMPLETE / ACCEPTED BY ARC / ROUTED / RESPONSES PENDING
+- next_action: アークがユエ・田中のGitHub返却を回収し、重複を避けて集約する。本人観察と医学的因果を分離し、医学判断・研究採否・正本判断は行わない。ケイへ転記・配送・要約を要求しない。
 
 ### DELIVERY-COCO-INTERACTION-2026-08-18-01
 - priority: HIGH
