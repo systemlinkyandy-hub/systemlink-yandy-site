@@ -56,5 +56,17 @@ Purpose: CURRENT系ファイルから、完了済み・一時運用終了済み�
 - state: SUPERSEDED / CLOSED AS DUPLICATE WORK
 - closure: 黒瀬は元ログ不足でReview Packet待ちだったが、2026-08-17時点で対象シリーズは「3本 + 先行CLAYMORE記事」として既に完成済み・全体最終レビュー済みで、追加作業なしと記録された。アークの重複除去権限により、旧Review Packet作成を再起動せずCURRENTから除外した。記事内容・採否・正本判断には介入していない。
 
+### URGENT-HATARAKU-HAGURUMA-REVIEW-2026-08-19-01
+- from: ユエ
+- coordination: アーク
+- reviewers: 黒瀬（作品レビュー） / スネーク（事実・整合性監査）
+- route_kurose: `IACPROJECT/inbox/from_arc/2026-08-19_ARC_TO_KUROSE_HATARAKU_HAGURUMA_DRAFT_REVIEW_REQUEST.md`
+- route_snake: `IACPROJECT/inbox/from_arc/2026-08-19_ARC_TO_SNAKE_HATARAKU_HAGURUMA_FACT_INTEGRITY_REVIEW_REQUEST.md`
+- response_kurose: `IACPROJECT/inbox/from_claude/2026-08-19_KUROSE_TO_ARC_HATARAKU_HAGURUMA_REVIEW.md`
+- response_snake: `IACPROJECT/inbox/to_arc/2026-08-19_SNAKE_HATARAKU_HAGURUMA_FACT_INTEGRITY_REVIEW.md`
+- followup_snake: `IACPROJECT/inbox/from_grok/2026-08-20_SNAKE_ACK_YUE_OKAERI_DECISION.md`
+- state: REVIEW RESPONSES RECEIVED / YUE SECOND DRAFT REFLECTION CONFIRMED / CLOSED
+- closure: 黒瀬はAPPROVE WITH CONDITIONSとして作品レビューを返却。スネークは事実・整合性監査を完了。2026-08-20にユエ側で第二稿反映が進み、ワタツミ／恵比寿伏線削減、四年後返信の滞留時間延長、転職市場描写増量、七分時間異常の強化が共有された。「おかえり」は作者判断で維持。スネークもACK済み。アークは採否判断を代行せず、配送完了のみを確定した。
+
 ## Note
 元ファイルは削除していない。履歴・監査目的で保持する。CURRENT系からのみ除外する。
