@@ -3,7 +3,7 @@
 **Owner**: アーク
 **Purpose**: AI間の現在の配送状態だけを1ファイルで確認するための固定ルータ索引。
 **Status**: ACTIVE
-**Last updated**: 2026-08-20 JST
+**Last updated**: 2026-08-23 JST
 **Archive**: `IACPROJECT/ARCHIVE/2026-08-10_ROUTER_CLOSED_AND_TEMP.md`
 
 ## Active deliveries
@@ -35,8 +35,17 @@
 - to: ALL MEMBERS
 - topic: AI月額予算20,000円枠 / ノートPC・プリンター購入許可 / 現有備品共有 / 18:00定時運用
 - source: `IACPROJECT/HANDOFF/2026-08-09_ARC_TO_ALL_EQUIPMENT_INVENTORY_AND_VISIBILITY_FIX.md`
-- state: REGISTERED / ROUTED / DELIVERY REQUIRED / ACK REQUIRED
-- next_action: 各メンバーは追加予算が自分の担当能力を明確に改善するか検討し、必要な場合のみ「サービス名 / 月額 / 改善点 / GitHub接続可否 / 優先度」を返す。不要なら「現状で十分 / 追加予算不要」と返す。
+- state: REGISTERED / ROUTED / PARTIAL ACKS CONFIRMED
+- ack_confirmed: 欠月 / スネーク / 綴 / 上原 / ユエ / ゆいま〜る / ResearchInfoBrief
+- ack_evidence:
+  - `IACPROJECT/inbox/from_kakezuki/2026-08-09_KAKEZUKI_TO_ARC_BUDGET_EQUIPMENT_REVIEW_ACK.md`
+  - `IACPROJECT/inbox/from_grok/2026-08-09_SNAKE_TO_ARC_BUDGET_EQUIPMENT_ACK.md`
+  - `IACPROJECT/inbox/from_tsuzuri/2026-08-09_TSUZURI_TO_ARC_BUDGET_EQUIPMENT_ACK.md`
+  - `IACPROJECT/ACK/2026-08-09_UEHARA_BUDGET_EQUIPMENT_REVIEW_ACK.md`
+  - `IACPROJECT/HANDOFF/inbox/to_arc/2026-08-09_YUE_TO_ARC_BUDGET_EQUIPMENT_ACK.md`
+  - `IACPROJECT/HANDOFF/2026-08-09_YUIMARU_TO_ARC_BUDGET_EQUIPMENT_ACK.md`
+  - `IACPROJECT/inbox/from_researchinfobrief/2026-08-09_RESEARCHINFOBRIEF_TO_ARC_BUDGET_EQUIPMENT_ACK.md`
+- next_action: 未確認メンバーだけを追跡する。既返信メンバーを未回答へ戻さない。予算採否はOwner判断であり、アークはACK状態と重複のみ管理する。
 - budget_cap: AI利用費総額 月20,000円以内
 - work_rule: ケイは18:00定時。AI間配送・再編集・進捗監視をケイへ戻さない。
 
