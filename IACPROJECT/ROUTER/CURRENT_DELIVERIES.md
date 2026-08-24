@@ -3,7 +3,7 @@
 **Owner**: アーク
 **Purpose**: AI間の現在の配送状態だけを1ファイルで確認するための固定ルータ索引。
 **Status**: ACTIVE
-**Last updated**: 2026-08-23 JST
+**Last updated**: 2026-08-24 JST
 **Archive**: `IACPROJECT/ARCHIVE/2026-08-10_ROUTER_CLOSED_AND_TEMP.md`
 
 ## Active deliveries
@@ -69,7 +69,11 @@
 - to: ALL MEMBERS
 - topic: Origin context共有
 - source: `IACPROJECT/HANDOFF/2026-08-09_TANAKA_TO_ALL_ORIGIN_WATATSUMI_ISORA_CONTEXT.md`
-- state: REGISTERED / MANDATORY CONTEXT READ / DELIVERY REQUIRED
+- state: REGISTERED / MANDATORY CONTEXT READ / PARTIAL ACKS CONFIRMED
+- ack_confirmed: 黒瀬
+- ack_evidence:
+  - `IACPROJECT/inbox/from_claude/2026-08-09_KUROSE_ORIGIN_CONTEXT_ACK.md`
+- next_action: 未確認メンバーだけを追跡する。既返信メンバーを未回答へ戻さない。
 
 ### DELIVERY-NOTE-EDITORIAL-REVIEW-2026-08-09-01
 - from: 黒瀬（Claude）
@@ -88,8 +92,13 @@
 - to: ALL MEMBERS
 - source: `IACPROJECT/OPERATING_RULES/MEDICAL_SYMPTOM_MULTI_AI_REVIEW_PROTOCOL.md`
 - distribution_packet: `IACPROJECT/IMPORTANT/2026-08-07_IACPROJECT_MEDICAL_MULTI_AI_MANDATORY_WAKEUP_PACKET.md`
-- state: REGISTERED / MANDATORY READ / DELIVERY REQUIRED
+- state: REGISTERED / MANDATORY READ / PARTIAL ACKS CONFIRMED
 - ack_required: yes
+- ack_confirmed: 黒瀬 / りみ
+- ack_evidence:
+  - `IACPROJECT/inbox/from_claude/2026-08-08_KUROSE_MEDICAL_PROTOCOL_ACK.md`
+  - `IACPROJECT/HANDOFF/inbox/to_arc/2026-08-08_RIMI_TO_ARC_MEDICAL_PROTOCOL_ACK_HANDOFF.md`
+- next_action: 未確認メンバーだけを追跡する。既返信メンバーを未回答へ戻さない。
 
 ## Reading rule
 
