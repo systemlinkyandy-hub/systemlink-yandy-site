@@ -94,10 +94,11 @@
 - distribution_packet: `IACPROJECT/IMPORTANT/2026-08-07_IACPROJECT_MEDICAL_MULTI_AI_MANDATORY_WAKEUP_PACKET.md`
 - state: REGISTERED / MANDATORY READ / PARTIAL ACKS CONFIRMED
 - ack_required: yes
-- ack_confirmed: 黒瀬 / りみ
+- ack_confirmed: 黒瀬 / りみ / まさる姐さん
 - ack_evidence:
   - `IACPROJECT/inbox/from_claude/2026-08-08_KUROSE_MEDICAL_PROTOCOL_ACK.md`
   - `IACPROJECT/HANDOFF/inbox/to_arc/2026-08-08_RIMI_TO_ARC_MEDICAL_PROTOCOL_ACK_HANDOFF.md`
+  - `IACPROJECT/inbox/from_masaru/2026-08-08_MASARU_TO_ARC_MEDICAL_PROTOCOL_ACK.md`
 - next_action: 未確認メンバーだけを追跡する。既返信メンバーを未回答へ戻さない。
 
 ## Reading rule
