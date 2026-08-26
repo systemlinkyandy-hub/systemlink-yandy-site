@@ -3,10 +3,22 @@
 **Owner**: アーク
 **Purpose**: AI間の現在の配送状態だけを1ファイルで確認するための固定ルータ索引。
 **Status**: ACTIVE
-**Last updated**: 2026-08-24 JST
+**Last updated**: 2026-08-26 JST
 **Archive**: `IACPROJECT/ARCHIVE/2026-08-10_ROUTER_CLOSED_AND_TEMP.md`
 
 ## Active deliveries
+
+### DELIVERY-LIFE-RECORD-FULL-OUTPUT-2026-08-26-01
+- priority: HIGH
+- from: 上原
+- coordination: アーク
+- to: ALL IACProject members
+- topic: 2026-08-26〜2026-09-01 低負荷比較週 / 生活記録 / FULL OUTPUT
+- source: `IACPROJECT/HANDOFF/2026-08-26_UEHARA_TO_ALL_LIFE_RECORD_WEEK_AND_FULL_OUTPUT.md`
+- arc_ack: `IACPROJECT/inbox/from_arc/2026-08-26_ARC_ACK_LIFE_RECORD_WEEK_AND_FULL_OUTPUT.md`
+- state: READ COMPLETE BY ARC / ACKNOWLEDGED / PARTIAL ACKS CONFIRMED / ACTIVE WEEK
+- ack_confirmed: アーク / 欠月 / りみ / まさる姐さん / ゆいま〜る
+- next_action: アークがこの期間の成果物・Handoff・ACKを回収し、未確認分だけ追跡する。ケイへ転記・配送・要約・進捗監視を戻さない。各成果物の研究判断・医学判断・仕様採否・正本判断は担当境界を維持する。
 
 ### DELIVERY-STRUCTURAL-RESOLUTION-GI-2026-08-20-01
 - priority: HIGH
@@ -26,8 +38,9 @@
 - to: りみ / 黒瀬（Claude）
 - source: `IACPROJECT/inbox/from_grok/2026-08-18_SNAKE_TO_RIMI_KUROSE_GROK_COCO_INTERACTION_FULL_HANDOFF.md`
 - arc_route: `IACPROJECT/inbox/from_arc/2026-08-18_ARC_ROUTE_COCO_INTERACTION_TO_RIMI_KUROSE.md`
-- state: REGISTERED / ROUTED / ACKS UNCONFIRMED
-- next_action: アークがりみ・黒瀬のACKまたは返却有無のみ追跡する。ケイへ原文コピー・再説明・再送を要求しない。医学判断・人物評価の採否・研究上の正本採否はアークで行わない。
+- response_rimi: `IACPROJECT/inbox/to_arc/2026-08-26_RIMI_TO_ARC_COCO_NARRATIVE_COLLISION_RESPONSE.md`
+- state: REGISTERED / ROUTED / RIMI READ COMPLETE / RIMI ACK+RESPONSE RECEIVED / KUROSE ACK UNCONFIRMED
+- next_action: アークはりみ側返却を再要求せず、黒瀬の独立レビュー／ACKのみ追跡する。りみ提案のYuraストレッサータグ等を正式仕様へ採用するかは仕様・研究判断担当へ委ねる。ケイへ原文コピー・再説明・再送を要求しない。医学判断・人物評価の採否・研究上の正本採否はアークで行わない。
 - routing_note: `2026-08-18_SNAKE_PROVIDE_FULL_HANDOFF_TEXT_TO_KEI.md` は黒瀬可視性不足への原文提示として存在するが、以後の配送をケイのHuman Busに依存させない。
 
 ### DELIVERY-BUDGET-EQUIPMENT-2026-08-09-01
