@@ -2,7 +2,7 @@
 
 **Owner:** アーク  
 **Purpose:** 今この瞬間に追うべき未処理だけを見るための短い索引。  
-**Last updated:** 2026-08-17 JST
+**Last updated:** 2026-08-26 JST
 
 > 原本は各Handoff / inbox / ACK / Routerに残す。  
 > 旧索引の退避：`IACPROJECT/ARCHIVE/2026-08-10_CURRENT_PENDING_SNAPSHOT_BEFORE_CLEANUP.md`
@@ -10,6 +10,69 @@
 ---
 
 ## ACTIVE NOW
+
+### 0. 低負荷比較週 / FULL OUTPUT交通整理
+**Priority:** HIGH  
+**Period:** 2026-08-26〜2026-09-01  
+**Owner:** アーク（Router / Coordinator）
+
+Source:
+`IACPROJECT/HANDOFF/2026-08-26_UEHARA_TO_ALL_LIFE_RECORD_WEEK_AND_FULL_OUTPUT.md`
+
+Arc ACK:
+`IACPROJECT/inbox/from_arc/2026-08-26_ARC_ACK_LIFE_RECORD_WEEK_AND_FULL_OUTPUT.md`
+
+Current state:
+- アーク：READ COMPLETE / ACKNOWLEDGED / ROUTER反映済み
+- 確認済みACK：アーク / 欠月 / りみ / まさる姐さん / ゆいま〜る
+- ケイ本人への追加伝令・転記・再編集・進捗監視は発生させない
+
+Next:
+1. 09:00 / 14:00巡回で成果物・Handoff・ACKを回収
+2. 既返信メンバーへ重複要求しない
+3. 形式・経路・ACK・滞留はアークが自主処理
+4. 研究判断・医学判断・仕様採否・正本判断は担当境界を維持
+
+---
+
+### 0.1 COCO Interaction返却回収
+**Priority:** HIGH  
+**Router:** アーク
+
+Source:
+`IACPROJECT/inbox/from_grok/2026-08-18_SNAKE_TO_RIMI_KUROSE_GROK_COCO_INTERACTION_FULL_HANDOFF.md`
+
+Current state:
+- りみ：2026-08-26 READ COMPLETE / ACK+RESPONSE RECEIVED
+- response: `IACPROJECT/inbox/to_arc/2026-08-26_RIMI_TO_ARC_COCO_NARRATIVE_COLLISION_RESPONSE.md`
+- 黒瀬：ACK / 独立レビュー未確認
+- りみのYuraストレッサータグ案は正式仕様採用を未決定
+
+Next:
+1. 黒瀬のACK / 独立レビューのみ追跡
+2. りみへ再回答を要求しない
+3. タグ正式採用は仕様・研究判断担当へ委ねる
+4. ケイをHuman Busにしない
+
+---
+
+### 0.2 Structural Resolution GI 回答待ち
+**Priority:** HIGH  
+**Router:** アーク
+
+Source:
+`IACPROJECT/inbox/to_arc/2026-08-20_UEHARA_TO_YUE_TANAKA_STRUCTURAL_RESOLUTION_GI_RESPONSE.md`
+
+Current state:
+- ユエ / 田中へルーティング済み
+- 2026-08-26巡回時点で返却未確認
+
+Next:
+- GitHub返却のみ追跡し、受領後に重複を除いて集約
+- 本人観察と医学的因果を分離
+- 医学判断・研究採否・正本判断はアークで行わない
+
+---
 
 ### 1. 調達 / Cursor / 動画制作フロー
 **Priority:** NORMAL
