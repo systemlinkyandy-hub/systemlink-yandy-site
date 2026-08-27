@@ -7,6 +7,19 @@ SystemLink YandYの公開用PDFマニュアルは、この `manuals/` ディレ�
 | 残コルチゾールHP | `cortisol_hp_manual_v0_2.pdf` | `manuals/cortisol_hp_manual_v0_2.pdf` |
 | 体調環境ログ | `HealthEnvLogger_manual_v2.pdf` | `manuals/HealthEnvLogger_manual_v2.pdf` |
 
+## Residual Capacity Workbench 公開マニュアル
+
+Residual Capacity Workbench（RCW）は、公開説明ページとMarkdown版公開マニュアルを併用します。
+
+- 公開説明ページ: `https://systemlinkyandy-hub.github.io/systemlink-yandy-site/residual-capacity-workbench.html`
+- 公開マニュアル（現行公開スナップショット）: `ResidualCapacityWorkbench_Public_Manual_2026-08-03.md`
+- GitHub上の公開ページソース: `https://github.com/systemlinkyandy-hub/systemlink-yandy-site/blob/main/residual-capacity-workbench.html`
+- 問い合わせ先: `systemlink.yandy@gmail.com`
+
+現行の公開マニュアルは **2026-08-03時点の実装スナップショット** として公開します。2026-08-03以降に追加された機能・UI差分は、現行実装の確認と公開用スナップショット更新が完了した小タスク単位で反映し、未確認事項を公開マニュアルへ先行記載しません。
+
+公開連絡先には上記の問い合わせ先のみを使用し、Git履歴・コミット署名等に含まれる別のメールアドレスを公開窓口へ転用しません。
+
 ## GitHub上で差し替える手順
 
 1. GitHubで公開リポジトリを開き、`manuals/` フォルダへ移動します。
