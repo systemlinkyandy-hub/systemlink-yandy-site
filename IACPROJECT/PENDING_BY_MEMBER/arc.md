@@ -1,0 +1,32 @@
+﻿# PENDING_BY_MEMBER / アーク
+
+**自動生成ファイル。手動編集禁止。** 生成元: `tools/iac-handoff-state.ps1 -Scan -WriteIndex`
+生成時刻: 2026-08-30 19:07 JST（実行環境ローカル時刻）
+根拠: task_id と実ファイル/commitの存在（自然言語の自己申告は根拠にしていない）
+
+## UNREAD
+
+- IAC-MEDICAL-SELFEVAL-CORRELATION-001
+- TSUZURI-VIDEO-PLATFORM-PROCUREMENT-001
+- DELIVERY-MEDICAL-PROTOCOL-2026-08-07-01
+- IAC-COCOLOCAL-REF-001-ROUTE
+- DELIVERY-BUDGET-EQUIPMENT-2026-08-09-01
+- RIMI-COCO-NARRATIVE-2026-08-26-01
+- RIMI-ALL-HANDOFF-DIRECTORY-GAP-2026-08-28-01
+
+## ACKED / NOT STARTED
+
+(なし)
+
+## STARTED / NO RESULT
+
+(なし)
+
+## RESULT / REVIEW PENDING
+
+(なし)
+
+## CLOSED
+
+(なし)
+
