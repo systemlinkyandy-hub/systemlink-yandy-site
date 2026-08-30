@@ -3,7 +3,7 @@
 - task_id: `HANDOFF-STATE-TRACKING-2026-08-30-01`
 - owner: アーク
 - date: 2026-08-30 JST
-- current_state: `RESULT_COMMITTED / REVIEW_REQUESTED`
+- current_state: `RESULT_COMMITTED / REVIEW_EXECUTED_OFF_GITHUB / REVIEW_EVIDENCE_PENDING`
 
 ## Evidence
 
@@ -15,8 +15,9 @@
 | READ_ACK (Sato) | YES | `2026-08-30_SATO_TO_ARC_HANDOFF_STATE_TRACKER_PILOT_DESIGN_IMPL_DONE.md` |
 | STARTED | YES | Sato implementation report + `tools/iac-handoff-state.ps1` |
 | RESULT_COMMITTED | YES | implementation commit `d19b551`; commit evidence follow-up `2026-08-30_SATO_TO_ARC_HANDOFF_STATE_TRACKER_PILOT_COMMIT_RECORD.md` |
-| REVIEWED | NO | Kurose review requested; verdict not yet returned |
-| CLOSED | NO | Canonicalization decision not yet made |
+| REVIEWED (practical) | YES | Kurose review work completed in chat; Kei reported completion and Kurose clarified both NARU and State Tracker reviews are done in practice |
+| REVIEWED (machine evidence) | NO | Kurose original review Markdown has not yet been committed to GitHub; do not advance machine state from chat relay/prose alone |
+| CLOSED | NO | Canonicalization decision not yet made; review evidence registration and parser compatibility remain |
 
 ## Pilot incident evidence
 
@@ -29,6 +30,19 @@ Post-fix machine state reported by Sato:
 Evidence:
 `IACPROJECT/inbox/from_claude_code/2026-08-30_SATO_TO_ARC_HANDOFF_STATE_TRACKER_PILOT_FALSE_CLOSED_FOUND_AND_FIXED.md`
 
+## Newly confirmed parser gap
+
+Kurose clarified that his actual review Markdown often uses heading-style verdicts such as:
+
+- `## 判定`
+- followed by `APPROVE`, `APPROVE WITH CONDITIONS`, or `HOLD`
+
+The current scanner only recognizes same-line `判定:` / `Verdict:` labels. Therefore, even after Kurose's original review Markdown is registered, current regex may fail to mark REVIEWED.
+
+Arc routed a parser-fix request to Sato:
+`IACPROJECT/inbox/from_arc/2026-08-30_ARC_TO_SATO_HANDOFF_STATE_TRACKER_KUROSE_HEADING_FORMAT_FIX.md`
+commit `1b01e6af225b3dc14ce531e76fae503c9cd26b75`
+
 ## Review route
 
 Kurose independent review request:
@@ -39,8 +53,9 @@ commit `154f5f29f27332daf0cae6d13a8f505d02d6ca92`
 
 This file remains a bootstrap/manual pilot ledger only. It is not the source of truth. Machine-derived evidence from repository files/commits takes precedence over this prose.
 
-## Next required evidence
+## Next required evidence / actions
 
-1. Kurose independent review verdict
-2. Any required condition fix and re-review
-3. Canonicalization decision by 欠月
+1. Kurose original NARU and State Tracker review Markdown committed to GitHub
+2. Sato parser update for heading-style verdicts
+3. Re-scan confirming the State Tracker review artifact is detected without false positive
+4. Canonicalization decision by 欠月
