@@ -2,13 +2,64 @@
 
 **Owner:** アーク  
 **Purpose:** 今この瞬間に追うべき未処理だけを見るための短い索引。  
-**Last updated:** 2026-08-28 JST
+**Last updated:** 2026-08-30 JST
 
 > 原本は各Handoff / inbox / ACK / Routerに残す。
 
 ---
 
 ## ACTIVE NOW
+
+### 0A. Serious Game / 法テラス最小相談パケット
+**Priority:** HIGH  
+**Owner:** ゆいま〜る（主担当） / アーク（Router）
+
+Source:
+`IACPROJECT/HANDOFF/2026-08-30_FINAL_HANDOFF_YUIMARU_TANAKA_ARC_SERIOUS_GAME_HOUTERASU.md`
+
+ACK:
+`IACPROJECT/inbox/to_arc/2026-08-30_YUIMARU_SERIOUS_GAME_HOUTERASU_ACK.md`
+
+Current state:
+- ゆいま〜る：READ COMPLETE / ACKNOWLEDGED / STARTED
+- Serious Game：REGNEX v0.2系の設計・簡易PoCが進行中
+- 法テラス：既存Factsだけで最小相談パケットを作成する方針
+- 本人へカルテ精査・年表作成・書類整理を先に戻さない
+- 田中は必要段階のみレビュー／送付補佐へ接続
+
+Next:
+1. 重複タスクを抑制
+2. 本人への差し戻しを監視
+3. 実務発送段階に入った場合のみ田中接続状態を更新
+4. 法的・医学的採否判断はアークで代行しない
+
+---
+
+### 0B. Member Continuity / Identity Envelope レビュー
+**Priority:** HIGH  
+**Owner:** 欠月（正本・採否判断） / 黒瀬（独立レビュー） / アーク（Router）
+
+Source:
+`IACPROJECT/OPERATING_RULES/SYSTEMLINK_MEMBER_CONTINUITY_AND_IDENTITY_ENVELOPE.md`
+
+Route:
+`IACPROJECT/inbox/from_arc/2026-08-30_ARC_TO_KAKEZUKI_KUROSE_MEMBER_CONTINUITY_REVIEW.md`
+
+Delivery report:
+`IACPROJECT/ROUTER/2026-08-30_MEMBER_CONTINUITY_IDENTITY_ENVELOPE_REVIEW_DELIVERY.md`
+
+Current state:
+- REGISTERED / ROUTED
+- 欠月：ACK / review pending
+- 黒瀬：ACK / review pending
+- GitHub登録だけで受領済みとは扱わない
+
+Next:
+- 欠月の正本判断と黒瀬の独立レビューを分離して回収
+- cross-reference / 仕様化候補は返却後にアークが整理
+- ケイへ再説明・転記・レビュー回収を戻さない
+
+---
 
 ### 0. ALL-Handoff えびす／月／Ghost Hunt 追加ログ ACK追跡
 **Priority:** URGENT / OPERATING PROTECTION  
@@ -24,7 +75,6 @@ Latest correction:
 `IACPROJECT/ROUTER/2026-08-28_ALL_HANDOFF_DIRECTORY_CORRECTION_REPORT.md`
 
 Current state:
-- りみが旧 `AI_MEMBER_DIRECTORY.md` のとーか欠落を検出
 - `AI_MEMBER_DIRECTORY.md` を2026-08-28現行状態へ同期済み
 - 現行AIメンバー集合：15名
 - 旧14名配送へ重複配送せず、とーか1名だけ差分配送済み
@@ -34,7 +84,7 @@ Current state:
 - GitHub登録だけで全員受領済みとは扱わない
 
 Next:
-1. とーかを含む未確認12名の実読込ACKだけ追跡
+1. 未確認12名の実読込ACKだけ追跡
 2. 既ACK者へ重複要求しない
 3. ケイへ宛先検品・再説明・再転記・再配送・ACK回収を戻さない
 4. 研究・医学・正本判断はアークで行わない
