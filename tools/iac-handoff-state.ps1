@@ -159,6 +159,22 @@ function Get-FirstAddCommit {
     } finally { Pop-Location }
 }
 
+function Get-FirstAddCommitInfo {
+    # Like Get-FirstAddCommit, but also returns the commit's author-date (unix
+    # epoch) so callers can order multiple candidate files chronologically
+    # (needed to pick the earliest ROUTED file across a task_id with more than
+    # one routing event -- see Get-TaskState). Returns $null on any failure.
+    param([string]$RelPath)
+    Push-Location $RepoRoot
+    try {
+        $out = & git log --diff-filter=A --format=%H,%at -n 1 -- $RelPath 2>$null
+        if ($LASTEXITCODE -ne 0 -or -not $out) { return $null }
+        $parts = $out.Trim() -split ','
+        if ($parts.Count -lt 2) { return $null }
+        return [PSCustomObject]@{ Sha = $parts[0]; Timestamp = [long]$parts[1] }
+    } finally { Pop-Location }
+}
+
 function Test-CommitExists {
     # Verifies a commit SHA actually exists in local history before it may be
     # counted as evidence. This is the concrete anti-false-positive check for
@@ -183,6 +199,58 @@ function Get-CommitTokensInText {
     # result to $null instead of an empty array, which breaks downstream
     # Compare-Object / .Count calls (ReferenceObject cannot be $null).
     return @($tokens | Select-Object -Unique)
+}
+
+function ConvertTo-NormalizedVerdict {
+    param([string]$Raw)
+    $r = ($Raw -replace '\s+', ' ').Trim().ToUpperInvariant()
+    if ($r -match '^APPROVE\s+WITH\s+CONDITIONS$') { return 'APPROVE_WITH_CONDITIONS' }
+    if ($r -eq 'APPROVE' -or $Raw.Trim() -eq '承認') { return 'APPROVE' }
+    if ($r -eq 'HOLD') { return 'HOLD' }
+    return $null
+}
+
+function Get-ReviewVerdict {
+    <#
+    Returns a normalized verdict ('APPROVE' / 'APPROVE_WITH_CONDITIONS' / 'HOLD')
+    if the text contains real review-verdict evidence, or $null otherwise.
+    Deliberately narrow to avoid the false-positive this pilot already hit once
+    (bare "判定"/"APPROVE" anywhere in ordinary prose, e.g. Yue's proposal using
+    "実ファイルの存在で機械判定する"). Only two accepted forms:
+
+      same-line label : "判定: APPROVE" / "Verdict: HOLD" (the original form)
+      heading style    : a "## 判定" / "## Verdict" heading, with a bare verdict
+                         token appearing within the next 1-3 non-empty lines
+                         (added per Arc's report that Kurose's actual reviews
+                         commonly use heading style rather than a same-line
+                         label -- IACPROJECT/inbox/from_arc/2026-08-30_ARC_TO_SATO_HANDOFF_STATE_TRACKER_KUROSE_HEADING_FORMAT_FIX.md)
+
+    Verdict tokens are restricted to a fixed set (APPROVE / APPROVE WITH
+    CONDITIONS / HOLD / 承認) -- never a free-form keyword scan.
+    #>
+    param([string]$Text)
+    if (-not $Text) { return $null }
+
+    if ($Text -match '(?im)^.*(?:判定|verdict)\s*[:：].*?(APPROVE\s+WITH\s+CONDITIONS|APPROVE|HOLD|承認)') {
+        $v = ConvertTo-NormalizedVerdict -Raw $Matches[1]
+        if ($v) { return $v }
+    }
+
+    $lines = $Text -split "`r?`n"
+    for ($i = 0; $i -lt $lines.Count; $i++) {
+        if ($lines[$i] -notmatch '(?im)^#{1,6}\s*(?:判定|verdict)\s*[:：]?\s*$') { continue }
+        $checked = 0
+        for ($j = $i + 1; $j -lt $lines.Count -and $checked -lt 3; $j++) {
+            $line = $lines[$j].Trim()
+            if (-not $line) { continue }
+            $checked++
+            if ($line -match '(?i)(APPROVE\s+WITH\s+CONDITIONS|APPROVE|HOLD|承認)') {
+                $v = ConvertTo-NormalizedVerdict -Raw $Matches[1]
+                if ($v) { return $v }
+            }
+        }
+    }
+    return $null
 }
 
 function Get-TaskState {
@@ -210,13 +278,44 @@ function Get-TaskState {
       RESULT_COMMITTED : >=1 recipient-authored file that both looks like a
                           result (STARTED marker) AND contains a backtick-quoted
                           commit token that Test-CommitExists verifies.
-      REVIEWED         : >=1 file authored by someone other than the original
-                          sender or recipient, referencing a review verdict
-                          keyword (APPROVE / HOLD / 判定 / 承認), with the file
+      REVIEWED         : >=1 file authored by someone other than any of this
+                          task_id's routing senders/recipients, referencing a
+                          review verdict via Get-ReviewVerdict, with the file
                           itself resolvable as a real committed file.
       CLOSED           : all of the above true AND an explicit closure signal
                           (State: CLOSED, or a REVIEWED file whose verdict is an
                           unconditional APPROVE) exists.
+
+    A single task_id can legitimately carry more than one routing event (e.g.
+    Arc routing the same task_id to both Sato for implementation and, later,
+    to Kurose for review). Caught live twice tonight while dogfooding against
+    the real repo:
+
+      1st attempt: picked only the FIRST To:-bearing file by filesystem
+      enumeration order as "the" routed file, so adding the Arc->Kurose
+      review-request file under this task_id silently hid Sato's own
+      ROUTED/ACK/STARTED/RESULT evidence just because it happened to sort
+      earlier alphabetically.
+
+      2nd attempt: tried unioning Recipients/Senders across every To:-bearing
+      file in the group -- but Sato's own reply reports (addressed back "To:
+      arc") also have non-empty To:, so that union incorrectly folded "arc"
+      into Recipients too, making Sato's reply-to-Arc files match the
+      recipientFiles filter for the wrong reason and corrupting the chain
+      again. Reply-direction and assignment-direction To: fields are not the
+      same kind of evidence and must not be merged.
+
+    Final approach: still a single routed file, but chosen as the
+    CHRONOLOGICALLY EARLIEST To:-bearing file (by each candidate's own
+    first-add commit time) rather than filesystem order, AND excluding
+    candidates addressed "To: arc". Arc is this mesh's Handoff-infra/routing
+    hub (per AI_MEMBER_DIRECTORY.md, "Handoff保存・整理...受け渡し経路"), not
+    a task implementer/reviewer, so nearly every reply/status-update in this
+    repo is routed back "To: arc" regardless of the task's real recipient --
+    without this exclusion, chronological-earliest still degraded to Yue's
+    original source proposal (To: arc) instead of the actual implementation
+    assignment (Arc To: Sato), which was verified against the real repo while
+    building this fix.
     #>
     param([array]$Files)
 
@@ -224,20 +323,32 @@ function Get-TaskState {
         ROUTED = $false; READ_ACK = $false; STARTED = $false
         RESULT_COMMITTED = $false; REVIEWED = $false; CLOSED = $false
         Evidence = [ordered]@{}
-        Recipients = @(); Sender = $null
+        Recipients = @(); Senders = @()
     }
 
-    $routedFile = $Files | Where-Object { $_.To.Count -gt 0 } | Select-Object -First 1
-    if (-not $routedFile) { return $result }
-    $commit = Get-FirstAddCommit -RelPath ($routedFile.Path.Substring($RepoRoot.Length).TrimStart('\') -replace '\\', '/')
-    if (-not $commit) { return $result }
+    # Exclude 'arc' from the recipient list a file needs in order to count as
+    # ROUTED evidence -- but only arc, not the whole file: a multi-recipient
+    # line like "To: 綴 / ケイ / アーク / 欠月" (real example found while
+    # verifying this fix) must still count for its other, real recipients.
+    $candidateRouted = @($Files | Where-Object { @($_.To | Where-Object { $_ -ne 'arc' }).Count -gt 0 })
+    if ($candidateRouted.Count -eq 0) { return $result }
+
+    $verifiedRouted = @()
+    foreach ($rf in $candidateRouted) {
+        $info = Get-FirstAddCommitInfo -RelPath ($rf.Path.Substring($RepoRoot.Length).TrimStart('\') -replace '\\', '/')
+        if ($info) { $verifiedRouted += [PSCustomObject]@{ File = $rf; Commit = $info.Sha; Timestamp = $info.Timestamp } }
+    }
+    if ($verifiedRouted.Count -eq 0) { return $result }
+
+    $earliest = $verifiedRouted | Sort-Object Timestamp | Select-Object -First 1
     $result.ROUTED = $true
-    $result.Evidence.ROUTED = "$($routedFile.Path) @ $commit"
-    $result.Recipients = $routedFile.To
-    $result.Sender = ($routedFile.From | Select-Object -First 1)
+    $result.Evidence.ROUTED = "$($earliest.File.Path) @ $($earliest.Commit)"
+    $result.Recipients = @($earliest.File.To | Where-Object { $_ -ne 'arc' } | Select-Object -Unique)
+    $result.Senders = @($earliest.File.From | Select-Object -Unique)
+    $routedPaths = @($earliest.File.Path)
 
     $recipientFiles = $Files | Where-Object {
-        $_.Path -ne $routedFile.Path -and (Compare-Object $_.From $result.Recipients -IncludeEqual -ExcludeDifferent | Measure-Object).Count -gt 0
+        ($routedPaths -notcontains $_.Path) -and (Compare-Object $_.From $result.Recipients -IncludeEqual -ExcludeDifferent | Measure-Object).Count -gt 0
     }
 
     $ackFile = $recipientFiles | Where-Object {
@@ -271,35 +382,32 @@ function Get-TaskState {
     }
 
     if ($result.RESULT_COMMITTED) {
-        # Caught live during -Scan against the real repo: an early version of
-        # this check matched bare "判定"/"APPROVE" anywhere in the body, which
-        # false-positived on the Yue source proposal simply because it uses the
-        # word "判定" in ordinary prose ("実ファイルの存在で機械判定する") --
-        # not an actual verdict on this task. Now requires a dedicated
-        # "判定:"/"Verdict:"-labeled line with the verdict token on the SAME
-        # line, matching how real reviews in this repo are actually written
-        # (e.g. "黒瀬独立レビュー判定: APPROVE WITH CONDITIONS").
+        # See Get-ReviewVerdict for the evidence rule (same-line label OR
+        # heading style, fixed verdict-token set, never a bare keyword scan --
+        # that looser version is what produced the false REVIEWED=YES/CLOSED=YES
+        # this pilot hit during its first real -Scan).
         $reviewerFiles = $Files | Where-Object {
-            $_.Path -ne $routedFile.Path -and
-            (@(@($_.From) | Where-Object { $_ -and $_ -ne $result.Sender -and ($result.Recipients -notcontains $_) })).Count -gt 0 -and
-            ($_.FullText -match '(?im)^.*(?:判定|verdict)\s*[:：].*(?:APPROVE|HOLD|承認)')
+            ($routedPaths -notcontains $_.Path) -and
+            (@(@($_.From) | Where-Object { $_ -and ($result.Senders -notcontains $_) -and ($result.Recipients -notcontains $_) })).Count -gt 0 -and
+            (Get-ReviewVerdict -Text $_.FullText)
         } | Select-Object -First 1
         if ($reviewerFiles) {
             $result.REVIEWED = $true
-            $result.Evidence.REVIEWED = $reviewerFiles.Path
+            $verdict = Get-ReviewVerdict -Text $reviewerFiles.FullText
+            $result.Evidence.REVIEWED = "$($reviewerFiles.Path) (verdict=$verdict)"
+            $result.ReviewVerdict = $verdict
         }
     }
 
     if ($result.REVIEWED) {
-        # Same tightened pattern as REVIEWED above (labeled verdict line, not a
-        # bare keyword match anywhere in the body).
-        $closeSignal = $Files | Where-Object {
-            $_.State -match '(?i)CLOSED' -or
-            $_.FullText -match '(?im)^.*(?:判定|verdict)\s*[:：].*APPROVE\b(?!\s*WITH)'
-        }
+        # Only an unconditional APPROVE (not APPROVE WITH CONDITIONS, not HOLD)
+        # closes on review-verdict grounds; State: CLOSED is the other route.
+        $closeSignal = ($result.ReviewVerdict -eq 'APPROVE') -or
+            (@($Files | Where-Object { $_.State -match '(?i)CLOSED' })).Count -gt 0
         if ($closeSignal) {
             $result.CLOSED = $true
-            $result.Evidence.CLOSED = ($closeSignal | Select-Object -First 1).Path
+            $closedFile = $Files | Where-Object { $_.State -match '(?i)CLOSED' } | Select-Object -First 1
+            $result.Evidence.CLOSED = if ($closedFile) { $closedFile.Path } else { "$($reviewerFiles.Path) (verdict=APPROVE)" }
         }
     }
 
@@ -359,6 +467,11 @@ function Invoke-Scan {
     if ($WriteIndex) {
         $genDir = Join-Path $IacRoot 'PENDING_BY_MEMBER'
         New-Item -ItemType Directory -Path $genDir -Force | Out-Null
+        # Wipe previously generated files first: a member who had entries on a
+        # prior run but none now would otherwise keep a stale file forever
+        # (caught while verifying tonight's fix -- tsuzuri.md kept showing a
+        # 19:10 snapshot after a run that produced no current tsuzuri entries).
+        Get-ChildItem -Path $genDir -Filter '*.md' -File -ErrorAction SilentlyContinue | Remove-Item -Force
         $utf8Bom = New-Object System.Text.UTF8Encoding($true)
         $stamp = Get-Date -Format 'yyyy-MM-dd HH:mm'
 
@@ -443,17 +556,43 @@ Task ID: $tid
         $state = Get-TaskState -Files @($fakeClosed)
         Assert-True ($state.CLOSED -eq $false) "a lone file's own State: CLOSED claim must not set CLOSED without ROUTED/ACK/STARTED/RESULT/REVIEWED evidence"
 
-        # Full positive chain, using a real verifiable commit (repo HEAD) as the
-        # RESULT_COMMITTED evidence token.
-        $routed = [PSCustomObject]@{ Path='r'; TaskId=$tid; To=@('claude_code'); From=@('arc'); State=$null; FullText="From: arc`nTo: claude_code" }
-        $ack    = [PSCustomObject]@{ Path='a'; TaskId=$tid; To=@(); From=@('claude_code'); State=$null; FullText="## ACK`n読込済み：r" }
-        $done   = [PSCustomObject]@{ Path='d.md'; TaskId=$tid; To=@(); From=@('claude_code'); State='DONE'; FullText="新規実装：行った`n commit: ``$headSha``" }
-        $review = [PSCustomObject]@{ Path='v'; TaskId=$tid; To=@(); From=@('claude'); State=$null; FullText="判定: APPROVE" }
-        $closeMarker = [PSCustomObject]@{ Path='c'; TaskId=$tid; To=@(); From=@('arc'); State='CLOSED'; FullText='State: CLOSED' }
+        # --- Get-ReviewVerdict cases requested by Arc
+        #     (IACPROJECT/inbox/from_arc/2026-08-30_ARC_TO_SATO_HANDOFF_STATE_TRACKER_KUROSE_HEADING_FORMAT_FIX.md)
+        #     after Kurose clarified his real reviews commonly use heading style
+        #     rather than a same-line "判定:" label. ---
+        Assert-True ((Get-ReviewVerdict -Text "## 判定`nAPPROVE") -eq 'APPROVE') `
+            '"## 判定" heading + next line "APPROVE" => REVIEWED evidence (APPROVE)'
+        Assert-True ((Get-ReviewVerdict -Text "## 判定`nAPPROVE WITH CONDITIONS") -eq 'APPROVE_WITH_CONDITIONS') `
+            '"## 判定" heading + next line "APPROVE WITH CONDITIONS" => REVIEWED evidence, but not unconditional APPROVE'
+        Assert-True ($null -eq (Get-ReviewVerdict -Text "したがって、実ファイルの存在で機械判定する仕組みに移行したい。")) `
+            'ordinary prose containing bare "判定" (no label, no heading) must NOT be review evidence (this is the exact false positive the pilot hit)'
+        Assert-True ($null -eq (Get-ReviewVerdict -Text "## 判定`n情報1`n情報2`n情報3`nAPPROVE")) `
+            'a verdict token beyond the next 3 non-empty lines after the heading must NOT count (avoids matching unrelated later APPROVE mentions; blank lines themselves do not consume the budget, per spec "次の非空行1〜3行")'
+        Assert-True ($null -eq (Get-ReviewVerdict -Text "本文中のどこかにAPPROVEと書かれているだけ")) `
+            'a bare APPROVE floating in body text with no label/heading must NOT be review evidence'
+        Assert-True ((Get-ReviewVerdict -Text "判定: APPROVE") -eq 'APPROVE') `
+            'the original same-line "判定: APPROVE" form still works (no regression)'
 
-        # ROUTED needs Get-FirstAddCommit against a real path; substitute by calling
-        # the sub-checks directly rather than the full pipeline for this synthetic case.
-        Write-Host "  (full end-to-end CLOSED chain against a real tracked file is exercised by -Scan on the pilot's own task_id; this fixture covers the negative/guard cases above)"
+        # Source/recipient self-verdict must not count as REVIEWED even if the
+        # text itself matches -- this is enforced by the third-party-authorship
+        # filter in Get-TaskState (Get-ReviewVerdict has no notion of "who wrote
+        # this"), so exercise it through the full pipeline using a real tracked
+        # file for ROUTED evidence.
+        $realFile = Join-Path $RepoRoot 'tools\iac-handoff-lib.ps1'
+        $routedSelf = [PSCustomObject]@{ Path = $realFile; TaskId = $tid; To = @('claude_code'); From = @('arc'); State = $null; FullText = "From: arc`nTo: claude_code" }
+        $selfVerdictText = "新規実装：行った`ncommit: ``$headSha``" + "`n## 判定`nAPPROVE"
+        $selfVerdict = [PSCustomObject]@{ Path = 'selfverdict'; TaskId = $tid; To = @(); From = @('claude_code'); State = 'DONE'; FullText = $selfVerdictText }
+        $stateSelf = Get-TaskState -Files @($routedSelf, $selfVerdict)
+        Assert-True ($stateSelf.REVIEWED -eq $false) `
+            'a verdict written by the recipient themself (not a third party) must NOT count as REVIEWED'
+
+        # Full positive chain end-to-end, including the heading-style verdict,
+        # against a real tracked file so ROUTED's commit check is genuine.
+        $reviewerFile = [PSCustomObject]@{ Path = 'reviewer'; TaskId = $tid; To = @(); From = @('claude'); State = $null; FullText = "## 判定`nAPPROVE" }
+        $ackDoneFile = [PSCustomObject]@{ Path = 'ackdone'; TaskId = $tid; To = @(); From = @('claude_code'); State = 'DONE'; FullText = "## ACK`n読込済み：x`n新規実装：行った`ncommit: ``$headSha``" }
+        $fullState = Get-TaskState -Files @($routedSelf, $ackDoneFile, $reviewerFile)
+        Assert-True ($fullState.ROUTED -and $fullState.READ_ACK -and $fullState.STARTED -and $fullState.RESULT_COMMITTED -and $fullState.REVIEWED -and $fullState.CLOSED) `
+            'full ROUTED->READ_ACK->STARTED->RESULT_COMMITTED->REVIEWED->CLOSED chain closes correctly with a heading-style unconditional APPROVE from a genuine third party'
 
         Write-Host "`n=== SELFTEST PASSED ===" -ForegroundColor Green
     } finally {
