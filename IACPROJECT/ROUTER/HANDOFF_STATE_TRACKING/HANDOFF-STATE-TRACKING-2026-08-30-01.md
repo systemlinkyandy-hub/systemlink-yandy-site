@@ -2,8 +2,8 @@
 
 - task_id: `HANDOFF-STATE-TRACKING-2026-08-30-01`
 - owner: アーク
-- date: 2026-08-30 JST
-- current_state: `RESULT_COMMITTED / REVIEW_EXECUTED_OFF_GITHUB / REVIEW_EVIDENCE_PENDING`
+- date: 2026-08-30 / updated 2026-08-31 JST
+- current_state: `RESULT_COMMITTED / REVIEW_EXECUTED_OFF_GITHUB / PARSER_FIX_DONE / REVIEW_EVIDENCE_PENDING`
 
 ## Evidence
 
@@ -11,51 +11,62 @@
 |---|---|---|
 | SOURCE | YES | `IACPROJECT/inbox/to_arc/2026-08-30_YUE_TO_ARC_MECHANICAL_HANDOFF_STATE_TRACKING_PROPOSAL.md` @ `0ba102e2824c6353bc3afb8c01bfc8e1385a801f` |
 | ROUTED | YES | `IACPROJECT/inbox/from_arc/2026-08-30_ARC_TO_SATO_HANDOFF_STATE_TRACKER_PILOT.md` @ `7e4ad8fc4e7e65772bcd47d458a89cf040a7790d` |
-| READ_ACK (Arc) | YES | Source fetched/read and Pilot registered by Arc; `HANDOFF_STATE_TRACKING_PILOT.md` @ `b344739d6b6230c353cf42cf905edd1132bca420` |
-| READ_ACK (Sato) | YES | `2026-08-30_SATO_TO_ARC_HANDOFF_STATE_TRACKER_PILOT_DESIGN_IMPL_DONE.md` |
-| STARTED | YES | Sato implementation report + `tools/iac-handoff-state.ps1` |
-| RESULT_COMMITTED | YES | implementation commit `d19b551`; commit evidence follow-up `2026-08-30_SATO_TO_ARC_HANDOFF_STATE_TRACKER_PILOT_COMMIT_RECORD.md` |
-| REVIEWED (practical) | YES | Kurose review work completed in chat; Kei reported completion and Kurose clarified both NARU and State Tracker reviews are done in practice |
-| REVIEWED (machine evidence) | NO | Kurose original review Markdown has not yet been committed to GitHub; do not advance machine state from chat relay/prose alone |
-| CLOSED | NO | Canonicalization decision not yet made; review evidence registration and parser compatibility remain |
+| READ_ACK (Arc) | YES | Pilot registered by Arc @ `b344739d6b6230c353cf42cf905edd1132bca420` |
+| READ_ACK (Sato) | YES | Sato implementation report |
+| STARTED | YES | `tools/iac-handoff-state.ps1` implementation |
+| RESULT_COMMITTED | YES | implementation `d19b551`, follow-up evidence, and parser-fix `7e39019664047672a1b3d76818115d2b89f860d3` |
+| REVIEWED (practical) | YES | Kurose review work completed in chat |
+| REVIEWED (machine evidence) | NO | Kurose original State Tracker review Markdown is still not present as a source-authored GitHub artifact |
+| CLOSED | NO | machine review evidence + canonicalization decision still required |
 
-## Pilot incident evidence
+## Pilot incident 1 — false REVIEWED/CLOSED
 
-The first real-data rescan produced a false `REVIEWED=YES / CLOSED=YES` because ordinary prose containing `判定` was accepted as review evidence. Sato fixed this by requiring explicit `判定:` / `Verdict:` label-line evidence and reran the scan.
+Initial real-data scan incorrectly accepted ordinary prose containing `判定` as review evidence and marked this task REVIEWED/CLOSED.
+Sato corrected the parser to require explicit review structure.
 
-Post-fix machine state reported by Sato:
+Post-fix state returned to:
+`ROUTED=YES / READ_ACK=YES / STARTED=YES / RESULT_COMMITTED=YES / REVIEWED=no / CLOSED=no`.
 
-`ROUTED=YES / READ_ACK=YES / STARTED=YES / RESULT_COMMITTED=YES / REVIEWED=no / CLOSED=no`
+## Parser compatibility fix — DONE
 
-Evidence:
-`IACPROJECT/inbox/from_claude_code/2026-08-30_SATO_TO_ARC_HANDOFF_STATE_TRACKER_PILOT_FALSE_CLOSED_FOUND_AND_FIXED.md`
-
-## Newly confirmed parser gap
-
-Kurose clarified that his actual review Markdown often uses heading-style verdicts such as:
-
-- `## 判定`
-- followed by `APPROVE`, `APPROVE WITH CONDITIONS`, or `HOLD`
-
-The current scanner only recognizes same-line `判定:` / `Verdict:` labels. Therefore, even after Kurose's original review Markdown is registered, current regex may fail to mark REVIEWED.
-
-Arc routed a parser-fix request to Sato:
+Arc request:
 `IACPROJECT/inbox/from_arc/2026-08-30_ARC_TO_SATO_HANDOFF_STATE_TRACKER_KUROSE_HEADING_FORMAT_FIX.md`
 commit `1b01e6af225b3dc14ce531e76fae503c9cd26b75`
 
-## Review route
+Sato implementation:
+commit `7e39019664047672a1b3d76818115d2b89f860d3`
 
-Kurose independent review request:
-`IACPROJECT/inbox/from_arc/2026-08-30_ARC_TO_KUROSE_HANDOFF_STATE_TRACKER_PILOT_REVIEW.md`
-commit `154f5f29f27332daf0cae6d13a8f505d02d6ca92`
+Implemented `Get-ReviewVerdict` and supports only structured review forms:
+- same-line `判定: APPROVE` / `Verdict: HOLD`
+- heading `## 判定` / `## Verdict`, then verdict within the next 1-3 non-empty lines
+- fixed verdict token set including APPROVE / APPROVE WITH CONDITIONS / HOLD
+- bare prose `判定` or floating body `APPROVE` does not count
+- recipient self-verdict does not count as third-party REVIEWED evidence
+
+Sato reports all requested synthetic tests passing, with real repository re-scan also executed.
+
+## Additional bugs found and fixed in `7e39019`
+
+### ROUTED evidence selection
+Previous implementation could select whichever `To:` file enumerated first, allowing a later Arc->Kurose review route to hide the original task route/evidence.
+Fix: exclude `arc` only from recipient candidacy and choose the chronologically earliest remaining routing candidate by first-add commit author date.
+
+### Stale PENDING_BY_MEMBER output
+Previous `-WriteIndex` could leave files from an earlier generation even when a member no longer had entries.
+Fix: generated `PENDING_BY_MEMBER/*.md` is cleared before regeneration.
 
 ## Machine-tracking note
 
-This file remains a bootstrap/manual pilot ledger only. It is not the source of truth. Machine-derived evidence from repository files/commits takes precedence over this prose.
+This file is a bootstrap/manual ledger, not source of truth. Repository evidence and scanner output take precedence over prose here.
 
-## Next required evidence / actions
+## Remaining gate
 
-1. Kurose original NARU and State Tracker review Markdown committed to GitHub
-2. Sato parser update for heading-style verdicts
-3. Re-scan confirming the State Tracker review artifact is detected without false positive
-4. Canonicalization decision by 欠月
+1. Kurose original State Tracker review Markdown is committed as a GitHub artifact.
+2. Re-scan must detect that artifact with the updated parser and must not create a false positive/false CLOSED.
+3. After machine REVIEWED evidence is confirmed, return canonicalization decision to 欠月.
+
+NARU's review artifact and State Tracker's review artifact are separate evidence problems; do not substitute secondary relay records for source-authored review evidence.
+
+## Owner burden rule
+
+ケイへregex修正、再Scan、未処理探索、ACK照合、進捗監視を戻さない。
