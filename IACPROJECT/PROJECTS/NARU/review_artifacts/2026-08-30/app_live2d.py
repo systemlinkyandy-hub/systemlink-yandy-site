@@ -450,10 +450,16 @@ def tts_worker():
         job = tts_queue.get()
         try:
             response_text = job["response_text"]
-            conversation_memory.append(f"Noll: {response_text}")
             print("Noll:", response_text)
-            write_subtitle(response_text)
-            speak(response_text, job_id=job["id"])
+            ok = speak(response_text, job_id=job["id"])
+            # [KUROSE CONDITION] speak()成功時のみ字幕/会話履歴を確定する。
+            # 失敗時（TTS/再生エラーでspeak()がFalseを返した場合）に
+            # 「音声は出ていないのに字幕・履歴だけ成功扱い」になるのを防ぐ。
+            if ok:
+                conversation_memory.append(f"Noll: {response_text}")
+                write_subtitle(response_text)
+            else:
+                print(f"[tts_worker] TTS/playback failed (job={job['id']}); subtitle/history not committed")
             show_prompt()
         except Exception as e:
             print(f"[tts_worker] エラー (job={job['id']}):", e)
