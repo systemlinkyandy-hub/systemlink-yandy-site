@@ -1,0 +1,187 @@
+--- a/app_live2d.py (before, 応急安全化直後)
++++ b/app_live2d.py (after, IBM Bob delta実装後)
+@@ -29,6 +29,8 @@
+ import asyncio
+ import re
+ import textwrap
++import sys
++import itertools
+ 
+ # TikTokLive はオプション（CHATモードでのみ使用）
+ # .venv に未インストールでも起動できるよう try/except で保護
+@@ -45,6 +47,28 @@
+ 
+ input_queue = queue.Queue()
+ 
++# [QUEUE] コメント受信(input_queue)をLLM生成・TTS生成/再生から分離する。
++# 直列ブロッキング解消: 各段はworkerスレッドが個別に処理し、
++# メインループ(input_queue)がLLM/TTS待ちで止まらないようにする。
++llm_queue = queue.Queue()
++tts_queue = queue.Queue()
++_job_id_gen = itertools.count(1)
++
++# [LATENCY] job_idごとの区間計測ログ。playback_complete到達時に破棄する。
++_job_stage_log = {}
++
++
++def latency_log(job_id, stage):
++    """job_idの各段階到達時刻を記録し、直前段階からの差分と合計経過を出力する。"""
++    ts = time.perf_counter()
++    history = _job_stage_log.setdefault(job_id, [])
++    prev_ts = history[-1][1] if history else ts
++    start_ts = history[0][1] if history else ts
++    history.append((stage, ts))
++    print(f"[LATENCY] job={job_id} stage={stage} +{ts - prev_ts:.3f}s total={ts - start_ts:.3f}s")
++    if stage == "playback_complete":
++        _job_stage_log.pop(job_id, None)
++
+ from dotenv import load_dotenv
+ from elevenlabs.client import ElevenLabs
+ from elevenlabs import VoiceSettings
+@@ -323,7 +347,7 @@
+ 
+ 
+ # ===== 音声再生（Live2D口パク同期版） =====
+-def speak(text, voice_id=DEFAULT_VOICE, voice_settings=None):
++def speak(text, voice_id=DEFAULT_VOICE, voice_settings=None, job_id=None):
+     """
+     ElevenLabsで音声を生成・再生し、
+     同時にアバターの口パクを同期させる。
+@@ -331,6 +355,9 @@
+     [LIVE2D] 元の speak() から以下を変更:
+       - speak_with_lipsync() を呼び出して口パク同期
+       - avatar_engine を渡して直接音量を設定
++
++    job_id が指定された場合、tts_request_start / tts_audio_ready /
++    playback_start / playback_complete を latency_log() へ記録する。
+     """
+     global is_speaking, tts_chars_used
+     if not text:
+@@ -359,6 +386,8 @@
+             normalize_fn=normalize_for_tts,
+             voice_settings=vs,
+             dict_locators=DICT_LOCATORS,
++            job_id=job_id,
++            on_stage=(lambda jid, stage, ts: latency_log(jid, stage)) if job_id is not None else None,
+         )
+         return result
+ 
+@@ -391,6 +420,47 @@
+     return speak(comment_text, voice_id=COMMENT_VOICE, voice_settings=VOICE_SETTINGS.get(COMMENT_VOICE))
+ 
+ 
++# ===== [QUEUE] LLM生成worker =====
++def llm_worker():
++    """
++    llm_queueからjobを受け取りLLM応答を生成する専用スレッド。
++    ここが詰まってもinput_queueの受信(メインループ)は止まらない。
++    """
++    while True:
++        job = llm_queue.get()
++        try:
++            latency_log(job["id"], "llm_request_start")
++            response_text = generate_ai_response(job["text"], user_name=job["user"])
++            latency_log(job["id"], "llm_text_ready")
++            job["response_text"] = response_text
++            tts_queue.put(job)
++        except Exception as e:
++            print(f"[llm_worker] エラー (job={job['id']}):", e)
++        finally:
++            llm_queue.task_done()
++
++
++# ===== [QUEUE] TTS生成/再生worker =====
++def tts_worker():
++    """
++    tts_queueからjobを受け取りTTS生成・再生を行う専用スレッド。
++    LLM生成(llm_worker)とは別スレッドのため、次のLLM応答生成を待たせない。
++    """
++    while True:
++        job = tts_queue.get()
++        try:
++            response_text = job["response_text"]
++            conversation_memory.append(f"Noll: {response_text}")
++            print("Noll:", response_text)
++            write_subtitle(response_text)
++            speak(response_text, job_id=job["id"])
++            show_prompt()
++        except Exception as e:
++            print(f"[tts_worker] エラー (job={job['id']}):", e)
++        finally:
++            tts_queue.task_done()
++
++
+ # ===== discussion =====
+ def speak_comment(user_name, text):
+     comment_text = f"{user_name}。{text}"
+@@ -466,11 +536,26 @@
+ if __name__ == "__main__":
+     print("=== 配信AI Live2D版 起動 ===")
+ 
++    # [MODEL] OPENAI_MODELの実在確認（起動時1回のみ、メタデータ取得のみでトークン課金なし）。
++    # 実在確認できないモデルIDはsilent fallbackせず、ここで起動を止める。
++    try:
++        client_ai.models.retrieve(OPENAI_MODEL)
++        print(f"[SAFE] OPENAI_MODEL 実在確認OK: {OPENAI_MODEL}")
++    except Exception as e:
++        print(f"[FATAL] OPENAI_MODEL の実在確認に失敗しました: {OPENAI_MODEL!r}")
++        print(f"        {e}")
++        print("        .env の OPENAI_MODEL を確認してください。silent fallbackはしません。起動を中止します。")
++        sys.exit(1)
++
+     # [LIVE2D] アバターエンジンを起動
++    # SAFE v2: 前回終了時の volume.txt が残っていても口パクしないよう、
++    # エンジン起動前後で音量を必ず 0 に戻す。
+     print("[LIVE2D] アバターエンジンを起動中...")
++    write_volume(0.0)
+     avatar_engine = AvatarEngine()
+     avatar_engine.start()
+     time.sleep(1.0)  # ウィンドウが開くまで少し待つ
++    write_volume(0.0)
+     # [SCROLLER] OBS用1行スクローラーを起動
+     start_scrollers()
+ 
+@@ -489,6 +574,11 @@
+     t = threading.Thread(target=input_thread, daemon=True)
+     t.start()
+ 
++    # [QUEUE] LLM/TTS workerスレッド起動。
++    # メインループ(input_queue)はここから先、LLM/TTS/再生の完了を待たない。
++    threading.Thread(target=llm_worker, daemon=True).start()
++    threading.Thread(target=tts_worker, daemon=True).start()
++
+     # ===== メインループ =====
+     while True:
+         now = time.time()
+@@ -504,6 +594,7 @@
+ 
+                 if cmd in ["S/", "/S"]:
+                     MODE = "standby"
++                    write_volume(0.0)
+                     print("→ STANDBY（有料API自動発話なし）")
+                     continue
+ 
+@@ -535,13 +626,18 @@
+                 conversation_memory.append(f"{user_name}: {user_input}")
+                 last_comment_time = time.time()
+                 write_comment(f"{user_name}: {user_input}")
++
++                job_id = next(_job_id_gen)
++                latency_log(job_id, "comment_received")
++
++                # [QUEUE] LLM生成・TTS生成/再生はworkerスレッドへ委譲する。
++                # ここではjobを渡すだけで、メインループ(input_queueの受信)は待たない。
++                # 既存の応急安全化(READ_COMMENTS_ALOUD既定OFF)は変更しない。
++                # READ_COMMENTS_ALOUDが有効な場合のコメント読み上げは今回のスコープ外
++                # (直列ブロッキング解消の対象外、既定OFFのため実害なし)。
+                 if READ_COMMENTS_ALOUD:
+                     speak_chat_comment(user_name, user_input)
+-                response_text = generate_ai_response(user_input, user_name=user_name)
+-                conversation_memory.append(f"Noll: {response_text}")
+-                print("Noll:", response_text)
+-                write_subtitle(response_text)
+-                speak(response_text)
++                llm_queue.put({"id": job_id, "user": user_name, "text": user_input})
+ 
+             # ===== DISCUSSION: 手入力で深掘り =====
+             elif item_type == "console" and MODE == "discussion" and text:

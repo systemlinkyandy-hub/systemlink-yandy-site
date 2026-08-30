@@ -1,0 +1,51 @@
+--- a/voice_analyzer.py (before)
++++ b/voice_analyzer.py (after)
+@@ -246,19 +246,30 @@
+     normalize_fn=None,
+     voice_settings=None,
+     dict_locators=None,
++    job_id=None,
++    on_stage=None,
+ ):
+     """
+     ElevenLabsで音声生成->再生->口パク同期を一括で行う。
+     app.py の speak() 関数の代替として使う。
++
++    on_stage(job_id, stage_name, perf_counter_timestamp) が渡された場合、
++    tts_request_start / tts_audio_ready / playback_start / playback_complete
++    の各段階で呼び出す（latency計測用、未指定時は従来通り無効）。
+     """
+     if not text:
+         return False
+ 
++    def _mark(stage):
++        if on_stage:
++            on_stage(job_id, stage, time.perf_counter())
++
+     try:
+         if normalize_fn:
+             text = normalize_fn(text)
+ 
+         print(f"[voice_analyzer] 音声生成中...")
++        _mark("tts_request_start")
+         audio = elevenlabs_client.text_to_speech.convert(
+             voice_id=voice_id,
+             text=text,
+@@ -271,14 +282,17 @@
+             for chunk in audio:
+                 f.write(chunk)
+ 
++        _mark("tts_audio_ready")
+         print(f"[voice_analyzer] 音声保存完了: {audio_path}")
+ 
++        _mark("playback_start")
+         sync_thread = play_with_lipsync(audio_path, avatar_engine)
+         _play_audio(audio_path)
+ 
+         if sync_thread:
+             sync_thread.join(timeout=30.0)
+ 
++        _mark("playback_complete")
+         return True
+ 
+     except Exception as e:
