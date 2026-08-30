@@ -271,10 +271,18 @@ function Get-TaskState {
     }
 
     if ($result.RESULT_COMMITTED) {
+        # Caught live during -Scan against the real repo: an early version of
+        # this check matched bare "判定"/"APPROVE" anywhere in the body, which
+        # false-positived on the Yue source proposal simply because it uses the
+        # word "判定" in ordinary prose ("実ファイルの存在で機械判定する") --
+        # not an actual verdict on this task. Now requires a dedicated
+        # "判定:"/"Verdict:"-labeled line with the verdict token on the SAME
+        # line, matching how real reviews in this repo are actually written
+        # (e.g. "黒瀬独立レビュー判定: APPROVE WITH CONDITIONS").
         $reviewerFiles = $Files | Where-Object {
             $_.Path -ne $routedFile.Path -and
             (@(@($_.From) | Where-Object { $_ -and $_ -ne $result.Sender -and ($result.Recipients -notcontains $_) })).Count -gt 0 -and
-            ($_.FullText -match '(?i)APPROVE|HOLD|判定|承認')
+            ($_.FullText -match '(?im)^.*(?:判定|verdict)\s*[:：].*(?:APPROVE|HOLD|承認)')
         } | Select-Object -First 1
         if ($reviewerFiles) {
             $result.REVIEWED = $true
@@ -283,7 +291,12 @@ function Get-TaskState {
     }
 
     if ($result.REVIEWED) {
-        $closeSignal = $Files | Where-Object { $_.State -match '(?i)CLOSED' -or $_.FullText -match '(?i)\bAPPROVE\b(?!\s*WITH)' }
+        # Same tightened pattern as REVIEWED above (labeled verdict line, not a
+        # bare keyword match anywhere in the body).
+        $closeSignal = $Files | Where-Object {
+            $_.State -match '(?i)CLOSED' -or
+            $_.FullText -match '(?im)^.*(?:判定|verdict)\s*[:：].*APPROVE\b(?!\s*WITH)'
+        }
         if ($closeSignal) {
             $result.CLOSED = $true
             $result.Evidence.CLOSED = ($closeSignal | Select-Object -First 1).Path
