@@ -10,6 +10,34 @@
 
 ## ACTIVE NOW
 
+### 0C. NARU TikTok AIライバー再稼働
+**Priority:** HIGH  
+**Implementation:** 佐藤（Claude Code）  
+**Review:** 黒瀬（独立レビュー） / スネーク（TikTok Studio・LIVE接続経路）  
+**Router:** アーク
+
+Source:
+`IACPROJECT/PROJECTS/NARU/2026-08-30_NARU_RESTART_BASELINE.md`
+
+Route:
+`IACPROJECT/inbox/from_arc/2026-08-30_ARC_TO_SATO_NARU_RESTART_IMPLEMENTATION.md`
+
+Current state:
+- RESTART BASELINE REGISTERED
+- 佐藤へ IMPLEMENTATION REQUESTED
+- 既存コード実体・起動方法・依存関係・設定位置・blocking point・最小修正案の一次返却待ち
+- IBM Bob一次査定の残課題：直列ブロッキング / 架空・無効モデル名 / TTS遅延
+- 既存コード未確認の全面書き直しは禁止
+
+Next:
+1. 佐藤の一次返却（repository/path等10項目）だけ追跡
+2. 実装完了後に黒瀬・スネークへレビュー経路を接続
+3. `comment received -> LLM text -> TTS -> audio output` の1往復とコメント受信ループ非停止を完了条件として追跡
+4. 実装判断・モデル採用判断はアークで代行しない
+5. ケイへコード所在探索・伝令・再編集・ACK回収を戻さない
+
+---
+
 ### 0A. Serious Game / 法テラス最小相談パケット
 **Priority:** HIGH  
 **Owner:** ゆいま〜る（主担当） / アーク（Router）
