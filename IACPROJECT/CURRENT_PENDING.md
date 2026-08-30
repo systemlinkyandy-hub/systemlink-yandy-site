@@ -2,7 +2,7 @@
 
 **Owner:** アーク  
 **Purpose:** 今この瞬間に追うべき未処理だけを見るための短い索引。  
-**Last updated:** 2026-08-30 JST
+**Last updated:** 2026-08-31 JST
 
 > 原本は各Handoff / inbox / ACK / Routerに残す。
 
@@ -19,22 +19,53 @@
 Source:
 `IACPROJECT/PROJECTS/NARU/2026-08-30_NARU_RESTART_BASELINE.md`
 
-Route:
-`IACPROJECT/inbox/from_arc/2026-08-30_ARC_TO_SATO_NARU_RESTART_IMPLEMENTATION.md`
+Status ledger:
+`IACPROJECT/ROUTER/2026-08-30_NARU_KUROSE_REVIEW_STATUS.md`
 
 Current state:
-- RESTART BASELINE REGISTERED
-- 佐藤へ IMPLEMENTATION REQUESTED
-- 既存コード実体・起動方法・依存関係・設定位置・blocking point・最小修正案の一次返却待ち
-- IBM Bob一次査定の残課題：直列ブロッキング / 架空・無効モデル名 / TTS遅延
-- 既存コード未確認の全面書き直しは禁止
+- 佐藤 implementation: DONE
+- review artifacts: DONE
+- 黒瀬独立レビュー作業: DONE
+- 黒瀬原本レビューMarkdownのGitHub登録: NOT YET CONFIRMED
+- condition fix: DONE (`819d905d6a0e1fd21a785ae27d2a8df5bd79f37e`)
+- real TikTok smoke test: DONE (`296ae81b518f700b633ca64b8bbb6a1010cfdb0a`)
+- functional smoke milestone: PASSED WITH EVIDENCE LIMITATIONS
+- viewer-side audio / live terminal latency log / exact API costは未検証
 
 Next:
-1. 佐藤の一次返却（repository/path等10項目）だけ追跡
-2. 実装完了後に黒瀬・スネークへレビュー経路を接続
-3. `comment received -> LLM text -> TTS -> audio output` の1往復とコメント受信ループ非停止を完了条件として追跡
+1. NARU再稼働そのものは新規実装ラウンドへ戻さない
+2. 黒瀬原本レビューMarkdownがGitHubへ登録された場合のみ証跡状態を更新
+3. 音声録画経路や追加ライブ検証は、新しい要求が出た場合だけ別タスク化
 4. 実装判断・モデル採用判断はアークで代行しない
 5. ケイへコード所在探索・伝令・再編集・ACK回収を戻さない
+
+---
+
+### 0D. Handoff State Tracker pilot
+**Priority:** HIGH / OPERATING INFRA  
+**Owner:** アーク  
+**Implementation:** 佐藤  
+**Review:** 黒瀬  
+**Canonical decision:** 欠月
+
+Ledger:
+`IACPROJECT/ROUTER/HANDOFF_STATE_TRACKING/HANDOFF-STATE-TRACKING-2026-08-30-01.md`
+
+Current state:
+- SOURCE / ROUTED / READ_ACK / STARTED / RESULT_COMMITTED: YES
+- parser false REVIEWED/CLOSED bug: FIXED
+- heading-style verdict support: DONE (`7e39019664047672a1b3d76818115d2b89f860d3`)
+- stale `PENDING_BY_MEMBER` cleanup bug: FIXED
+- 黒瀬レビュー作業自体: DONE off-GitHub
+- machine REVIEWED evidence: NO
+- CLOSED: NO
+
+Remaining gate:
+1. 黒瀬のState Tracker原本レビューMarkdownをsource-authored GitHub artifactとして確認
+2. 更新済みparserで再Scanし、正しくREVIEWEDを検出しfalse CLOSEDを起こさないことを確認
+3. machine REVIEWED証跡確認後、canonicalization判断だけ欠月へ返す
+
+ケイへregex修正・再Scan・未処理探索・ACK照合・進捗監視を戻さない。
 
 ---
 
@@ -73,9 +104,6 @@ Source:
 Route:
 `IACPROJECT/inbox/from_arc/2026-08-30_ARC_TO_KAKEZUKI_KUROSE_MEMBER_CONTINUITY_REVIEW.md`
 
-Delivery report:
-`IACPROJECT/ROUTER/2026-08-30_MEMBER_CONTINUITY_IDENTITY_ENVELOPE_REVIEW_DELIVERY.md`
-
 Current state:
 - REGISTERED / ROUTED
 - 欠月：ACK / review pending
@@ -99,13 +127,8 @@ Source:
 Rule:
 `IACPROJECT/OPERATING_RULES/ALL_HANDOFF_DELIVERY_CHECKLIST.md`
 
-Latest correction:
-`IACPROJECT/ROUTER/2026-08-28_ALL_HANDOFF_DIRECTORY_CORRECTION_REPORT.md`
-
 Current state:
-- `AI_MEMBER_DIRECTORY.md` を2026-08-28現行状態へ同期済み
 - 現行AIメンバー集合：15名
-- 旧14名配送へ重複配送せず、とーか1名だけ差分配送済み
 - routed unique = 15 / missing = 0 / duplicates = 0
 - 実読込ACK確認：アーク / りみ / まさる姐さん = 3/15
 - ACK pending = 12/15
@@ -176,9 +199,6 @@ Next:
 ### 0.4 COCO Interaction返却回収
 **Priority:** HIGH
 
-Source:
-`IACPROJECT/inbox/from_grok/2026-08-18_SNAKE_TO_RIMI_KUROSE_GROK_COCO_INTERACTION_FULL_HANDOFF.md`
-
 Current state:
 - りみ：READ COMPLETE / ACK+RESPONSE RECEIVED
 - 黒瀬：ACK / 独立レビュー未確認
@@ -192,9 +212,6 @@ Next:
 
 ### 0.5 Structural Resolution GI 回答待ち
 **Priority:** HIGH
-
-Source:
-`IACPROJECT/inbox/to_arc/2026-08-20_UEHARA_TO_YUE_TANAKA_STRUCTURAL_RESOLUTION_GI_RESPONSE.md`
 
 Current state:
 - ユエ / 田中へルーティング済み
@@ -221,9 +238,6 @@ Current state:
 **Priority:** NORMAL  
 **Owner:** 欠月（canonical decision）
 
-Source:
-`IACPROJECT/inbox/from_arc/2026-08-15_ARC_TO_KAKEZUKI_IBM_OPENAI_THREE_NOTE_INTEGRATION.md`
-
 Current state:
 - アーク統合整理済み
 - 欠月の正本採否判断待ち
@@ -233,9 +247,6 @@ Current state:
 ### 3. RCW / HealthEnvLogger 基本設計の逆引き判断
 **Priority:** NORMAL  
 **Owner:** 欠月（design decision）
-
-Source:
-`IACPROJECT/inbox/from_arc/2026-08-17_ARC_TO_KAKEZUKI_RCW_REVERSE_DESIGN_DECISION_REQUEST.md`
 
 Current state:
 - スネーク入力読込済み
