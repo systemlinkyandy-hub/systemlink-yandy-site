@@ -3,7 +3,7 @@
 - Task ID: `NARU-RENDERER-SWAP-2026-08-31-01`
 - Date: 2026-08-31 JST
 - Coordinator: アーク
-- State: PHASE A/B APPROVED / PHASE C0-C1 ROUTED
+- State: PHASE A/B APPROVED / PHASE C0 PASSED / PHASE C1 PREFLIGHT HOLD
 
 ## Evidence
 
@@ -16,44 +16,42 @@
   - commit `6df23381f1cdf1d0b81f6f91d0177a1c6aa50c50`
 - Kurose practical review relay:
   - `IACPROJECT/inbox/from_claude_code/2026-08-31_SATO_TO_ARC_NARU_RENDERER_SWAP_KUROSE_APPROVE_RELAYED.md`
-  - commit `aa18bc6`
-- Phase C0/C1 route:
-  - `IACPROJECT/inbox/from_arc/2026-08-31_ARC_TO_SATO_NARU_RENDERER_PHASE_C0_C1.md`
-  - commit `7f79bbc5915424a100f261e1fa23c9637254a313`
+  - commit `aa18bc6061844a636746574deb918775479a29df`
+- Phase C0/C1 implementation:
+  - commit `d503281a4192d36c2e7597460449ca741450d81d`
+- Live2D preflight:
+  - `IACPROJECT/inbox/from_claude_code/2026-08-31_SATO_TO_ARC_NARU_LIVE2D_PREFLIGHT_REPORT.md`
+  - commit `4a863d9da123880f9906bb6e560c235c69ca8156`
 
 ## Current state
 
-- NARU core conversation/TikTok/TTS path: PRESERVE
+- NARU core conversation/TikTok/TTS path: PRESERVED
 - Renderer boundary (Phase A): DONE / APPROVED
 - Legacy lipsync + blink polish (Phase B): DONE / APPROVED
-- Kurose primary review artifact: NOT YET ON GITHUB
-- Kurose practical verdict via relay: Phase A/B APPROVE
-- Phase C condition: deliberately break renderer and prove LLM/TTS/core survives
-- Phase C0 renderer failure isolation: ROUTED TO SATO
-- Phase C1 Live2D technical spike: ROUTED TO SATO
+- Kurose practical verdict: APPROVE
+- Kurose condition for Phase C: deliberately break renderer and prove LLM/TTS/core survives
+- Phase C0 renderer failure isolation: DONE / TESTED
+- Failure injection evidence: factory failure / start exception / audio-level exception while real LLM/TTS queue workers process jobs / stop exception all contained by renderer isolation; 0 paid API calls
+- Phase C1 Live2D adapter spike: CODE PATH PREPARED / SDK+CORE+MODEL NOT INSTALLED
+- Live2D SDK/Core/model asset: INSTALL HOLD
+- Preflight finding: current NARU venv is Python 3.14.3, while `live2d-py` v0.7.0.4 Windows wheel is cp310 only; direct install into current venv is not viable
+- Lowest-risk technical option proposed by Sato: separate Python 3.10 venv for the Live2D spike, leaving NARU main venv untouched
+- License gate: Cubism Core/Framework and any model asset acquisition remain human-consent gated; AI must not accept license terms on Kei's behalf
 - Live2D final adoption: NOT DECIDED
 - VRM final rejection: NOT DECIDED
 - Kei visual confirmation: DEFERRED until a real renderer candidate is locally visible
 
-## Phase C strategy
-
-Do not treat the current technical preference as a final specification decision.
-
-1. C0: isolate renderer failures from NARU core and prove it with injected failures.
-2. C1: test Live2D as the first reversible candidate because it preserves the current 2D visual direction and can plausibly remain in-process.
-3. Keep `legacy` renderer available as immediate rollback.
-4. If the Live2D spike succeeds, return evidence before any formal adoption decision.
-
 ## Next
 
-1. Sato ACK / C0 isolation implementation
-2. paid-API-free failure injection tests
-3. Live2D technical spike or explicit ASSET BLOCKED report
-4. Arc evidence check
-5. Kurose review of Phase C evidence
-6. one consolidated visual confirmation from Kei only after a real candidate is visible
-7. formal renderer adoption decision after evidence
+1. Do not reopen Phase A/B; Kurose APPROVE stands.
+2. Treat Phase C0 failure-isolation condition as satisfied at implementation/test level.
+3. Keep Live2D install blocked until two separate gates are resolved:
+   - human license/asset consent
+   - technical environment decision for the Python 3.10 isolated spike versus another binding/defer
+4. Arc must not decide renderer adoption, license acceptance, or the technical-spec adoption question.
+5. After a permitted Live2D spike exists, return evidence to Kurose for Phase C review before any formal adoption.
+6. One consolidated visual confirmation from Kei only after a real candidate is visible.
 
 ## Owner burden rule
 
-ケイへ進捗監視・ACK照合・コード編集・SDK testを戻さない。
+ケイへ進捗監視・ACK照合・コード編集・SDK差分探索・ライセンス文面の再編集を戻さない。ケイへ返すのは、実際に必要となった人間同意または採否判断だけに圧縮する。
