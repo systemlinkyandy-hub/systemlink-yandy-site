@@ -1,0 +1,23 @@
+--- a/app_live2d.py (前夜レビュー時点)
++++ b/app_live2d.py (renderer swap後)
+@@ -82,8 +82,9 @@
+     DISCUSSION_PROMPT
+ )
+ 
+-# [LIVE2D] アバターエンジンと音声解析モジュールをインポート
+-from avatar_engine import AvatarEngine
++# [RENDERER] 表示層はrenderer factory経由で起動する（avatar_engineへの直接依存を排除）。
++# 既定(NARU_RENDERER未設定)では従来通りAvatarEngineが使われる（挙動非回帰）。
++from renderer import create_renderer
+ from voice_analyzer import speak_with_lipsync, write_volume
+ from subtitle_scroller import start_scrollers, stop_scrollers
+ 
+@@ -558,7 +559,7 @@
+     # エンジン起動前後で音量を必ず 0 に戻す。
+     print("[LIVE2D] アバターエンジンを起動中...")
+     write_volume(0.0)
+-    avatar_engine = AvatarEngine()
++    avatar_engine = create_renderer()  # [RENDERER] 既定はlegacy(=AvatarEngine)。挙動非回帰。
+     avatar_engine.start()
+     time.sleep(1.0)  # ウィンドウが開くまで少し待つ
+     write_volume(0.0)

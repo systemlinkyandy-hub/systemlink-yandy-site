@@ -1,0 +1,115 @@
+--- a/avatar_engine.py (renderer swap前)
++++ b/avatar_engine.py (renderer swap後)
+@@ -56,16 +56,25 @@
+ # ─────────────────────────────────────────────
+ #  口パク設定
+ # ─────────────────────────────────────────────
+-VOLUME_THRESHOLD  = 0.05   # この音量を超えると口が開く
+-MOUTH_CLOSE_DELAY = 0.15   # 音が止まってからこの秒数後に口を閉じる
+-VOLUME_OPEN_HIGH  = 0.15   # この音量を超えると mouth_open（最大開口）
++# [RENDERER SWAP Phase B] ヒステリシス追加。
++# 立ち上がり(RISE)と立ち下がり(FALL)を別値にすることで、閾値付近で音量が
++# 微妙に上下しただけの往復（バタつき）を抑える。FALL側は必ずRISE側より低い値にする。
++# 旧単一閾値(VOLUME_THRESHOLD=0.05 / VOLUME_OPEN_HIGH=0.15)はコメントとして残す。
++VOLUME_THRESHOLD_RISE   = 0.05   # closed→half_open（この音量を超えたら口を開く）
++VOLUME_THRESHOLD_FALL   = 0.03   # half_open→closed（この音量以下に下がったら閉じる候補）
++VOLUME_OPEN_HIGH_RISE   = 0.15   # half_open→open（この音量を超えたら全開）
++VOLUME_OPEN_HIGH_FALL   = 0.11   # open→half_open（この音量以下に下がったら半開へ戻る）
++MOUTH_CLOSE_DELAY       = 0.15   # 音が止まってからこの秒数後に口を閉じる
+ 
+ # ─────────────────────────────────────────────
+ #  瞬き設定
+ # ─────────────────────────────────────────────
+ BLINK_INTERVAL_MIN   = 2.5   # 瞬きの最小間隔（秒）
+ BLINK_INTERVAL_MAX   = 6.0   # 瞬きの最大間隔（秒）
+-BLINK_FRAME_DURATION = 0.07  # 各フェーズの表示時間（秒）
++# [RENDERER SWAP Phase B] 各フェーズの表示時間に軽いランダム幅を持たせ、
++# 毎回寸分違わず同じ速さで瞬きする機械的な印象を減らす（間隔自体は元々ランダム）。
++BLINK_FRAME_DURATION_MIN = 0.055  # 各フェーズの表示時間・下限（秒）
++BLINK_FRAME_DURATION_MAX = 0.085  # 各フェーズの表示時間・上限（秒）
+ # 瞬きシーケンス: half_open(1) → closed(0) → half_open(1)
+ # 通常状態(open=2)から: open → half → closed → half → open
+ # eye_open.jpg は通常状態（mouth_closed.jpg）と画像位置が異なるため使用しない
+@@ -112,6 +121,8 @@
+         # ── 瞬き状態 ──
+         self._blink_seq_idx  = len(BLINK_SEQUENCE)  # シーケンス終了位置 = 待機中
+         self._blink_phase_t  = 0.0
++        # [RENDERER SWAP Phase B] 瞬き1回ごとのフェーズ表示時間（毎回ランダムに選び直す）
++        self._blink_frame_duration = BLINK_FRAME_DURATION_MIN
+         self._next_blink_t   = time.time() + random.uniform(
+             BLINK_INTERVAL_MIN, BLINK_INTERVAL_MAX
+         )
+@@ -168,18 +179,45 @@
+         """
+         外部から音量を直接設定する（voice_analyzer から呼ばれる）。
+         volume: 0.0〜1.0
++
++        [RENDERER SWAP Phase B] ヒステリシス付き状態機械に変更。
++        現在の口パクレベル(self._mouth_level)を起点に、上昇と下降で別の閾値を使う。
++        単一閾値だった旧実装は、音量が閾値付近で微小に上下するだけでも
++        closed⇔half_open（またはhalf_open⇔open）を毎フレーム往復し、
++        口パクがバタついて見える原因になっていた。
+         """
+         with self._lock:
+-            if volume > VOLUME_OPEN_HIGH:
+-                self._mouth_level  = 2  # open
+-                self._last_sound_t = time.time()
+-            elif volume > VOLUME_THRESHOLD:
+-                self._mouth_level  = 1  # half_open
+-                self._last_sound_t = time.time()
+-            else:
+-                # 音が止まってから MOUTH_CLOSE_DELAY 秒後に閉じる
+-                if time.time() - self._last_sound_t > MOUTH_CLOSE_DELAY:
+-                    self._mouth_level = 0  # closed
++            cur = self._mouth_level
++            now = time.time()
++
++            if cur == 0:  # closed
++                if volume > VOLUME_THRESHOLD_RISE:
++                    cur = 1  # half_open
++                    self._last_sound_t = now
++
++            elif cur == 1:  # half_open
++                if volume > VOLUME_OPEN_HIGH_RISE:
++                    cur = 2  # open
++                    self._last_sound_t = now
++                elif volume > VOLUME_THRESHOLD_FALL:
++                    # ヒステリシス帯域内: half_openを維持
++                    self._last_sound_t = now
++                else:
++                    # 無音とみなせる音量まで下がった場合のみ、
++                    # 遅延後にclosedへ（従来通りのclose delayを維持）
++                    if now - self._last_sound_t > MOUTH_CLOSE_DELAY:
++                        cur = 0  # closed
++
++            else:  # cur == 2, open
++                if volume > VOLUME_OPEN_HIGH_FALL:
++                    # ヒステリシス帯域内: openを維持
++                    self._last_sound_t = now
++                else:
++                    # openの閾値を割ったのでhalf_openへ降格（closedへは直接落とさない）
++                    cur = 1
++                    self._last_sound_t = now
++
++            self._mouth_level = cur
+ 
+     def set_speaking(self, is_speaking: bool):
+         """
+@@ -235,12 +273,16 @@
+                 # 瞬き開始
+                 self._blink_seq_idx = 0
+                 self._blink_phase_t = now
++                # [RENDERER SWAP Phase B] 毎回速さを少し変える（機械的な印象を減らす）
++                self._blink_frame_duration = random.uniform(
++                    BLINK_FRAME_DURATION_MIN, BLINK_FRAME_DURATION_MAX
++                )
+             else:
+                 return -1  # 瞬きなし（通常状態 = mouth_closed を使う）
+ 
+         # シーケンス実行中: 経過時間でフェーズを進める
+         elapsed = now - self._blink_phase_t
+-        if elapsed >= BLINK_FRAME_DURATION:
++        if elapsed >= self._blink_frame_duration:
+             self._blink_seq_idx += 1
+             self._blink_phase_t  = now
+ 
