@@ -5,36 +5,37 @@
 - Cc: 佐藤（Claude Code）, 黒瀬（Claude）
 - Task ID: `NARU-RENDERER-SWAP-2026-08-31-01`
 - Date: 2026-08-31 JST
-- State: ROUTED / DECISION PENDING
+- State: **CLOSED / SUPERSEDED — DECISION NO LONGER REQUIRED**
 
-## Facts only
+## Closure
+
+この判断依頼は前提消滅により閉じる。
+
+当初は、`live2d-py` v0.7.0.4 のWindows wheelがcp310のみというpreflight報告を前提に、Python 3.10分離venv / 別binding / 保留の技術判断を欠月へ依頼した。
+
+その後、PyPI/pipで `cp314-cp314-win_amd64` wheelの実在を直接確認し、現行NARU venv（Python 3.14.3）へ `live2d-py` を実導入・Cubism Core初期化まで成功したため、分離Python 3.10 venvを選ぶ必要は消滅した。
+
+Evidence:
+- Arc correction/install GO: `9bcd3d3d7b08d8f0a67a44381a5bdbb4e92b0f6d`
+- SDK installed/verified: `c9c4348e56fae21411c46b4676caba2dea3ea753`
+- Real Haru rendering spike: `cedabc63fdd90362fa12e9256672379cccdb3fa6`
+- Kurose spike review relay: `IACPROJECT/ROUTER/2026-08-31_NARU_PHASE_C_KUROSE_SPIKE_REVIEW_RELAY.md`
+
+## Historical context retained
+
+以下は当時の判断依頼の背景としてのみ保持する：
 
 - Phase A/B は黒瀬 practical reviewで APPROVE。
-- 黒瀬がPhase C前条件として指定した「rendererを実際に壊し、LLM/TTS/coreを巻き込まないこと」の失敗注入テストは、Phase C0で実装・実行済み。
-- 佐藤のPhase C1 preflightで、現行NARU venvが Python 3.14.3 / Windows AMD64であることを確認。
-- `live2d-py` v0.7.0.4 のWindows wheelは cp310 のみで、現行3.14 venvへ直接入れる経路は不適合。
-- 佐藤は、NARU本体venvを触らず Live2D technical spike 専用Python 3.10 venvを分離する案を最小リスク案として提示。
-- Cubism Core/Framework・モデルassetは未取得。ライセンス同意を伴う取得・インストールはHOLD中。
+- Phase C0でrenderer failure injectionを実施済み。
+- 初回preflightではcp310限定と誤認し、分離venv案を最小リスク候補として提示した。
+- ライセンス同意は環境判断とは別の人間ゲートとして扱った。
 
-Source:
-`IACPROJECT/inbox/from_claude_code/2026-08-31_SATO_TO_ARC_NARU_LIVE2D_PREFLIGHT_REPORT.md`
+## Current decision boundary
 
-Router status:
-`IACPROJECT/ROUTER/2026-08-31_NARU_RENDERER_SWAP_STATUS.md`
+欠月への「Python 3.10分離venvを採るか」という判断要求は**撤回済み**。
 
-## Decision boundary
-
-アークは以下を決めない：
-- Live2D正式採用
-- Python 3.10分離venv案を正式仕様として採るか
-- 別bindingを探すか
-- renderer候補の最終採否
-
-欠月に返す判断点は1つ：
-**Phase C1の次の技術スパイクとして、NARU本体から分離したPython 3.10 venv方式を採るか、別binding調査／保留へ回すか。**
-
-ライセンス同意は別の人間ゲートであり、この判断と混ぜない。
+今後、欠月へ返す可能性があるのは正式採用・仕様確定など本来の最終判断だけであり、この旧環境判断を再起動しない。
 
 ## Owner burden rule
 
-ケイへ環境調査・SDK探索・比較表作成・伝令を戻さない。人間同意が実際に必要な取得段階まで、ライセンス確認依頼も広げない。
+ケイへ旧判断の再説明・比較・伝令を戻さない。
