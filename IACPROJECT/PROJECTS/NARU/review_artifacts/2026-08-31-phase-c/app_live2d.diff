@@ -1,0 +1,20 @@
+--- app_live2d.py-PhaseAB
++++ app_live2d.py-PhaseC0
+@@ -84,7 +84,7 @@
+ 
+ # [RENDERER] 表示層はrenderer factory経由で起動する（avatar_engineへの直接依存を排除）。
+ # 既定(NARU_RENDERER未設定)では従来通りAvatarEngineが使われる（挙動非回帰）。
+-from renderer import create_renderer
++from renderer import create_isolated_renderer  # [PHASE C0] renderer失敗をNARU本体から隔離
+ from voice_analyzer import speak_with_lipsync, write_volume
+ from subtitle_scroller import start_scrollers, stop_scrollers
+ 
+@@ -559,7 +559,7 @@
+     # エンジン起動前後で音量を必ず 0 に戻す。
+     print("[LIVE2D] アバターエンジンを起動中...")
+     write_volume(0.0)
+-    avatar_engine = create_renderer()  # [RENDERER] 既定はlegacy(=AvatarEngine)。挙動非回帰。
++    avatar_engine = create_isolated_renderer()  # [PHASE C0] 失敗してもNARU本体は継続する
+     avatar_engine.start()
+     time.sleep(1.0)  # ウィンドウが開くまで少し待つ
+     write_volume(0.0)
