@@ -2,7 +2,7 @@
 
 **Owner:** アーク  
 **Purpose:** 今この瞬間に追うべき未処理だけを見るための短い索引。  
-**Last updated:** 2026-08-31 JST
+**Last updated:** 2026-09-01 JST
 
 > 原本は各Handoff / inbox / ACK / Routerに残す。
 
@@ -44,6 +44,31 @@ Next:
 4. 欠月への旧Python 3.10環境判断を再起動しない
 5. 正式採用・公開・商用判断をアークで代行しない
 6. ケイへコード修正・ログ採取・レビュー回収を戻さない
+
+---
+
+### 0C-2. NARU本人 Live2D body prototype
+**Priority:** HIGH / VISUAL PROTOTYPE  
+**Implementation:** 佐藤（Claude Code）  
+**Review:** 黒瀬（独立レビュー）  
+**Router:** アーク
+
+Source:
+`IACPROJECT/inbox/from_arc/2026-08-31_ARC_TO_SATO_NARU_NATIVE_LIVE2D_BODY_PROTOTYPE_START.md`
+
+Current state:
+- START AUTHORIZED
+- Haru visual demo: DEPRIORITIZED / SDK test fixture only
+- NARU/Noll既存素材のinventory・再利用可否判定: SATO RESPONSE PENDING
+- NARU core conversation/TikTok/LLM/TTS/queue: CHANGE PROHIBITED
+- Phase C hardening: 別トラックとして継続
+- 正式Live2D採用・公開TikTok運用・商用利用・正式デザイン採用: NOT DECIDED
+
+Next:
+1. 佐藤の既存素材inventory / 再利用可能・不足判定 / 最小prototype実現可否を待つ
+2. 不足素材がある場合はArcで一度だけ優先度付き最小一覧へ圧縮する
+3. 勝手なキャラクター再設計・別人化を許可しない
+4. ケイへ素材探索・Live2D技術判断・ACK回収・進捗監視を戻さない
 
 ---
 
@@ -195,6 +220,7 @@ Source:
 Current state:
 - アーク：READ COMPLETE / ACKNOWLEDGED / ROUTER反映済み
 - 確認済みACK：アーク / 欠月 / りみ / まさる姐さん / ゆいま〜る
+- 2026-09-01: 最終日。未確認成果物・ACKのみ回収し、比較結果の研究・医学解釈は行わない
 
 Next:
 - 成果物・Handoff・ACKの未確認分のみ回収
