@@ -10,34 +10,37 @@
 
 ## ACTIVE NOW
 
-### 0C. NARU TikTok AIライバー再稼働
+### 0C. NARU TikTok AIライバー再稼働 / Renderer Phase C
 **Priority:** HIGH  
 **Implementation:** 佐藤（Claude Code）  
 **Review:** 黒瀬（独立レビュー） / スネーク（TikTok Studio・LIVE接続経路）  
 **Router:** アーク
 
-Source:
-`IACPROJECT/PROJECTS/NARU/2026-08-30_NARU_RESTART_BASELINE.md`
-
 Status ledger:
-`IACPROJECT/ROUTER/2026-08-30_NARU_KUROSE_REVIEW_STATUS.md`
+`IACPROJECT/ROUTER/2026-08-31_NARU_RENDERER_SWAP_STATUS.md`
 
 Current state:
-- 佐藤 implementation: DONE
-- review artifacts: DONE
-- 黒瀬独立レビュー作業: DONE
-- 黒瀬原本レビューMarkdownのGitHub登録: NOT YET CONFIRMED
-- condition fix: DONE (`819d905d6a0e1fd21a785ae27d2a8df5bd79f37e`)
-- real TikTok smoke test: DONE (`296ae81b518f700b633ca64b8bbb6a1010cfdb0a`)
-- functional smoke milestone: PASSED WITH EVIDENCE LIMITATIONS
-- viewer-side audio / live terminal latency log / exact API costは未検証
+- NARU core再稼働・実TikTok smoke: DONE
+- Phase A renderer boundary: DONE / APPROVED
+- Phase B legacy lipsync + blink polish: DONE / APPROVED
+- 黒瀬 practical verdict: APPROVE
+- 黒瀬Phase C条件「renderer failureでLLM/TTS/coreを巻き込まない」: Phase C0で実装・失敗注入テスト済み
+- Phase C0 failure isolation: DONE / TEST EVIDENCE PRESENT (`d503281a4192d36c2e7597460449ca741450d81d`)
+- Phase C1 Live2D adapter spike: CODE PATH PREPARED / SDK未導入
+- Live2D preflight: DONE (`4a863d9da123880f9906bb6e560c235c69ca8156`)
+- 現行venv: Python 3.14.3 / Windows AMD64
+- `live2d-py` v0.7.0.4 Windows wheel: cp310のみ → 現行venvへ直接導入不可
+- Live2D/Cubism/asset install: HOLD
+- 技術判断: 欠月へ「分離Python 3.10 venv / 別binding調査 / 保留」の採否をルーティング済み
+- ライセンス同意: AI代行禁止。実際に取得段階へ進む場合だけ人間同意が必要
 
 Next:
-1. NARU再稼働そのものは新規実装ラウンドへ戻さない
-2. 黒瀬原本レビューMarkdownがGitHubへ登録された場合のみ証跡状態を更新
-3. 音声録画経路や追加ライブ検証は、新しい要求が出た場合だけ別タスク化
-4. 実装判断・モデル採用判断はアークで代行しない
-5. ケイへコード所在探索・伝令・再編集・ACK回収を戻さない
+1. 欠月のPhase C1環境判断を待つ
+2. 判断前に佐藤へSDK/Core/model取得・インストールを再開させない
+3. Phase A/Bを再実装へ戻さない
+4. Live2D正式採用・VRM棄却・仕様確定をアークで代行しない
+5. 実candidateが可視化された後だけケイへまとめてvisual confirmationを返す
+6. ケイへSDK探索・比較・伝令・ACK回収を戻さない
 
 ---
 
