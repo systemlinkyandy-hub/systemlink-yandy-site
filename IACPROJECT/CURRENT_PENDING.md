@@ -23,24 +23,27 @@ Current state:
 - NARU core再稼働・実TikTok smoke: DONE
 - Phase A renderer boundary: DONE / APPROVED
 - Phase B legacy lipsync + blink polish: DONE / APPROVED
-- 黒瀬 practical verdict: APPROVE
-- 黒瀬Phase C条件「renderer failureでLLM/TTS/coreを巻き込まない」: Phase C0で実装・失敗注入テスト済み
-- Phase C0 failure isolation: DONE / TEST EVIDENCE PRESENT (`d503281a4192d36c2e7597460449ca741450d81d`)
-- Phase C1 Live2D adapter spike: CODE PATH PREPARED / SDK未導入
-- Live2D preflight: DONE (`4a863d9da123880f9906bb6e560c235c69ca8156`)
-- 現行venv: Python 3.14.3 / Windows AMD64
-- `live2d-py` v0.7.0.4 Windows wheel: cp310のみ → 現行venvへ直接導入不可
-- Live2D/Cubism/asset install: HOLD
-- 技術判断: 欠月へ「分離Python 3.10 venv / 別binding調査 / 保留」の採否をルーティング済み
-- ライセンス同意: AI代行禁止。実際に取得段階へ進む場合だけ人間同意が必要
+- Phase C0 failure isolation: DONE / TESTED
+- Live2D SDK / Cubism Core: INSTALLED / VERIFIED
+- Haru official sample: LOCAL ONLY / GitHub asset非同梱
+- Haru実モデル描画: PASS (`cedabc63fdd90362fa12e9256672379cccdb3fa6`)
+- continuous `ParamMouthOpenY`: PASS
+- legacy rollback: PASS
+- 黒瀬Phase Cレビュー: APPROVE / SPIKE PASS（ケイ経由のsecondary review evidence）
+- 正式採用前条件: 2件
+  1. renderer内部threadのhealthを `is_offline` 等の単一観測点へ統合
+  2. deliberate render-loop failure後のprocess-exit segfaultを根本修正
+- Python 3.10分離venv判断依頼: CLOSED / SUPERSEDED（cp314 wheel実在・現行3.14環境で導入成功）
+- Live2D正式採用: NOT DECIDED
+- 公開・商用・継続TikTok運用: 別ゲート
 
 Next:
-1. 欠月のPhase C1環境判断を待つ
-2. 判断前に佐藤へSDK/Core/model取得・インストールを再開させない
-3. Phase A/Bを再実装へ戻さない
-4. Live2D正式採用・VRM棄却・仕様確定をアークで代行しない
-5. 実candidateが可視化された後だけケイへまとめてvisual confirmationを返す
-6. ケイへSDK探索・比較・伝令・ACK回収を戻さない
+1. 佐藤が上記2件のhardeningのみ実装
+2. hardening evidenceを黒瀬へ返し、正式採用前レビュー
+3. Phase A/Bや技術スパイクをやり直さない
+4. 欠月への旧Python 3.10環境判断を再起動しない
+5. 正式採用・公開・商用判断をアークで代行しない
+6. ケイへコード修正・ログ採取・レビュー回収を戻さない
 
 ---
 
