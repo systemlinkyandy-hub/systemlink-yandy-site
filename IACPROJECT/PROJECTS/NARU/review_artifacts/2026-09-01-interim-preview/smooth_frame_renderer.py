@@ -15,12 +15,21 @@ smooth_frame_renderer.py
   - キャラクターの描き直し・再解釈はしていない。同じ6枚の画素をブレンド・
     平行移動するだけで、新しい絵は一切生成していない。
 
-口パクの連続化:
-  既存の mouth_closed / mouth_half_open / mouth_open は「同じ構図・同じ解像度で
-  口の部分だけが違う」設計（avatar_engine.py内のコメント通り、全フレームが
-  ピクセル単位で一致する）。したがって、2枚をそのまま `cv2.addWeighted` で
-  合成すると、口の領域だけが自然に混ざる（他の領域は元々同一画素なので
-  合成しても変化しない）。
+[v2 修正: 全画面ブレンド → 口のみクロップ+フェザーブレンドへ]
+  v1は「口以外のピクセルは全フレームで完全一致する」という
+  avatar_engine.py内のコメントを前提に、フレーム全体をcv2.addWeighted()
+  していた。しかし実測したところ、6枚は個別JPEGとして書き出されているため
+  口以外の領域（背景の葉・服の柄など）にも無視できない差分があることが
+  判明した（例: mouth_closed.jpg と mouth_open.jpg の背景領域だけでも
+  平均差分が約9〜20あり、フレーム全体をブレンドすると口と無関係な部分まで
+  毎フレーム揺らめいて見えた。実際にケイが見て「痙攣のよう」と表現した
+  不具合の原因）。
+
+  v2では口の実座標範囲（差分の連結成分解析＋目視で特定）だけを切り出して
+  ブレンドし、楕円形+ガウスぼかしのフェザーマスクで境界を馴染ませた上で、
+  **常に同じ1枚（mouth_closed.jpg）を土台**として貼り戻す。土台が常に同一
+  ファイルの画素であるため、口のクロップ領域の外側は原理的に一切変化しない
+  （「差分が小さいはず」という期待値ではなく、構造的にゼロを保証する）。
 
 idle sway:
   数px程度のごく小さい並進のみ（回転・拡大縮小は誇張されやすいため使わない）。
@@ -44,10 +53,29 @@ class SmoothFrameRenderer(AvatarEngine):
     # この値以下の音量は「無音」とみなし、mouth_closed相当の合成コストを省く
     SILENT_LEVEL_THRESHOLD = 0.02
 
+    # 口の実座標範囲（y0, y1, x0, x1）。差分の連結成分解析＋目視で特定した、
+    # 3状態すべての口の形を収める最小限の矩形。
+    MOUTH_CROP = (300, 420, 200, 370)
+
     def __init__(self):
         super().__init__()
         self._raw_audio_level = 0.0
         self._start_time = time.time()
+        self._mouth_mask = self._build_mouth_mask()
+
+    def _build_mouth_mask(self) -> np.ndarray:
+        """
+        口クロップ領域用のフェザーマスク（楕円+ガウスぼかし、0.0〜1.0）。
+        境界を滑らかにし、貼り戻した跡が矩形として見えないようにする。
+        """
+        y0, y1, x0, x1 = self.MOUTH_CROP
+        h, w = y1 - y0, x1 - x0
+        mask = np.zeros((h, w), dtype=np.float32)
+        center = (w // 2, h // 2)
+        axes = (int(w * 0.42), int(h * 0.42))
+        cv2.ellipse(mask, center, axes, 0, 0, 360, 1.0, -1)
+        mask = cv2.GaussianBlur(mask, (25, 25), 0)
+        return mask[:, :, None]  # チャンネル方向へブロードキャストできる形にする
 
     def set_volume(self, volume: float):
         # 離散ヒステリシス状態(self._mouth_level)は瞬き優先判定等、親クラスの
@@ -57,17 +85,21 @@ class SmoothFrameRenderer(AvatarEngine):
             self._raw_audio_level = max(0.0, min(1.0, volume))
         super().set_volume(volume)
 
-    def _blend_mouth_frame(self, level: float) -> np.ndarray:
+    def _blend_mouth_crop(self, level: float) -> np.ndarray:
         """
         0.0〜1.0の連続値を [closed -> half_open -> open] の2区間クロスフェードへ
-        変換する。既存3枚以外の新しい画素は生成しない（重み付き合成のみ）。
+        変換する。口クロップ領域だけを対象にする（既存3枚以外の新しい画素は
+        生成しない、重み付き合成のみ）。
         """
+        y0, y1, x0, x1 = self.MOUTH_CROP
         if level <= 0.5:
             t = level / 0.5
-            a, b = self._mouth_frames[0], self._mouth_frames[1]
+            a = self._mouth_frames[0][y0:y1, x0:x1]
+            b = self._mouth_frames[1][y0:y1, x0:x1]
         else:
             t = (level - 0.5) / 0.5
-            a, b = self._mouth_frames[1], self._mouth_frames[2]
+            a = self._mouth_frames[1][y0:y1, x0:x1]
+            b = self._mouth_frames[2][y0:y1, x0:x1]
         return cv2.addWeighted(a, 1.0 - t, b, t, 0.0)
 
     def _idle_sway_offset(self, now: float):
@@ -80,16 +112,22 @@ class SmoothFrameRenderer(AvatarEngine):
         # 瞬き中は親クラスと同じ優先ルール（口パクは一時的に無視）を維持する。
         # 瞬きの品質・タイミングは今回変更しない（要求通り）。
         if eye_idx >= 0:
-            frame = self._eye_frames[eye_idx]
+            frame = self._eye_frames[eye_idx].copy()
         else:
             with self._lock:
                 level = self._raw_audio_level
+
+            # 土台は常に同一ファイル(mouth_closed.jpg)の画素にする。
+            # これにより口クロップ領域の外側は原理的に一切変化しない。
+            frame = self._mouth_frames[0].copy()
+
             if level > self.SILENT_LEVEL_THRESHOLD:
-                frame = self._blend_mouth_frame(level)
-            else:
-                # 無音時はeye_open.jpgを使う（親クラスの元の挙動と同じ。
-                # mouth_closed.jpgより位置が正確、という既存コメントに準拠）。
-                frame = self._eye_frames[2]
+                y0, y1, x0, x1 = self.MOUTH_CROP
+                blended_crop = self._blend_mouth_crop(level).astype(np.float32)
+                base_crop = frame[y0:y1, x0:x1].astype(np.float32)
+                mask = self._mouth_mask
+                composited = blended_crop * mask + base_crop * (1.0 - mask)
+                frame[y0:y1, x0:x1] = composited.astype(np.uint8)
 
         dx, dy = self._idle_sway_offset(time.time())
         m = np.float32([[1, 0, dx], [0, 1, dy]])
