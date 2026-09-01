@@ -28,10 +28,18 @@ from renderer import create_renderer  # noqa: E402
 
 def synthetic_talk_wave(t: float) -> float:
     """
-    実音声の代わりに使う、なだらかな合成波形。0.0〜0.75程度に収め、
+    実音声の代わりに使う、なだらかな合成波形。0.0〜0.6程度に収め、
     ナルの落ち着いたキャラクター性に合わせて振り切らせない。
+
+    [修正] 初版はケイの実機確認で「口パクが速すぎる」と報告があった
+    （音声を伴わない合成波形だけ見ると、速さの基準が無く余計に目立つ）。
+    速い成分の周波数を約1/3へ落とし、ゆっくりした強弱(envelope)との
+    掛け合わせに変更した。
     """
-    return max(0.0, 0.55 + 0.35 * math.sin(t * 3.3) * math.sin(t * 0.7))
+    envelope = 0.5 + 0.5 * math.sin(t * 0.45)   # 文の抑揚に相当、ゆっくり
+    syllable = 0.5 + 0.5 * math.sin(t * 1.1)    # 音節に相当（旧: 3.3 -> 1.1、約1/3の速さ）
+    level = 0.6 * envelope * syllable
+    return max(0.0, min(0.6, level))
 
 
 def main():
@@ -43,7 +51,8 @@ def main():
     print("[demo] ウィンドウ「Noll Live」が開きます。閉じるとデモも終了します。")
 
     IDLE_SEC = 4.0
-    TALK_SEC = 6.0
+    TALK_SEC = 5.0
+    PAUSE_SEC = 1.2  # 発話の合間の一拍（自然な間、実際の会話のような句読点相当）
 
     try:
         while True:
@@ -53,10 +62,20 @@ def main():
                 renderer.set_audio_level(0.0)
                 time.sleep(0.05)
 
-            print("[demo] 発話っぽい動き（合成波形、実音声なし）...")
+            print("[demo] 発話っぽい動き（合成波形、実音声なし、ゆっくりめ）...")
             t0 = time.time()
             while time.time() - t0 < TALK_SEC:
                 level = synthetic_talk_wave(time.time() - t0)
+                renderer.set_audio_level(level)
+                time.sleep(0.05)
+
+            # 一拍おいてから次の発話区間へ（連続して喋り続けない）
+            renderer.set_audio_level(0.0)
+            time.sleep(PAUSE_SEC)
+
+            t0 = time.time()
+            while time.time() - t0 < TALK_SEC:
+                level = synthetic_talk_wave(time.time() - t0 + 30.0)  # 位相をずらす
                 renderer.set_audio_level(level)
                 time.sleep(0.05)
 
