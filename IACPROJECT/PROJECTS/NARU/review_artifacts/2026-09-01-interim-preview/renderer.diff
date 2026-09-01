@@ -1,0 +1,43 @@
+--- renderer.py-PhaseC
++++ renderer.py-InterimPreview
+@@ -62,9 +62,14 @@
+     呼び出し側を一切変更せずに済む）。
+     """
+ 
+-    def __init__(self):
+-        from avatar_engine import AvatarEngine
+-        self._engine = AvatarEngine()
++    def __init__(self, engine_class=None):
++        # engine_class: 省略時は従来通りAvatarEngine。SmoothFrameRenderer等、
++        # AvatarEngineと同じ公開API（start/stop/set_volume/set_speaking/
++        # _mouth_level/_lock）を持つサブクラスであれば差し替えられる。
++        if engine_class is None:
++            from avatar_engine import AvatarEngine
++            engine_class = AvatarEngine
++        self._engine = engine_class()
+ 
+     def start(self):
+         self._engine.start()
+@@ -111,6 +116,13 @@
+     if name == "legacy":
+         return LegacyFrameRenderer()
+ 
++    if name in ("legacy_smooth", "smooth"):
++        # [NARU interim native preview] 既存6枚素材のまま、口パクの連続化＋
++        # ごく小さいidle swayを加えた版。legacyとは完全に別インスタンスなので
++        # 選ばなければ何も変わらない（zero irreversible conversion）。
++        from smooth_frame_renderer import SmoothFrameRenderer
++        return LegacyFrameRenderer(engine_class=SmoothFrameRenderer)
++
+     if name == "live2d":
+         from live2d_renderer import Live2DRenderer
+         return Live2DRenderer()
+@@ -120,7 +132,7 @@
+     #   legacyへ差し替えたりしない）。
+     raise ValueError(
+         f"[renderer] 未知のNARU_RENDERER指定です: {name!r}. "
+-        f"現時点で利用可能なrendererは 'legacy' / 'live2d' です。"
++        f"現時点で利用可能なrendererは 'legacy' / 'legacy_smooth' / 'live2d' です。"
+     )
+ 
+ 
