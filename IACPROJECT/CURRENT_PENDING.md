@@ -2,7 +2,7 @@
 
 **Owner:** アーク  
 **Purpose:** 今この瞬間に追うべき未処理だけを見るための短い索引。  
-**Last updated:** 2026-09-01 JST
+**Last updated:** 2026-09-02 JST
 
 > 原本は各Handoff / inbox / ACK / Routerに残す。
 
@@ -47,28 +47,40 @@ Next:
 
 ---
 
-### 0C-2. NARU本人 Live2D body prototype
+### 0C-2. NARU本人 Live2D body prototype / overlay_v1
 **Priority:** HIGH / VISUAL PROTOTYPE  
 **Implementation:** 佐藤（Claude Code）  
 **Review:** 黒瀬（独立レビュー）  
 **Router:** アーク
 
-Source:
-`IACPROJECT/inbox/from_arc/2026-08-31_ARC_TO_SATO_NARU_NATIVE_LIVE2D_BODY_PROTOTYPE_START.md`
+Sources:
+- `IACPROJECT/inbox/from_arc/2026-08-31_ARC_TO_SATO_NARU_NATIVE_LIVE2D_BODY_PROTOTYPE_START.md`
+- `IACPROJECT/inbox/from_claude_code/2026-09-01_SATO_TO_ARC_NARU_OVERLAY_ROUTE_V1_SMOKETEST_RESULT.md`
+- `IACPROJECT/inbox/from_arc/2026-09-01_ARC_KUROSE_OVERLAY_V1_REVIEW_RELAY_EVIDENCE_INSUFFICIENT.md`
+- `IACPROJECT/inbox/from_arc/2026-09-01_ARC_TO_KUROSE_NARU_SHARED_RENDERER_TARGETED_REVIEW.md`
 
 Current state:
 - START AUTHORIZED
 - Haru visual demo: DEPRIORITIZED / SDK test fixture only
-- NARU/Noll既存素材のinventory・再利用可否判定: SATO RESPONSE PENDING
+- NARU既存素材の抽出・肩修正・mouth 3-state合成: DONE
+- classical / specialized part-separation検証: DONE / full precise split BLOCKED
+- overlay_v1 implementation + local smoke: DONE (`92565f6aba9a0bdeeabfa1b693f3430d0245205e`)
+- 既存 `legacy` / `legacy_smooth` / `live2d` の既定経路を変更しない設計
+- 黒瀬overlay_v1一次レビュー: GitHub一次返却未確認
+- ケイ経由の黒瀬secondary evidence: `EVIDENCE INSUFFICIENT / formal adoption HOLD`
+- 主要懸念は共有 `LegacyFrameRenderer(engine_class=...)` 変更の非回帰確認へ絞り込み済み
+- `renderer.py` / `renderer.diff` のGitHub一次コード証拠を確認済み
+- 黒瀬へ shared renderer のTARGETED ONLY再レビュー依頼済み (`c052c3756307c592e9ad1c398900430d21ca525e`)
 - NARU core conversation/TikTok/LLM/TTS/queue: CHANGE PROHIBITED
 - Phase C hardening: 別トラックとして継続
 - 正式Live2D採用・公開TikTok運用・商用利用・正式デザイン採用: NOT DECIDED
 
 Next:
-1. 佐藤の既存素材inventory / 再利用可能・不足判定 / 最小prototype実現可否を待つ
-2. 不足素材がある場合はArcで一度だけ優先度付き最小一覧へ圧縮する
-3. 勝手なキャラクター再設計・別人化を許可しない
-4. ケイへ素材探索・Live2D技術判断・ACK回収・進捗監視を戻さない
+1. 黒瀬のshared renderer targeted review一次返却のみ追跡
+2. `SHARED_RENDERER_CHANGE_OK` の場合でも、正式採用判断は欠月へ返す
+3. `NEEDS_FIX` の場合は最小修正だけ佐藤へRoutingし、旧素材探索・分離検証を再起動しない
+4. overlay_v1の視覚品質・正式デザイン採用をアークで代行判断しない
+5. ケイへコード差分確認・レビュー回収・素材探索・進捗監視を戻さない
 
 ---
 
@@ -220,7 +232,8 @@ Source:
 Current state:
 - アーク：READ COMPLETE / ACKNOWLEDGED / ROUTER反映済み
 - 確認済みACK：アーク / 欠月 / りみ / まさる姐さん / ゆいま〜る
-- 2026-09-01: 最終日。未確認成果物・ACKのみ回収し、比較結果の研究・医学解釈は行わない
+- 比較週の期間自体は2026-09-01で終了
+- 未確認成果物・ACKのみ回収対象として残し、比較結果の研究・医学解釈は行わない
 
 Next:
 - 成果物・Handoff・ACKの未確認分のみ回収
