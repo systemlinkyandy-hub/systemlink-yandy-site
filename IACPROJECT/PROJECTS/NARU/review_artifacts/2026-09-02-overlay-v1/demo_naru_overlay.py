@@ -25,14 +25,22 @@ def synthetic_talk_wave(t: float) -> float:
 
 
 def main():
+    """[黒瀬レビュー指摘を受けた注記] `NaruOverlayEngine.start()`は現在、
+    実際のOpenCVウィンドウ描画スレッド（30fps・`avatar_engine._run_cv2`と
+    同じ構成）を起動する（以前は空実装だった不具合を修正済み）。
+
+    このデモはローカルMP4ファイルへのオフライン一括書き出しが目的であり、
+    `renderer.start()`（ライブ表示用の別スレッド）とは意図的に併用しない
+    ——両方が同時に`compose_frame()`を呼ぶと、瞬き状態などの内部状態が
+    二重に進行してしまうため。ライブ表示の動作確認自体は
+    `renderer.start()`を単体で呼ぶ最小テストで別途行う。
+    """
     renderer = create_renderer("overlay_v1")
-    engine = renderer._engine  # smoke test: 内部engineへ直接アクセスしフレームを取得する
+    engine = renderer._engine  # オフライン一括書き出し用に内部engineへ直接アクセスする
 
     assert "naru_overlay" not in {"openai", "elevenlabs", "tiktok"}
     for banned in ("openai", "elevenlabs", "TikTokLive"):
         assert banned not in sys.modules, f"禁止モジュール {banned} がロードされています"
-
-    renderer.start()
 
     fps = 30
     duration_sec = 10.0
@@ -83,7 +91,6 @@ def main():
             saved_stills.setdefault("hair_sway_extreme", frame.copy())
 
     writer.release()
-    renderer.stop()
 
     print(f"saved video: {out_path} ({n_frames} frames, {duration_sec}s @ {fps}fps)")
     print(f"best mouth level observed: {best_level:.3f} at t={best_level_t:.2f}s")

@@ -148,10 +148,56 @@ class NaruOverlayEngine:
     # -- 公開API（LegacyFrameRenderer / RendererIsolationProxy 契約） --
 
     def start(self):
-        pass
+        """[FIX: 黒瀬レビュー指摘] 以前はここが空（`pass`）で、
+        `compose_frame()`を定期的に呼んで画面へ出す描画駆動ループが
+        どこにも存在しなかった。エラーは出ず`is_offline`もFalseのまま
+        だが、実際には何も表示されないという不具合だった
+        （`avatar_engine.AvatarEngine._run_cv2`と同じ構成で実装する）。"""
+        if self._running:
+            return
+        self._running = True
+        self._thread = threading.Thread(target=self._run_cv2, daemon=True)
+        self._thread.start()
 
     def stop(self):
-        pass
+        self._running = False
+        if self._thread:
+            self._thread.join(timeout=2.0)
+
+    def _run_cv2(self):
+        """OpenCVウィンドウで`compose_frame()`を30fpsで描画するループ。
+        `avatar_engine.AvatarEngine._run_cv2`と同じ構成（同じWINDOW_TITLEを
+        使うため、OBS側のウィンドウキャプチャ設定を変えずにrenderer切替できる）。"""
+        from avatar_engine import WINDOW_TITLE, FPS
+
+        cv2.namedWindow(WINDOW_TITLE, cv2.WINDOW_AUTOSIZE)
+        interval = 1.0 / FPS
+
+        while self._running:
+            t_start = time.time()
+
+            frame = self.compose_frame()
+            cv2.imshow(WINDOW_TITLE, frame)
+
+            key = cv2.waitKey(1) & 0xFF
+            if key == 27:  # ESC
+                self._running = False
+                break
+
+            try:
+                if cv2.getWindowProperty(WINDOW_TITLE, cv2.WND_PROP_VISIBLE) < 1:
+                    self._running = False
+                    break
+            except Exception:
+                pass
+
+            elapsed = time.time() - t_start
+            sleep_t = interval - elapsed
+            if sleep_t > 0:
+                time.sleep(sleep_t)
+
+        cv2.destroyAllWindows()
+        print("[NaruOverlayEngine] ウィンドウを閉じました")
 
     def set_volume(self, volume: float):
         with self._lock:

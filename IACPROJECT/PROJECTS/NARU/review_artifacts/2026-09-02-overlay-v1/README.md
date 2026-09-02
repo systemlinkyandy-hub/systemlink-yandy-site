@@ -17,7 +17,8 @@
 | `naru_overlay_engine.py` | 新規。`NaruOverlayEngine`。FACE基底 + MOUTH4状態クロスフェード + 幾何学的blink近似 + HAIR_FRONT独立オーバーレイを合成する |
 | `renderer.py` | `overlay_v1` / `naru_overlay` 分岐を追加した現行版全文（`renderer.diff`参照） |
 | `renderer.diff` | 直前の一次証拠（`2026-09-01-interim-preview/renderer.py`）との差分。**追加は`create_renderer()`内の新規分岐1箇所のみ**で、既存`legacy`/`legacy_smooth`/`live2d`の分岐・デフォルト動作・`LegacyFrameRenderer`本体は無変更であることが確認できる |
-| `demo_naru_overlay.py` | ローカルスモークテスト用スクリプト。`renderer.py`経由で`NaruOverlayEngine`を駆動し、MP4+静止画をローカル出力する。OpenAI/ElevenLabs/TikTokLiveをimportしていないことをコード内assertで自己検証する |
+| `demo_naru_overlay.py` | ローカルスモークテスト用スクリプト（オフライン一括MP4書き出し専用、`renderer.start()`は意図的に呼ばない。理由はファイル内コメント参照）。OpenAI/ElevenLabs/TikTokLiveをimportしていないことをコード内assertで自己検証する |
+| `test_overlay_start_stop.py` | `renderer.start()`が実際に描画スレッドを起動し`compose_frame()`を周期的に呼び続けること、`stop()`で確実に停止することを検証するテスト |
 
 ## blink polish（今回の変更点）
 
@@ -39,3 +40,19 @@
 - HAIR_FRONT揺れ最大時: 既存の房オーバーレイに影響なし（今回の変更は目マスクのみ）
 
 `.env` / APIキーはハードコードなし（grep確認済み）。ローカル絶対パス（`C:\...`）も含まれていない（相対パスのみ使用）。
+
+## `start()`/`stop()`が空実装だった不具合の修正（2026-09-02、黒瀬レビュー指摘反映）
+
+### 指摘内容
+
+`NaruOverlayEngine.start()`/`stop()`が`pass`のみで、`compose_frame()`を周期的に呼んで画面へ出す描画駆動ループがどこにも存在しなかった。エラーは出ず`RendererIsolationProxy.is_offline`もFalseのままだが、実配信で`NARU_RENDERER=overlay_v1`にしても実際には何も表示されない状態だった。`demo_naru_overlay.py`が`renderer._engine`へ直接アクセスしてフレームを取得していたのは、この未実装を回避していた結果だった。
+
+### 修正
+
+`avatar_engine.AvatarEngine._run_cv2`と同じ構成（`WINDOW_TITLE`/`FPS`は`avatar_engine`からimportして共有し、OBS側のウィンドウキャプチャ設定を変えずに済むようにした）で、`start()`が実際にOpenCVウィンドウ描画スレッドを起動するよう実装した。`stop()`はスレッドを`join()`して確実に停止する。
+
+`demo_naru_overlay.py`は元々`renderer._engine`を直接叩いてMP4へ一括書き出す設計だったため、`renderer.start()`（今回から実体を持つライブ表示スレッド）と併用すると同一エンジンへ二重に`compose_frame()`が走る競合状態になる。そのため`demo_naru_overlay.py`からは`renderer.start()`/`stop()`の呼び出しを外し、意図的にオフライン一括書き出し専用スクリプトとして位置づけを明記した（コード内コメント参照）。
+
+### 検証
+
+`test_overlay_start_stop.py`で、`renderer.start()`後に`compose_frame()`が実際に周期的（実測: 約1.8秒間で47回、目標30fpsに近い実測値）に呼ばれ続けること、`renderer.stop()`後はスレッドが確実に停止し呼び出しが増えないことを確認した。
