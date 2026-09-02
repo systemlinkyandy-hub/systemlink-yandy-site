@@ -1,11 +1,14 @@
 # Arc → 欠月: NARU overlay_v1 採用判断ゲート
 
+> **2026-09-02 ROUTING CORRECTION — CANCELLED / NO ACTION**  
+> ケイの明示指示により、**欠月はNARU案件から外す**。本Handoffは履歴保持のみとし、欠月への判断依頼・ACK追跡・採否待ちはすべて取消す。今後のNARU進行は **佐藤（実装）／黒瀬（独立レビュー）／アーク（Router）** で扱う。欠月へNARUの仕様確定・採用判断を再Routingしない。
+
 - From: アーク
 - To: 欠月
 - Cc: 黒瀬（Claude）, 佐藤（Claude Code）
 - Task ID: `NARU-RENDERER-SWAP-2026-08-31-01`
 - Date: 2026-09-02 JST
-- State: DECISION GATE READY
+- State: **CANCELLED / NO ACTION — SUPERSEDED BY USER ROUTING DECISION**
 
 ## 結論
 
@@ -77,21 +80,20 @@ Commit: `92565f6aba9a0bdeeabfa1b693f3430d0245205e`
 これは今回のshared renderer非回帰判定を妨げない。
 ただし `engine_class` 差し替え候補が増えるほど暗黙契約になるため、別tech-debtとして追跡する。
 
-## 欠月へ返す判断
+## 旧・欠月へ返す判断（取消済み）
 
-以下はアーク権限外のため欠月判断とする。
+以下は**現在はNO ACTION**。欠月へ判断を求めない。
 
 1. `overlay_v1` を **NARU暫定visual/runtime route** として採用するか
 2. それとも **技術試作のまま保留** とするか
 3. 採用する場合も、Cubism Native `.moc3` 化は別工程・別ゲートとするか
 
-## Arc recommendation（採否ではなく運用提案）
+## 現行Routing
 
-- shared renderer回帰懸念はブロッカーから外す
-- `_lock/_mouth_level` は非blocking tech debtへ分離
-- 旧segmentation探索・interim JPEG previewへ戻らない
-- canonical NARU画像を保持する
-- 欠月判断後、必要なら黒瀬一次レビューartifactのGitHub化だけ追跡する
+- 佐藤：NARU実装
+- 黒瀬：独立レビュー
+- アーク：Router / ACK / 状態整理
+- 欠月：**NARU案件から除外。NO ACTION**
 
 ## Owner burden rule
 
