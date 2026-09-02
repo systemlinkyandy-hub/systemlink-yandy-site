@@ -2,7 +2,7 @@
 
 - Author: ユエ
 - Date: 2026-09-02
-- Status: DRAFT V1 / SCENE 1 ONLY
+- Status: DRAFT V1 / SCENE 1 ONLY / HOLD
 - Parent scene list: `IACPROJECT/PROJECTS/YUE/2026-09-02_YUE_JUUNIKOKKI_PART1_3_SCENE_LIST_V2_CHRONOLOGY_FIXED.md`
 - V3 keep point: `835bdbb8`
 
@@ -87,5 +87,3 @@
 それでも、最後に決めるのは自分だった。
 
 そのことだけは、ずっと変わらなかった。
-
-だから、その役に名前がつくより前から、もう役はそこにいた。
