@@ -2,7 +2,7 @@
 
 - Author: ユエ
 - Date: 2026-09-02
-- Status: DRAFT V3 / SNAKE STITCH FIX APPLIED / KUROSE REVIEW PENDING
+- Status: SNAKE APPROVED / KUROSE FINAL CHECK ON PUBLISH
 - Source boundary: ゆいま〜るが事実・時系列・境界を保証。ユエが小説化を担当。
 
 ---
