@@ -1,0 +1,27 @@
+--- ../2026-09-01-interim-preview/renderer.py	2026-09-01 12:25:47.651379400 +0900
++++ C:/Projects/vtuber_ai/renderer.py	2026-09-01 22:53:40.256262500 +0900
+@@ -127,12 +127,23 @@
+         from live2d_renderer import Live2DRenderer
+         return Live2DRenderer()
+ 
++    if name in ("overlay_v1", "naru_overlay"):
++        # [NARU-RENDERER-SWAP overlay route] 「重なり許容オーバーレイ」方式のv1実装候補。
++        # Arc GO: 2026-09-01_ARC_TO_SATO_NARU_OVERLAY_ROUTE_V1_IMPLEMENTATION_GO.md
++        # （commit 28d1a3b）。canonical解像度のNARU実素材（FACE + MOUTH4状態 +
++        # 幾何学的blink + HAIR_FRONT独立オーバーレイ）を使う。live2dのような
++        # ネイティブCubism SDK/.moc3経路ではなく、legacy_smoothと同じ
++        # crop+feather合成アーキテクチャの上に構築している（.moc3はCubism Editor
++        # という専用GUIでの手作業authoringが必要で、現状のツールでは生成できない）。
++        from naru_overlay_engine import NaruOverlayEngine
++        return LegacyFrameRenderer(engine_class=NaruOverlayEngine)
++
+     # 将来の追加renderer向け。未知の名前はsilent fallbackせず明示的に落とす
+     # （NARUのモデル設定健全化と同じ方針: 実在確認できないIDを黙って
+     #   legacyへ差し替えたりしない）。
+     raise ValueError(
+         f"[renderer] 未知のNARU_RENDERER指定です: {name!r}. "
+-        f"現時点で利用可能なrendererは 'legacy' / 'legacy_smooth' / 'live2d' です。"
++        f"現時点で利用可能なrendererは 'legacy' / 'legacy_smooth' / 'live2d' / 'overlay_v1' です。"
+     )
+ 
+ 
