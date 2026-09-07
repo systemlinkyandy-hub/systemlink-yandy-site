@@ -68,3 +68,15 @@
 - `_match_and_sharpen()`新設：light/medium/wideをclosed基準にLAB色空間で色統計を一致させ、軽いアンシャープマスクを適用（初期化時に1回のみ計算）
 - `_blend_mouth_crop()`のクロスフェード係数をシグモイドで急峻化し、遷移中の二重像区間を短縮
 - `test_mouth_blink_concurrency_smoke2.py`相当の回帰確認で、blink/hair/speaking pathへの影響なしを確認済み
+
+## Mouth composite 根本rework（2026-09-07、オーナーREJECT反映）
+
+上記の局所polish（色補正+タイトクロップ+sigmoid遷移）では、発話時に鼻先〜人中まで形が潰れる／口が二重に見える、というオーナー目視REJECTが出た。原因はクロップが矩形である限り解消できない構造的な問題と判明。詳細は以下のHandoffを参照：
+
+`IACPROJECT/inbox/from_claude_code/2026-09-07_SATO_TO_ARC_NARU_OWNER_MOUTH_COMPOSITE_REWORK_RESULT.md`
+
+要点：
+- `MOUTH_CROP`（矩形）を廃止し、`MOUTH_REGION`という「これより外は絶対に変更しない」ハード境界に変更。上端をグリッド目視で実測した鼻孔(y≈685)・人中(y≈700-710)より確実に下(y=715)へ固定
+- `_build_mouth_alpha()`新設：矩形全体を均一に混ぜるのではなく、各状態とclosedとの実差分から口の形そのものに沿ったソフトアルファマスクを生成。差が無い画素（鼻・頬等）はアルファ0のまま
+- 検証：`MOUTH_REGION`より上（鼻を含む領域）の画素は、全ての発話レベル(0.0〜0.95)で**diff=0（数学的に完全不変）**であることを実測確認
+- 既存のImagine元動画（`resource/Noll_kinohanoyouni.mp4`等、4/12時点の既存ローカル素材）を発見し、品質基準として参照（全体が動く生成動画のため直接の抽出元には使わず、今回は視覚的な基準として利用）
