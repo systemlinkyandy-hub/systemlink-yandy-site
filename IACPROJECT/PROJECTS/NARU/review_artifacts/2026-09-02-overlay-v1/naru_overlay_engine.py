@@ -41,7 +41,14 @@ class NaruOverlayEngine:
     継承はしない（AvatarEngine.__init__が旧avatar_frames/*.jpgを前提にしているため）。
     """
 
-    MOUTH_CROP = (640, 820, 440, 690)   # canonical座標、口4状態を包む矩形（やや広め、フェザー用）
+    # [mouth polish 2026-09-07] 黒瀬レビュー(Arc経由)指摘: 色差/座標ずれ/線の甘さ。
+    # 診断の結果、静止画としての位置合わせ自体は良好（サブピクセル一致）だったが、
+    # (a) light/medium/wideの口周辺が closed(canonical) よりLAB輝度で暗く、
+    #     周辺スキンとの混色域で色が浮いて見えていた
+    # (b) 旧クロップ(640,820,440,690)は実差分の外側にも広い余白(数十px)を含み、
+    #     不要な混色・ぼかしの範囲を広げていた
+    # 実測diff bboxに10px程度の余白のみを加えたタイトな矩形へ変更する。
+    MOUTH_CROP = (665, 800, 456, 670)   # canonical座標、口4状態の実差分に10px前後の余白のみ
     EYE_CROP = (390, 670, 370, 770)     # canonical座標、両目を含む範囲（IMAGE_EDIT_PACKET_READY記載値）
     HAIR_FRONT_OFFSET = (296, 340)      # HAIR_FRONT_overlay.png の貼り付け原点 (y0, x0)
 
@@ -92,6 +99,16 @@ class NaruOverlayEngine:
         for name, im in [("closed", closed), ("light", light), ("medium", medium), ("wide", wide)]:
             if im is None:
                 raise FileNotFoundError("mouth state '" + name + "' が読み込めません")
+
+        # [mouth polish 2026-09-07] light/medium/wideは口の開閉差分を別途抽出した素材系列
+        # （closed=canonical本体とは別系列）で、MOUTH_CROP範囲内のLAB輝度がcanonicalより
+        # 暗く、周辺スキンとの混色域で色が浮いて見えていた。closedを基準にLAB空間で
+        # 色統計（平均・分散）を一致させ、あわせて軽いアンシャープマスクで
+        # クロスフェード・フェザーにより甘くなった口線のコントラストを復元する。
+        # 初期化時に1回だけ計算してキャッシュする（毎フレーム計算はしない）。
+        light = self._match_and_sharpen(light, closed, self.MOUTH_CROP)
+        medium = self._match_and_sharpen(medium, closed, self.MOUTH_CROP)
+        wide = self._match_and_sharpen(wide, closed, self.MOUTH_CROP)
         self._mouth_states = [closed, light, medium, wide]
 
         hair_front = cv2.imdecode(
@@ -102,7 +119,9 @@ class NaruOverlayEngine:
             raise FileNotFoundError("HAIR_FRONT_overlay.png (BGRA) が読み込めません")
         self._hair_front = hair_front
 
-        self._mouth_mask = self._build_feather_mask(self.MOUTH_CROP)
+        # [mouth polish 2026-09-07] クロップを縮小した分、フェザー半径も比例して縮める
+        # （縮小前と同程度の相対的な柔らかさを保ちつつ、口線まで過度に侵食しないようにする）
+        self._mouth_mask = self._build_feather_mask(self.MOUTH_CROP, blur_kernel=25)
         self._eye_mask = self._build_eye_mask(self.EYE_CROP)
 
         h, w = self._base.shape[:2]
@@ -135,14 +154,35 @@ class NaruOverlayEngine:
         return mask[:, :, None]
 
     @staticmethod
-    def _build_feather_mask(crop):
+    def _match_and_sharpen(src, ref, crop):
+        """srcの[crop]領域の色統計(LAB平均・分散)をrefの同領域に合わせ、
+        続けて軽いアンシャープマスクで線のコントラストを復元する。
+        srcの他の領域には影響しない範囲の局所補正（画像全体には
+        同じ線形変換を一括適用するが、統計はcrop領域だけで計算する）。"""
+        y0, y1, x0, x1 = crop
+        src_lab = cv2.cvtColor(src, cv2.COLOR_BGR2LAB).astype(np.float32)
+        ref_lab = cv2.cvtColor(ref, cv2.COLOR_BGR2LAB).astype(np.float32)
+        src_mean = src_lab[y0:y1, x0:x1].reshape(-1, 3).mean(axis=0)
+        src_std = src_lab[y0:y1, x0:x1].reshape(-1, 3).std(axis=0)
+        ref_mean = ref_lab[y0:y1, x0:x1].reshape(-1, 3).mean(axis=0)
+        ref_std = ref_lab[y0:y1, x0:x1].reshape(-1, 3).std(axis=0)
+        corrected_lab = (src_lab - src_mean) * (ref_std / np.maximum(src_std, 1e-3)) + ref_mean
+        corrected_lab = np.clip(corrected_lab, 0, 255).astype(np.uint8)
+        corrected = cv2.cvtColor(corrected_lab, cv2.COLOR_LAB2BGR)
+
+        blurred = cv2.GaussianBlur(corrected, (0, 0), 1.0)
+        sharpened = cv2.addWeighted(corrected, 1.8, blurred, -0.8, 0)
+        return sharpened
+
+    @staticmethod
+    def _build_feather_mask(crop, blur_kernel=35):
         y0, y1, x0, x1 = crop
         h, w = y1 - y0, x1 - x0
         mask = np.zeros((h, w), dtype=np.float32)
         center = (w // 2, h // 2)
         axes = (int(w * 0.46), int(h * 0.46))
         cv2.ellipse(mask, center, axes, 0, 0, 360, 1.0, -1)
-        mask = cv2.GaussianBlur(mask, (35, 35), 0)
+        mask = cv2.GaussianBlur(mask, (blur_kernel, blur_kernel), 0)
         return mask[:, :, None]
 
     # -- 公開API（LegacyFrameRenderer / RendererIsolationProxy 契約） --
@@ -226,6 +266,13 @@ class NaruOverlayEngine:
         y0, y1, x0, x1 = self.MOUTH_CROP
         segment = min(int(level * 3), 2)
         t = min(max(level * 3 - segment, 0.0), 1.0)
+        # [mouth polish 2026-09-07] 形の異なる口2状態を線形クロスフェードすると、
+        # t≈0.5付近で両方の輪郭線が同時に薄く見える「二重像」区間が生じ、
+        # これが動画再生時に「口の位置がずれて見える」という指摘につながって
+        # いたと考えられる（静止画としての位置合わせ自体は実測でサブピクセル
+        # 一致を確認済み）。t=0.5を中心にシグモイドで急峻化し、二重像区間を
+        # 通過する時間を短くする（両端付近ではほぼ単一状態が見える時間を増やす）。
+        t = 1.0 / (1.0 + np.exp(-8.0 * (t - 0.5)))
         a = self._mouth_states[segment][y0:y1, x0:x1]
         b = self._mouth_states[segment + 1][y0:y1, x0:x1]
         return cv2.addWeighted(a, 1.0 - t, b, t, 0.0)

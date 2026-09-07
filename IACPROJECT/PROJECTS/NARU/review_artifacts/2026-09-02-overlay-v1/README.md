@@ -56,3 +56,15 @@
 ### 検証
 
 `test_overlay_start_stop.py`で、`renderer.start()`後に`compose_frame()`が実際に周期的（実測: 約1.8秒間で47回、目標30fpsに近い実測値）に呼ばれ続けること、`renderer.stop()`後はスレッドが確実に停止し呼び出しが増えないことを確認した。
+
+## 口元3点の修正（2026-09-07、オーナー目視指摘反映）
+
+ケイの目視確認で、発話時の口元について次3点の指摘があった：(A)色差、(B)座標ずれに見える、(C)線のシャープさ不足。詳細な原因分析・修正内容・acceptance criteria確認結果は以下のHandoffを参照：
+
+`IACPROJECT/inbox/from_claude_code/2026-09-07_SATO_TO_ARC_NARU_OWNER_VISUAL_FIX_RESULT.md`
+
+要点：
+- `MOUTH_CROP`を実差分ベースの実測値へ縮小（180×250px → 135×214px）
+- `_match_and_sharpen()`新設：light/medium/wideをclosed基準にLAB色空間で色統計を一致させ、軽いアンシャープマスクを適用（初期化時に1回のみ計算）
+- `_blend_mouth_crop()`のクロスフェード係数をシグモイドで急峻化し、遷移中の二重像区間を短縮
+- `test_mouth_blink_concurrency_smoke2.py`相当の回帰確認で、blink/hair/speaking pathへの影響なしを確認済み
