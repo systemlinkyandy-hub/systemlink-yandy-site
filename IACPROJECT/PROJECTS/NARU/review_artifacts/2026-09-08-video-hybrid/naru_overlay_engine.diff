@@ -1,0 +1,97 @@
+--- /c/Users/NY/Documents/GitHub/systemlink-yandy-site/IACPROJECT/PROJECTS/NARU/review_artifacts/2026-09-02-overlay-v1/naru_overlay_engine.py	2026-09-07 20:42:05.991497300 +0900
++++ /c/Users/NY/Documents/GitHub/systemlink-yandy-site/IACPROJECT/PROJECTS/NARU/review_artifacts/2026-09-08-video-hybrid/naru_overlay_engine.py	2026-09-08 21:16:39.683472900 +0900
+@@ -28,6 +28,8 @@
+ import cv2
+ import numpy as np
+ 
++import naru_face_fx
++
+ BASE_DIR = "live2d_assets/naru_v1_extraction"
+ 
+ 
+@@ -166,18 +168,9 @@
+ 
+     @classmethod
+     def _build_eye_mask(cls, crop):
+-        """目クロップ全体を覆う単一の大きな楕円だと、髪が密集する周辺領域まで
+-        フェザー帯に含んでしまい、圧縮画像と原画（どちらも斜め方向の細い毛束
+-        線画を持つ）を部分アルファで重ねた際にモアレ状のにじみが出ると判明した
+-        （実測で確認、修正済み）。目そのものの周りだけに絞った小さい楕円2つへ
+-        変更し、毛束が密集する領域をできるだけフェザー帯の外に置く。"""
+-        y0, y1, x0, x1 = crop
+-        h, w = y1 - y0, x1 - x0
+-        mask = np.zeros((h, w), dtype=np.float32)
+-        for cx, cy, rx, ry in cls.EYE_LOCAL_CENTERS:
+-            cv2.ellipse(mask, (cx, cy), (rx, ry), 0, 0, 360, 1.0, -1)
+-        mask = cv2.GaussianBlur(mask, (21, 21), 0)
+-        return mask[:, :, None]
++        """[production 2026-09-08] 実体は`naru_face_fx.build_eye_mask`へ切り出し済み
++        （`NaruVideoHybridEngine`と共有するため）。経緯コメントはそちら参照。"""
++        return naru_face_fx.build_eye_mask(crop, cls.EYE_LOCAL_CENTERS, blur_kernel=21)
+ 
+     @staticmethod
+     def _match_and_sharpen(src, ref, crop):
+@@ -346,56 +339,16 @@
+         return 0.0
+ 
+     def _squash_eye_crop(self, base_frame, closeness):
+-        """目クロップ全体を縦方向に圧縮した版を作り、`_eye_mask`（片目ずつの
+-        小さい楕円フェザー、`_build_eye_mask`参照）でクロップ全体へ合成する。
+-
+-        試行錯誤の経緯（3方式とも実測して不採用理由を確認済み）:
+-          1. 圧縮画像を元クロップの中央帯だけへ差し戻す方式
+-             → 差し戻し境界で「目が二重に見える」継ぎ目が発生（不採用）
+-          2. warpAffine一発での大幅縮小
+-             → 縮小率が大きい箇所でエイリアシング（縞模様）が発生（不採用）
+-          3. クロップ全体を覆う単一の大きな楕円マスクで(2)の縮小結果を合成
+-             → 髪が密集する周辺領域までフェザー帯に含み、圧縮画像と原画
+-               （どちらも斜め方向の細い毛束線画を持つ）を部分アルファで
+-               重ねた際にモアレ状のにじみが発生（不採用。アンシャープマスクで
+-               検証したところ悪化したため、単純なぼけでなく干渉縞と特定）
+-        現在の実装: 縮小前に軽いガウスぼかしでエイリアシングの種を減らし
+-        (2)を回避、マスクは片目ずつの小さい楕円に絞って毛束密集領域を
+-        フェザー帯の外へ出すことで(3)を回避している。
+-        """
+-        if closeness <= 0.001:
+-            return
+-        y0, y1, x0, x1 = self.EYE_CROP
+-        h, w = y1 - y0, x1 - x0
+-        src = base_frame[y0:y1, x0:x1]
+-        scale_y = max(0.10, 1.0 - closeness * 0.85)
+-        small_h = max(1, int(h * scale_y))
+-        # [blink polish] 当初は src をそのままINTER_AREAで縮小していたが、まつ毛・
+-        # 前髪の細い線画が持つ高周波成分が、縮小時にわずかなモアレ（格子状の
+-        # にじみ）を生んでいたと判明した（アンシャープマスクで強調すると悪化する
+-        # ことで裏付けられた＝アンシャープは逆効果だった）。縮小前に軽くガウス
+-        # ぼかしをかけて高周波成分を落としてから縮小することで、モアレの原因を
+-        # 元から減らす（一般的なダウンサンプリング前ローパスフィルタと同じ考え方）。
+-        prefiltered = cv2.GaussianBlur(src, (0, 0), 1.4)
+-        squashed_small = cv2.resize(prefiltered, (w, small_h), interpolation=cv2.INTER_AREA)
+-        squashed = cv2.resize(squashed_small, (w, h), interpolation=cv2.INTER_LINEAR)
+-        alpha = self._eye_mask * closeness
+-        composited = squashed.astype(np.float32) * alpha + src.astype(np.float32) * (1.0 - alpha)
+-        base_frame[y0:y1, x0:x1] = composited.astype(np.uint8)
++        """[production 2026-09-08] 実体は`naru_face_fx.squash_eye_crop`へ切り出し済み
++        （`NaruVideoHybridEngine`と共有するため）。試行錯誤の経緯は同関数のdocstring参照。"""
++        naru_face_fx.squash_eye_crop(base_frame, self.EYE_CROP, self._eye_mask, closeness)
+ 
+     def _composite_hair_front(self, frame, t):
+-        y0, x0 = self.HAIR_FRONT_OFFSET
+-        h, w = self._hair_front.shape[:2]
+-        sway = self.HAIR_SWAY_AMPLITUDE_PX * np.sin(2 * np.pi * t / self.HAIR_SWAY_PERIOD_SEC)
+-        M = np.float32([[1, 0, sway], [0, 1, sway * 0.3]])
+-        shifted = cv2.warpAffine(
+-            self._hair_front, M, (w, h),
+-            flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE
++        """[production 2026-09-08] 実体は`naru_face_fx.composite_hair_front`へ切り出し済み。"""
++        naru_face_fx.composite_hair_front(
++            frame, self._hair_front, self.HAIR_FRONT_OFFSET, t,
++            self.HAIR_SWAY_AMPLITUDE_PX, self.HAIR_SWAY_PERIOD_SEC,
+         )
+-        color = shifted[:, :, :3].astype(np.float32)
+-        alpha = (shifted[:, :, 3:4].astype(np.float32)) / 255.0
+-        region = frame[y0:y0 + h, x0:x0 + w].astype(np.float32)
+-        frame[y0:y0 + h, x0:x0 + w] = (region * (1 - alpha) + color * alpha).astype(np.uint8)
+ 
+     def compose_frame(self):
+         """現在の状態から1フレーム合成して返す（呼び出し側がループ/描画/保存を担う）。"""

@@ -1,0 +1,26 @@
+--- /c/Users/NY/Documents/GitHub/systemlink-yandy-site/IACPROJECT/PROJECTS/NARU/review_artifacts/2026-09-02-overlay-v1/renderer.py	2026-09-02 12:19:43.897369200 +0900
++++ /c/Users/NY/Documents/GitHub/systemlink-yandy-site/IACPROJECT/PROJECTS/NARU/review_artifacts/2026-09-08-video-hybrid/renderer.py	2026-09-08 21:16:39.712162900 +0900
+@@ -138,12 +138,22 @@
+         from naru_overlay_engine import NaruOverlayEngine
+         return LegacyFrameRenderer(engine_class=NaruOverlayEngine)
+ 
++    if name == "video_hybrid":
++        # [NARU-RENDERER-SWAP video-hybrid] Arc GO:
++        # 2026-09-08_ARC_TO_SATO_NARU_VIDEO_HYBRID_PRODUCTION_ONE_SHOT_IMPLEMENTATION.md
++        # 黒瀬 final pre-production gate（C1〜C4 CLOSED）＋オーナー視認承認済み（v4）。
++        # STANDBYは採用動画frame0、SPEAKINGは自然な発話区間(forward-only)を
++        # そのまま再生する。顎・頬・髪・陰影の再計算はしない。reverse再生は禁止
++        # （旧ping-pong設計はオーナーREJECT済み、復活させない）。
++        from naru_video_hybrid_engine import NaruVideoHybridEngine
++        return LegacyFrameRenderer(engine_class=NaruVideoHybridEngine)
++
+     # 将来の追加renderer向け。未知の名前はsilent fallbackせず明示的に落とす
+     # （NARUのモデル設定健全化と同じ方針: 実在確認できないIDを黙って
+     #   legacyへ差し替えたりしない）。
+     raise ValueError(
+         f"[renderer] 未知のNARU_RENDERER指定です: {name!r}. "
+-        f"現時点で利用可能なrendererは 'legacy' / 'legacy_smooth' / 'live2d' / 'overlay_v1' です。"
++        f"現時点で利用可能なrendererは 'legacy' / 'legacy_smooth' / 'live2d' / 'overlay_v1' / 'video_hybrid' です。"
+     )
+ 
+ 
