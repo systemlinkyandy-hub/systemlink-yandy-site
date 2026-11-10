@@ -1,0 +1,2 @@
+claim_id,created_at,claim_text,claim_type,source_type,source_ref,evidence_for,evidence_against,verification_status,confidence,reviewer,notes
+EXAMPLE-001,2026-11-11T00:00:00+09:00,"例: 特定の環境負荷の後に症状が増えた","observation","self_report","","","","observed",1.0,"","例示行。実データへ置換する"
