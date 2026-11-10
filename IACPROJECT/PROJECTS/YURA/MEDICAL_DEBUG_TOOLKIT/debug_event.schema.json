@@ -1,0 +1,143 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Yura Medical Debug Event",
+  "type": "object",
+  "required": [
+    "event_id",
+    "layer",
+    "event_type",
+    "source_type",
+    "recorded_at",
+    "summary"
+  ],
+  "properties": {
+    "event_id": {
+      "type": "string"
+    },
+    "occurred_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "recorded_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "operational_date": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date"
+    },
+    "layer": {
+      "enum": [
+        "raw",
+        "observation",
+        "derived",
+        "inference",
+        "presentation"
+      ]
+    },
+    "event_type": {
+      "enum": [
+        "symptom",
+        "measurement",
+        "medication",
+        "activity",
+        "environment",
+        "stressor",
+        "recovery_factor",
+        "medical_statement",
+        "external_source",
+        "ai_answer",
+        "note",
+        "missing_or_error"
+      ]
+    },
+    "source_type": {
+      "enum": [
+        "self_report",
+        "device",
+        "app",
+        "medical_record",
+        "clinician",
+        "paper",
+        "guideline",
+        "web",
+        "social",
+        "ai",
+        "other"
+      ]
+    },
+    "summary": {
+      "type": "string"
+    },
+    "observed_value": {},
+    "unit": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "intervention": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "response": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "stressor_tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "source_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "data_quality": {
+      "enum": [
+        "high",
+        "medium",
+        "low",
+        "unknown"
+      ]
+    },
+    "confidence": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 1
+    },
+    "verification_status": {
+      "enum": [
+        "observed",
+        "source_verified",
+        "partially_verified",
+        "unverified",
+        "contradicted",
+        "not_applicable"
+      ]
+    },
+    "notes": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": true
+}
